@@ -8,6 +8,10 @@ tags: ['arduino', 'bisiklet', 'mekatronik', 'diy']
 
 Bisiklet süren biliyorsun: tırmanmada vites değiştirmek, inişte fren, virajda denge... Peki ya bisikletin bunu kendisi yapsa?
 
+## Neden İhtiyaç Duydum?
+
+İstanbul'da bisikletla işe giderken, Kadıköy'den Fenerbahçe'ye her gün tırmanıyordum. Vites değiştirmek o kadar can sıkıcıydı ki, "bunu yazılım yapabilir miyim?" diye düşündüm. Sonra bir de şey ekledim: eğer bisikletin kendi karar verirse, insan hatası olmaz. Trafikte dikkatin dağıldığı anlarda vites unutulmaz — otomatik sistem bunu çözer.
+
 ## Proje Nedir?
 
 `velesbit`, mevcut kablolu vites sistemlerine uyumlu, Arduino tabanlı otomatik şanzıman projesi. Hız ve RPM verilerine göre otomatik vites değiştiriyor.

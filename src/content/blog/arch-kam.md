@@ -8,6 +8,10 @@ tags: ['linux', 'arch', 'bash', 'automation']
 
 Arch Linux kullanan herkes bilir: her şey elle yapılır, her şeyi sen kurarsın. Bu güzel ama bazen tekrarlayan işler can sıkıyor. `arch-kam` tam olarak bu noktada devreye giriyor.
 
+## Neden İhtiyaç Duydum?
+
+Yıllar boyunca Arch Linux kurdum, sildim, tekrar kurdum. Her seferinde aynı adımlar: swap oluştur, grub düzenle, mkinitcpio hook ekle, TLP kur, bootloader temayı değiştir. Bir gün dedim ki — bunları elle yapmaktan bıktım. Özellikle hibernate kurulumu, BTRFS ile uğraşırken bir keresinde boot etmemiştim. O günden sonra "bir daha olmasın" diye scriptleri yazmaya başladım.
+
 ## Nedir?
 
 `arch-kam`, Arch tabanlı dağıtımlar için yazılmış bir dizi bash script. "Kam" kelimesi eski Türkçede "şaman" anlamına geliyor — ve proje de tam olarak şamanlık yapıyor: sistemi "iyileştirir", "kötü ruhları kovar" ve "kozmik dengeyi" sağlar.

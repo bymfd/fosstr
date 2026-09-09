@@ -8,6 +8,10 @@ tags: ['python', 'noel', 'masaüstü', 'eglence']
 
 Noel zamanı geldi ve masaüstüne biraz renk mi istiyorsun? `tree.py` ile Python'da kodladığın ama tamamen özelleştirebileceğin bir Noel ağacı.
 
+## Neden İhtiyaç Duydum?
+
+2023 aralığında ofiste "Noel ağacı alalım" dediler. Ben de "almayın, ben kodlarım" dedim. Ciddiye alınınca da biraz utandım ama sonunda terminalde parlayan bir ağac çıktı. Ama asıl sebep şu: herkesin masasında aynı yapay ağaçlar, aynı LED'ler... Ben istedim ki ağacın rengi, boyutu, süsleri — hepsi benim kodumda olsun. Bir de şey ekledim: "arkadaşlarım da kendi ağacını yazsın" diye açık kaynak yaptım.
+
 ## Ne Yapıyor?
 
 Terminal veya pencere içinde gösterilen, özelleştirilebilir bir Noel ağacı. Renkler, süsler, yıldız — hepsi senin elinde.
