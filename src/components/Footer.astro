@@ -1,0 +1,15 @@
+---
+import { SITE_AUTHOR } from '../consts';
+const today = new Date();
+---
+
+<footer class="border-t border-slate-200 dark:border-slate-800 py-8 mt-16">
+	<div class="max-w-5xl mx-auto px-4 text-center text-sm text-slate-500 dark:text-slate-400">
+		<p>&copy; {today.getFullYear()} {SITE_AUTHOR}. All rights reserved.</p>
+		<p class="mt-2">
+			<a href="/rss.xml" class="hover:text-accent transition-colors">RSS Feed</a>
+			<span class="mx-2">·</span>
+			<a href="https://github.com/bymfd/fosstr" target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">Source</a>
+		</p>
+	</div>
+</footer>

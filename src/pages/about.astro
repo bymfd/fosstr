@@ -1,0 +1,24 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/BlogPost.astro';
+import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
+---
+
+<Layout
+	title="About Me"
+	description="Who am I?"
+	pubDate={new Date('August 08 2021')}
+	heroImage={AboutHeroImage}
+>
+	<p>
+		Hello! I'm Mevlüt Furkan Demir (bymfd). I'm a software developer interested in
+		cybersecurity, systems programming, and web development.
+	</p>
+	<p>
+		I work with Go, C++, Python, and JavaScript. I build tools and write about
+		security, programming, and technology.
+	</p>
+	<p>
+		Find me on <a href="https://github.com/bymfd">GitHub</a> or reach out via email.
+	</p>
+</Layout>

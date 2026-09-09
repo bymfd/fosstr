@@ -1,0 +1,42 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body class="min-h-screen flex flex-col">
+		<Header />
+		<main class="flex-1 max-w-5xl mx-auto px-4 py-16">
+			<section class="text-center mb-16">
+				<h1 class="text-5xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
+					fosstr
+				</h1>
+				<p class="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+					{SITE_DESCRIPTION}
+				</p>
+			</section>
+
+			<section class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+				<a href="/blog" class="group p-6 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-accent dark:hover:border-accent transition-colors">
+					<h2 class="text-lg font-semibold text-slate-900 dark:text-white group-hover:text-accent transition-colors">Blog</h2>
+					<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Yazılarımı oku</p>
+				</a>
+				<a href="/about" class="group p-6 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-accent dark:hover:border-accent transition-colors">
+					<h2 class="text-lg font-semibold text-slate-900 dark:text-white group-hover:text-accent transition-colors">About</h2>
+					<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Hakkımda</p>
+				</a>
+				<a href="https://github.com/bymfd" target="_blank" rel="noopener noreferrer" class="group p-6 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-accent dark:hover:border-accent transition-colors">
+					<h2 class="text-lg font-semibold text-slate-900 dark:text-white group-hover:text-accent transition-colors">GitHub</h2>
+					<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Projelerim</p>
+				</a>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
