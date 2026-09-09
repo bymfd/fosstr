@@ -10,7 +10,7 @@ Bisiklet süren biliyorsun: tırmanmada vites değiştirmek, inişte fren, viraj
 
 ## Neden İhtiyaç Duydum?
 
-İstanbul'da bisikletla işe giderken, Kadıköy'den Fenerbahçe'ye her gün tırmanıyordum. Vites değiştirmek o kadar can sıkıcıydı ki, "bunu yazılım yapabilir miyim?" diye düşündüm. Sonra bir de şey ekledim: eğer bisikletin kendi karar verirse, insan hatası olmaz. Trafikte dikkatin dağıldığı anlarda vites unutulmaz — otomatik sistem bunu çözer.
+İstanbul'da bisikletle işe giderken, Kadıköy'den Fenerbahçe'ye her gün tırmanıyordum. Vites değiştirmek o kadar can sıkıcıydı ki, "bunu yazılım yapabilir miyim?" diye düşündüm. Sonra bir de şey ekledim: eğer bisikletin kendi karar verirse, insan hatası olmaz. Trafikte dikkatin dağıldığı anlarda vites unutulmaz — otomatik sistem bunu çözer.
 
 ## Proje Nedir?
 

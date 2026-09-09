@@ -21,7 +21,7 @@ Başka uygulamalar denedim — smcFanControl, Macs Fan Control. Hepsi iyi ama ya
 - **Sıcaklık eğrisi:** 50-88°C arası otomatik fan kontrolü
 - **Özel hız ayarı:** İstediğin RPM değerini yaz
 - **Tüm sensörler:** CPU, RAM, depolama, kablosuz — her sensörü listeler
-- **Watchdog:** Hedif hızı her 1.5 saniyede bir yeniden uygular
+- **Watchdog:** Hedef hızı her 1.5 saniyede bir yeniden uygular
 - **Intel ve Apple Silicon** desteği (Universal binary)
 
 ## Kurulum (Terminal Gereksiz)
