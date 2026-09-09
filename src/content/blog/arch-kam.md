@@ -2,7 +2,7 @@
 title: 'arch-kam: Arch Linux İçin Şamanik Bash Ritüelleri'
 description: 'Hibernate, pil ömrü ve bootloader ayarlarını otomatikleştiren, "şamanik" bir bash script koleksiyonu'
 pubDate: '2026-09-10'
-heroImage: ../../assets/blog-placeholder-1.jpg
+heroImage: ../../assets/blog-placeholder-5.jpg
 tags: ['linux', 'arch', 'bash', 'automation']
 ---
 
