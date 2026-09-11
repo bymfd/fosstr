@@ -8,11 +8,11 @@
 - [Hakkımda](https://fosstr.com/about/)
 
 ## Posts
-- [Welcome](https://fosstr.com/blog/welcome/)
+- [Eylül 2026 Siber Güvenlik Analizi](https://fosstr.com/blog/eylul-2026-siber-guvenlik-analizi/)
 - [fcm - macOS Fan Control](https://fosstr.com/blog/fcm/)
-- [arch-kam](https://fosstr.com/blog/arch-kam/)
-- [velesbit](https://fosstr.com/blog/velesbit/)
-- [tree.py](https://fosstr.com/blog/tree-py/)
+- [arch-kam: Arch Linux İçin Şamanik Bash Ritüelleri](https://fosstr.com/blog/arch-kam/)
+- [velesbit: Otomatik Vitesli Bisiklet Sistemi](https://fosstr.com/blog/velesbit/)
+- [tree.py: Masaüstüne Özelleştirilebilir Noel Ağacı](https://fosstr.com/blog/tree-py/)
 
 ## Contact
 - GitHub: https://github.com/bymfd
