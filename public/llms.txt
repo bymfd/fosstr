@@ -1,0 +1,19 @@
+# fosstr
+
+> Yazılım, güvenlik ve daha fazlası
+
+## Blog
+- [Ana Sayfa](https://fosstr.com/)
+- [Blog Arşivi](https://fosstr.com/blog/)
+- [Hakkımda](https://fosstr.com/about/)
+
+## Posts
+- [Welcome](https://fosstr.com/blog/welcome/)
+- [fcm - macOS Fan Control](https://fosstr.com/blog/fcm/)
+- [arch-kam](https://fosstr.com/blog/arch-kam/)
+- [velesbit](https://fosstr.com/blog/velesbit/)
+- [tree.py](https://fosstr.com/blog/tree-py/)
+
+## Contact
+- GitHub: https://github.com/bymfd
+- Email: hello@fosstr.com
