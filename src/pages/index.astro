@@ -2,13 +2,31 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../consts';
+
+const jsonLd = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		name: SITE_TITLE,
+		url: SITE_URL,
+		description: SITE_DESCRIPTION,
+		inLanguage: 'tr',
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'Person',
+		name: SITE_AUTHOR,
+		url: SITE_URL,
+		sameAs: ['https://github.com/bymfd'],
+	},
+];
 ---
 
 <!doctype html>
 <html lang="tr">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} jsonLd={jsonLd} />
 	</head>
 	<body class="min-h-screen flex flex-col">
 		<Header />

@@ -1,0 +1,88 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../../components/BaseHead.astro';
+import Footer from '../../../components/Footer.astro';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import Header from '../../../components/Header.astro';
+import { SITE_TITLE } from '../../../consts';
+import { slugify } from '../../../utils';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	const byTag = new Map<string, string[]>();
+
+	for (const post of posts) {
+		for (const tag of post.data.tags ?? []) {
+			const existing = byTag.get(tag) ?? [];
+			existing.push(post.id);
+			byTag.set(tag, existing);
+		}
+	}
+
+	return [...byTag.entries()].map(([tag, ids]) => ({
+		params: { tag: slugify(tag) },
+		props: { tag, ids },
+	}));
+}
+
+type Props = { tag: string; ids: string[] };
+
+const { tag, ids } = Astro.props;
+const posts = (await getCollection('blog'))
+	.filter((post) => ids.includes(post.id))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const title = `#${tag} | ${SITE_TITLE}`;
+const description = `#${tag} etiketiyle işaretlenmiş ${posts.length} yazı: yazılım, güvenlik ve teknoloji içerikli fosstr blogu.`;
+const pageURL = new URL(`/blog/tags/${slugify(tag)}/`, Astro.site).href;
+const jsonLd = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'CollectionPage',
+		name: title,
+		description,
+		inLanguage: 'tr',
+		url: pageURL,
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: [
+			{ '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: Astro.site?.href },
+			{ '@type': 'ListItem', position: 2, name: 'Blog', item: `${Astro.site}blog/` },
+			{ '@type': 'ListItem', position: 3, name: `#${tag}`, item: pageURL },
+		],
+	},
+];
+---
+
+<!doctype html>
+<html lang="tr">
+	<head>
+		<BaseHead title={title} description={description} jsonLd={jsonLd} />
+	</head>
+	<body class="min-h-screen flex flex-col">
+		<Header />
+		<main class="flex-1 max-w-5xl mx-auto px-4 py-16">
+			<h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-2">#{tag}</h1>
+			<p class="text-slate-500 dark:text-slate-400 mb-8">{posts.length} yazı</p>
+
+			<ul class="space-y-6">
+				{posts.map((post) => (
+					<li>
+						<a href={`/blog/${post.id}/`} class="group block p-6 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-accent dark:hover:border-accent transition-colors">
+							<h2 class="text-xl font-semibold text-slate-900 dark:text-white group-hover:text-accent transition-colors mb-2">
+								{post.data.title}
+							</h2>
+							<p class="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-2">
+								{post.data.description}
+							</p>
+							<FormattedDate date={post.data.pubDate} class="text-xs text-slate-500 dark:text-slate-500" />
+						</a>
+					</li>
+				))}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>

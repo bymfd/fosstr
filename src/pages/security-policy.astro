@@ -1,0 +1,62 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+
+const title = 'Güvenlik Politikası | fosstr';
+const description =
+	'fosstr güvenlik açığı bildirimi ve sorumlu ifşa politikası: nasıl raporlanır, kapsam ve yanıt süreleri.';
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'WebPage',
+	name: title,
+	description,
+	inLanguage: 'tr',
+	url: new URL('/security-policy/', Astro.site).href,
+};
+---
+
+<!doctype html>
+<html lang="tr">
+	<head>
+		<BaseHead title={title} description={description} jsonLd={jsonLd} />
+	</head>
+	<body class="min-h-screen flex flex-col">
+		<Header />
+		<main class="flex-1 max-w-3xl mx-auto px-4 py-12 w-full">
+			<h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">
+				Güvenlik Politikası
+			</h1>
+			<div class="prose max-w-none">
+				<p>
+					fosstr sitesinde bir güvenlik açığı bulduysanız lütfen
+					<a href="mailto:security@fosstr.com">security@fosstr.com</a> adresine
+					bildirin. Sorumlu ifşa yaklaşımını benimsiyorum: sorunu araştırıp
+					gidermek için makul süre tanır, ardından kamuya açık şekilde
+					bildiririm.
+				</p>
+				<h2>Kapsam</h2>
+				<ul>
+					<li>fosstr.com alan adı ve altındaki tüm sayfalar</li>
+					<li>Siteye ait açık kaynak depoları (GitHub: bymfd)</li>
+				</ul>
+				<h2>Kapsam Dışı</h2>
+				<ul>
+					<li>Üçüncü taraf servisler ve bağımlılıklar (üreticilerine bildirilmeli)</li>
+					<li>Deneme yanılma ile bulunan ve etkisi olmayan bulgular (ör. eksik başlıklar)</li>
+				</ul>
+				<h2>Yanıt Süresi</h2>
+				<p>
+					Bildirimlerden <strong>72 saat içinde</strong> ilk yanıt verilir; düzeltme
+					süresi sorunun ciddiyetine göre belirlenir.
+				</p>
+				<h2>İletişim</h2>
+				<p>
+					E-posta: <a href="mailto:security@fosstr.com">security@fosstr.com</a><br />
+					GitHub: <a href="https://github.com/bymfd" rel="noopener noreferrer">github.com/bymfd</a>
+				</p>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

@@ -2,9 +2,22 @@
 
 > Yazılım, güvenlik ve daha fazlası
 
+Site: https://fosstr.com
+Blog: https://fosstr.com/blog/
+RSS: https://fosstr.com/rss.xml
+Site haritası: https://fosstr.com/sitemap-index.xml
+Dizin (llms.txt): https://fosstr.com/llms.txt
+
+Bu dosya blogdaki tüm yazıların tam metnini, her yazı için kaynak URL ve tarih bilgisiyle birlikte verir.
+
 ---
 
 # Eylül 2026 Siber Güvenlik Analizi: FBI Hacklendi, AI Agentları Saldırdı, 284M Hasta Kaydı Sızdı
+
+- Kaynak: https://fosstr.com/blog/eylul-2026-siber-guvenlik-analizi/
+- Tarih: 2026-09-12
+- Etiketler: cybersecurity, ai-agents, ransomware, data-breach, fbi, shinyhunters, qilin, anthropic, openai
+- Özet: 2026 yılının ilk ayında yaşanan en kritik siber güvenlik olayları, AI saldırıları, casusluk kampanyaları ve veri ihlalleri detaylı analiz.
 
 ## En Kritik Mesaj
 
@@ -794,70 +807,12 @@ Berlin, McKesson ve JFrog olayları gösteriyor ki **temel hijyen hala en büyü
 
 ---
 
-# Hoş Geldiniz
-
-Bu benim yeni blogum. Yazılım, güvenlik ve teknoloji hakkında yazılar yazacağım.
-
-Daha fazla yazı için takip edin!
-
----
-
-# fcm: macOS İçin Fan Kontrol Menü Uygulaması
-
-MacBook'unuz aşırı ısınıyor, fan hiç mi hiç açılmıyor ve aniden kapanıyor? macOS fan yönetimi bazen gerçekten kötü çalışıyor. `fcm` tam bu sorunu çözmek için var.
-
-## Neden İhtiyaç Duydum?
-
-2019 model MacBook Pro'im vardı — "i9" denen şey. O bilgisayar yazılım derlerken eriyordu. Fan 6000 RPM'e çıkıyor, sesi uçak kalkışı gibiydi. Ama bazen de hiç açmıyor! Bir gün video render ederken aniden kapandı. SSD'den veri kaybettim. O gün dedim ki: "macOS fan kontrolü benim işime yaramıyor, ben yazıyorum."
-
-Başka uygulamalar denedim — smcFanControl, Macs Fan Control. Hepsi iyi ama ya çok karmaşıktı ya da menü çubuğunda güzel görünmüyordu. Ben istedim: basit, güvenli, tek seferlik şifre girişi, ve menü çubuğunda sade bir görünüm.
-
-## Özellikler
-
-- **Menü çubuğunda** anlık RPM ve sıcaklık gösterimi
-- **MAX / MIN / AUTO** modları
-- **Sıcaklık eğrisi:** 50-88°C arası otomatik fan kontrolü
-- **Özel hız ayarı:** İstediğin RPM değerini yaz
-- **Tüm sensörler:** CPU, RAM, depolama, kablosuz — her sensörü listeler
-- **Watchdog:** Hedef hızı her 1.5 saniyede bir yeniden uygular
-- **Intel ve Apple Silicon** desteği (Universal binary)
-
-## Kurulum (Terminal Gereksiz)
-
-1. [Releases](https://github.com/bymfd/fcm/releases) sayfasından `FCM.app` indir
-2. `/Applications` klasörüne taşı
-3. Uygulamayı aç
-4. Şifreni bir kez gir — privileged helper kurulup hazır
-
-## Terminal ile Kullanım
-
-```bash
-./scripts/fcm.sh status   # Durum
-./scripts/fcm.sh max      # Maksimum hız
-./scripts/fcm.sh min      # Minimum hız
-./scripts/fcm.sh auto     # Otomatik
-./scripts/fcm.sh set 3000 # 3000 RPM
-```
-
-## Teknik Detaylar
-
-- Uygulama normal kullanıcı olarak çalışır, SMC'yi okur
-- Yazma işlemleri için root launch daemon (`com.fcm.helper`) kullanır
-- FIFO üzerinden iletişim kurar
-- Çıkışta fanı MAX'a çeker (güvenlik önlemi)
-
-## Uyarı
-
-SMC'ye doğrudan yazıyorsun. Eğer donanımın bozulursa, garantin düşerse, günlün mahvolursa — bu senin sorumluluğun. Fanı sürekli minimumda bırakma.
-
----
-
-**Repo:** [github.com/bymfd/fcm](https://github.com/bymfd/fcm)
-**Lisans:** MIT
-
----
-
 # arch-kam: Arch Linux İçin Şamanik Bash Ritüelleri
+
+- Kaynak: https://fosstr.com/blog/arch-kam/
+- Tarih: 2026-09-10
+- Etiketler: linux, arch, bash, automation
+- Özet: Hibernate, pil ömrü ve bootloader ayarlarını otomatikleştiren, "şamanik" bir bash script koleksiyonu
 
 Arch Linux kullanan herkes bilir: her şey elle yapılır, her şeyi sen kurarsın. Bu güzel ama bazen tekrarlayan işler can sıkıyor. `arch-kam` tam olarak bu noktada devreye giriyor.
 
@@ -916,7 +871,112 @@ sudo ./*.sh
 
 ---
 
+# fcm: macOS İçin Fan Kontrol Menü Uygulaması
+
+- Kaynak: https://fosstr.com/blog/fcm/
+- Tarih: 2026-09-10
+- Etiketler: macos, swift, smc, fan-control, menu-bar
+- Özet: Intel ve Apple Silicon Maclerde fan hızını kontrol eden, menü çubuğunda çalışan hafif bir uygulama
+
+MacBook'unuz aşırı ısınıyor, fan hiç mi hiç açılmıyor ve aniden kapanıyor? macOS fan yönetimi bazen gerçekten kötü çalışıyor. `fcm` tam bu sorunu çözmek için var.
+
+## Neden İhtiyaç Duydum?
+
+2019 model MacBook Pro'im vardı — "i9" denen şey. O bilgisayar yazılım derlerken eriyordu. Fan 6000 RPM'e çıkıyor, sesi uçak kalkışı gibiydi. Ama bazen de hiç açmıyor! Bir gün video render ederken aniden kapandı. SSD'den veri kaybettim. O gün dedim ki: "macOS fan kontrolü benim işime yaramıyor, ben yazıyorum."
+
+Başka uygulamalar denedim — smcFanControl, Macs Fan Control. Hepsi iyi ama ya çok karmaşıktı ya da menü çubuğunda güzel görünmüyordu. Ben istedim: basit, güvenli, tek seferlik şifre girişi, ve menü çubuğunda sade bir görünüm.
+
+## Özellikler
+
+- **Menü çubuğunda** anlık RPM ve sıcaklık gösterimi
+- **MAX / MIN / AUTO** modları
+- **Sıcaklık eğrisi:** 50-88°C arası otomatik fan kontrolü
+- **Özel hız ayarı:** İstediğin RPM değerini yaz
+- **Tüm sensörler:** CPU, RAM, depolama, kablosuz — her sensörü listeler
+- **Watchdog:** Hedef hızı her 1.5 saniyede bir yeniden uygular
+- **Intel ve Apple Silicon** desteği (Universal binary)
+
+## Kurulum (Terminal Gereksiz)
+
+1. [Releases](https://github.com/bymfd/fcm/releases) sayfasından `FCM.app` indir
+2. `/Applications` klasörüne taşı
+3. Uygulamayı aç
+4. Şifreni bir kez gir — privileged helper kurulup hazır
+
+## Terminal ile Kullanım
+
+```bash
+./scripts/fcm.sh status   # Durum
+./scripts/fcm.sh max      # Maksimum hız
+./scripts/fcm.sh min      # Minimum hız
+./scripts/fcm.sh auto     # Otomatik
+./scripts/fcm.sh set 3000 # 3000 RPM
+```
+
+## Teknik Detaylar
+
+- Uygulama normal kullanıcı olarak çalışır, SMC'yi okur
+- Yazma işlemleri için root launch daemon (`com.fcm.helper`) kullanır
+- FIFO üzerinden iletişim kurar
+- Çıkışta fanı MAX'a çeker (güvenlik önlemi)
+
+## Uyarı
+
+SMC'ye doğrudan yazıyorsun. Eğer donanımın bozulursa, garantin düşerse, günlün mahvolursa — bu senin sorumluluğun. Fanı sürekli minimumda bırakma.
+
+---
+
+**Repo:** [github.com/bymfd/fcm](https://github.com/bymfd/fcm)
+**Lisans:** MIT
+
+---
+
+# tree.py: Masaüstüne Özelleştirilebilir Noel Ağacı
+
+- Kaynak: https://fosstr.com/blog/tree-py/
+- Tarih: 2026-09-10
+- Etiketler: python, noel, masaüstü, eglence
+- Özet: Python ile yazılmış, masaüstünde gösterilebilen interaktif Noel ağacı
+
+Noel zamanı geldi ve masaüstüne biraz renk mi istiyorsun? `tree.py` ile Python'da kodladığın ama tamamen özelleştirebileceğin bir Noel ağacı.
+
+## Neden İhtiyaç Duydum?
+
+2023 aralığında ofiste "Noel ağacı alalım" dediler. Ben de "almayın, ben kodlarım" dedim. Ciddiye alınınca da biraz utandım ama sonunda terminalde parlayan bir ağac çıktı. Ama asıl sebep şu: herkesin masasında aynı yapay ağaçlar, aynı LED'ler... Ben istedim ki ağacın rengi, boyutu, süsleri — hepsi benim kodumda olsun. Bir de şey ekledim: "arkadaşlarım da kendi ağacını yazsın" diye açık kaynak yaptım.
+
+## Ne Yapıyor?
+
+Terminal veya pencere içinde gösterilen, özelleştirilebilir bir Noel ağacı. Renkler, süsler, yıldız — hepsi senin elinde.
+
+## Kurulum
+
+```bash
+git clone https://github.com/bymfd/tree.py.git
+cd tree.py
+python tree.py
+```
+
+## Özelleştirme
+
+Ağacın rengini, boyutunu, süslerini değiştirebilirsin. Kod basit ve okunabilir — birkaç satır ile kendi "minimalist" veya "abartılı" ağacını yarat.
+
+## Neden?
+
+Çünkü Noel ağacı almak yerine kodlamak daha eğlenceli. Hem arkadaşlarına "ben yazdım" diyebilirsin.
+
+---
+
+**Repo:** [github.com/bymfd/tree.py](https://github.com/bymfd/tree.py)
+**Lisans:** MIT
+
+---
+
 # velesbit: Otomatik Vitesli Bisiklet Sistemi
+
+- Kaynak: https://fosstr.com/blog/velesbit/
+- Tarih: 2026-09-10
+- Etiketler: arduino, bisiklet, mekatronik, diy
+- Özet: Arduino tabanlı, kablolu vites sistemlerine uyumlu otomatik şanzıman projesi
 
 Bisiklet süren biliyorsun: tırmanmada vites değiştirmek, inişte fren, virajda denge... Peki ya bisikletin bunu kendisi yapsa?
 
@@ -955,36 +1015,15 @@ Hackaday.io'da da paylaşılan proje, açık kaynak topluluktan ilham almak içi
 
 ---
 
-# tree.py: Masaüstüne Özelleştirilebilir Noel Ağacı
+# Hoş Geldiniz
 
-Noel zamanı geldi ve masaüstüne biraz renk mi istiyorsun? `tree.py` ile Python'da kodladığın ama tamamen özelleştirebileceğin bir Noel ağacı.
+- Kaynak: https://fosstr.com/blog/welcome/
+- Tarih: 2026-09-09
+- Özet: Astro ve Cloudflare Pages ile yeni blogum
 
-## Neden İhtiyaç Duydum?
+Bu benim yeni blogum. Yazılım, güvenlik ve teknoloji hakkında yazılar yazacağım.
 
-2023 aralığında ofiste "Noel ağacı alalım" dediler. Ben de "almayın, ben kodlarım" dedim. Ciddiye alınınca da biraz utandım ama sonunda terminalde parlayan bir ağac çıktı. Ama asıl sebep şu: herkesin masasında aynı yapay ağaçlar, aynı LED'ler... Ben istedim ki ağacın rengi, boyutu, süsleri — hepsi benim kodumda olsun. Bir de şey ekledim: "arkadaşlarım da kendi ağacını yazsın" diye açık kaynak yaptım.
-
-## Ne Yapıyor?
-
-Terminal veya pencere içinde gösterilen, özelleştirilebilir bir Noel ağacı. Renkler, süsler, yıldız — hepsi senin elinde.
-
-## Kurulum
-
-```bash
-git clone https://github.com/bymfd/tree.py.git
-cd tree.py
-python tree.py
-```
-
-## Özelleştirme
-
-Ağacın rengini, boyutunu, süslerini değiştirebilirsin. Kod basit ve okunabilir — birkaç satır ile kendi "minimalist" veya "abartılı" ağacını yarat.
-
-## Neden?
-
-Çünkü Noel ağacı almak yerine kodlamak daha eğlenceli. Hem arkadaşlarına "ben yazdım" diyebilirsin.
+Daha fazla yazı için takip edin!
 
 ---
-
-**Repo:** [github.com/bymfd/tree.py](https://github.com/bymfd/tree.py)
-**Lisans:** MIT
 

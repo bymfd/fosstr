@@ -2,18 +2,57 @@
 
 > Yazılım, güvenlik ve daha fazlası
 
+fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine Türkçe yayın yapan kişisel bir blogdur.
+
+Yazıların tam metni [llms-full.txt](https://fosstr.com/llms-full.txt) dosyasındadır.
+
 ## Blog
+
 - [Ana Sayfa](https://fosstr.com/)
 - [Blog Arşivi](https://fosstr.com/blog/)
 - [Hakkımda](https://fosstr.com/about/)
+- [RSS](https://fosstr.com/rss.xml)
+- [Site Haritası](https://fosstr.com/sitemap-index.xml)
 
 ## Posts
-- [Eylül 2026 Siber Güvenlik Analizi](https://fosstr.com/blog/eylul-2026-siber-guvenlik-analizi/)
-- [fcm - macOS Fan Control](https://fosstr.com/blog/fcm/)
-- [arch-kam: Arch Linux İçin Şamanik Bash Ritüelleri](https://fosstr.com/blog/arch-kam/)
-- [velesbit: Otomatik Vitesli Bisiklet Sistemi](https://fosstr.com/blog/velesbit/)
-- [tree.py: Masaüstüne Özelleştirilebilir Noel Ağacı](https://fosstr.com/blog/tree-py/)
+
+- [Eylül 2026 Siber Güvenlik Analizi: FBI Hacklendi, AI Agentları Saldırdı, 284M Hasta Kaydı Sızdı](https://fosstr.com/blog/eylul-2026-siber-guvenlik-analizi/) — 2026 yılının ilk ayında yaşanan en kritik siber güvenlik olayları, AI saldırıları, casusluk kampanyaları ve veri ihlalleri detaylı analiz.
+- [arch-kam: Arch Linux İçin Şamanik Bash Ritüelleri](https://fosstr.com/blog/arch-kam/) — Hibernate, pil ömrü ve bootloader ayarlarını otomatikleştiren, "şamanik" bir bash script koleksiyonu
+- [fcm: macOS İçin Fan Kontrol Menü Uygulaması](https://fosstr.com/blog/fcm/) — Intel ve Apple Silicon Maclerde fan hızını kontrol eden, menü çubuğunda çalışan hafif bir uygulama
+- [tree.py: Masaüstüne Özelleştirilebilir Noel Ağacı](https://fosstr.com/blog/tree-py/) — Python ile yazılmış, masaüstünde gösterilebilen interaktif Noel ağacı
+- [velesbit: Otomatik Vitesli Bisiklet Sistemi](https://fosstr.com/blog/velesbit/) — Arduino tabanlı, kablolu vites sistemlerine uyumlu otomatik şanzıman projesi
+- [Hoş Geldiniz](https://fosstr.com/blog/welcome/) — Astro ve Cloudflare Pages ile yeni blogum
+
+## Tags
+
+- [ai-agents](https://fosstr.com/blog/tags/ai-agents/) — 1 yazı
+- [anthropic](https://fosstr.com/blog/tags/anthropic/) — 1 yazı
+- [arch](https://fosstr.com/blog/tags/arch/) — 1 yazı
+- [arduino](https://fosstr.com/blog/tags/arduino/) — 1 yazı
+- [automation](https://fosstr.com/blog/tags/automation/) — 1 yazı
+- [bash](https://fosstr.com/blog/tags/bash/) — 1 yazı
+- [bisiklet](https://fosstr.com/blog/tags/bisiklet/) — 1 yazı
+- [cybersecurity](https://fosstr.com/blog/tags/cybersecurity/) — 1 yazı
+- [data-breach](https://fosstr.com/blog/tags/data-breach/) — 1 yazı
+- [diy](https://fosstr.com/blog/tags/diy/) — 1 yazı
+- [eglence](https://fosstr.com/blog/tags/eglence/) — 1 yazı
+- [fan-control](https://fosstr.com/blog/tags/fan-control/) — 1 yazı
+- [fbi](https://fosstr.com/blog/tags/fbi/) — 1 yazı
+- [linux](https://fosstr.com/blog/tags/linux/) — 1 yazı
+- [macos](https://fosstr.com/blog/tags/macos/) — 1 yazı
+- [masaüstü](https://fosstr.com/blog/tags/masaustu/) — 1 yazı
+- [mekatronik](https://fosstr.com/blog/tags/mekatronik/) — 1 yazı
+- [menu-bar](https://fosstr.com/blog/tags/menu-bar/) — 1 yazı
+- [noel](https://fosstr.com/blog/tags/noel/) — 1 yazı
+- [openai](https://fosstr.com/blog/tags/openai/) — 1 yazı
+- [python](https://fosstr.com/blog/tags/python/) — 1 yazı
+- [qilin](https://fosstr.com/blog/tags/qilin/) — 1 yazı
+- [ransomware](https://fosstr.com/blog/tags/ransomware/) — 1 yazı
+- [shinyhunters](https://fosstr.com/blog/tags/shinyhunters/) — 1 yazı
+- [smc](https://fosstr.com/blog/tags/smc/) — 1 yazı
+- [swift](https://fosstr.com/blog/tags/swift/) — 1 yazı
 
 ## Contact
+
 - GitHub: https://github.com/bymfd
 - Email: hello@fosstr.com
