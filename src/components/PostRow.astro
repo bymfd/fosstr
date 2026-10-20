@@ -1,0 +1,30 @@
+---
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+	href: string;
+	title: string;
+	description: string;
+	date: Date;
+	badge?: string;
+}
+
+const { href, title, description, date, badge } = Astro.props;
+---
+
+<li>
+	<a href={href} class="group grid gap-1.5 py-4 sm:grid-cols-[1fr_auto] sm:gap-6">
+		<span class="min-w-0">
+			<span class="t-item block transition-colors duration-150 group-hover:text-accent">
+				{title}
+			</span>
+			<span class="t-sm mt-1 block max-w-[78ch] text-muted">{description}</span>
+		</span>
+		<span class="flex shrink-0 items-center gap-2 font-mono text-[0.75rem] leading-4 text-faint sm:pt-1">
+			{badge && (
+				<span class="rounded border border-line px-1 leading-4 tracking-[0.08em]">{badge}</span>
+			)}
+			<FormattedDate date={date} />
+		</span>
+	</a>
+</li>

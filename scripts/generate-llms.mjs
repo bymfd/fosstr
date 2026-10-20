@@ -3,7 +3,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const SITE = 'https://fosstr.com';
-const BLOG = `${SITE}/blog/`;
 const CONTENT_DIR = fileURLToPath(new URL('../src/content/blog/', import.meta.url));
 const OUT_DIR = fileURLToPath(new URL('../public/', import.meta.url));
 
@@ -46,7 +45,7 @@ function parseFrontmatter(source) {
 	return { data, body: source.slice(match[0].length).trim() };
 }
 
-const posts = fs
+const entries = fs
 	.readdirSync(CONTENT_DIR)
 	.filter((file) => file.endsWith('.md') || file.endsWith('.mdx'))
 	.map((file) => {
@@ -54,21 +53,28 @@ const posts = fs
 		const { data, body } = parseFrontmatter(
 			fs.readFileSync(path.join(CONTENT_DIR, file), 'utf8'),
 		);
+		const type = data.type === 'project' ? 'project' : 'post';
 		return {
 			id,
+			type,
 			title: data.title ?? id,
 			description: data.description ?? '',
 			pubDate: data.pubDate ?? '',
 			updatedDate: data.updatedDate ?? '',
 			tags: data.tags ?? [],
+			repo: data.repo ?? '',
+			url: `${SITE}/${type === 'project' ? 'projects' : 'blog'}/${id}/`,
 			body,
 		};
 	})
 	.sort((a, b) => (a.pubDate < b.pubDate ? 1 : a.pubDate > b.pubDate ? -1 : a.id.localeCompare(b.id)));
 
+const posts = entries.filter((e) => e.type === 'post');
+const projects = entries.filter((e) => e.type === 'project');
+
 const tagCounts = new Map();
-for (const post of posts) {
-	for (const tag of post.tags) {
+for (const entry of entries) {
+	for (const tag of entry.tags) {
 		tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
 	}
 }
@@ -81,25 +87,32 @@ const llmsTxt = [
 	'',
 	'> Yazılım, güvenlik ve daha fazlası',
 	'',
-	'fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine Türkçe yayın yapan kişisel bir blogdur.',
+	'fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine Türkçe yayın yapan kişisel bir sitedir. Blog yazıları ile açık kaynak projeler ayrı bölümlerde yer alır.',
 	'',
-	'Yazıların tam metni [llms-full.txt](https://fosstr.com/llms-full.txt) dosyasındadır.',
+	'İçeriklerin tam metni [llms-full.txt](https://fosstr.com/llms-full.txt) dosyasındadır.',
 	'',
-	'## Blog',
+	'## Site',
 	'',
 	'- [Ana Sayfa](https://fosstr.com/)',
-	'- [Blog Arşivi](https://fosstr.com/blog/)',
+	'- [Yazılar](https://fosstr.com/blog/)',
+	'- [Projeler](https://fosstr.com/projects/)',
 	'- [Hakkımda](https://fosstr.com/about/)',
 	'- [RSS](https://fosstr.com/rss.xml)',
 	'- [Site Haritası](https://fosstr.com/sitemap-index.xml)',
 	'',
-	'## Posts',
+	'## Yazılar',
 	'',
-	...posts.map((p) => `- [${p.title}](${BLOG}${p.id}/) — ${p.description}`),
+	...posts.map((p) => `- [${p.title}](${p.url}) — ${p.description}`),
+	'',
+	'## Projeler',
+	'',
+	...projects.map(
+		(p) => `- [${p.title}](${p.url}) — ${p.description}${p.repo ? ` (repo: ${p.repo})` : ''}`,
+	),
 	'',
 	'## Tags',
 	'',
-	...tags.map(([tag, count]) => `- [${tag}](${SITE}/blog/tags/${slugify(tag)}/) — ${count} yazı`),
+	...tags.map(([tag, count]) => `- [${tag}](${SITE}/blog/tags/${slugify(tag)}/) — ${count} içerik`),
 	'',
 	'## Contact',
 	'',
@@ -114,23 +127,26 @@ const llmsFullTxt = [
 	'> Yazılım, güvenlik ve daha fazlası',
 	'',
 	`Site: ${SITE}`,
-	`Blog: ${BLOG}`,
+	`Yazılar: ${SITE}/blog/`,
+	`Projeler: ${SITE}/projects/`,
 	`RSS: ${SITE}/rss.xml`,
 	`Site haritası: ${SITE}/sitemap-index.xml`,
 	`Dizin (llms.txt): ${SITE}/llms.txt`,
 	'',
-	'Bu dosya blogdaki tüm yazıların tam metnini, her yazı için kaynak URL ve tarih bilgisiyle birlikte verir.',
+	'Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her biri için kaynak URL ve tarih bilgisiyle birlikte verir.',
 	'',
 	'---',
 	'',
-	...posts.map((p) =>
+	...entries.map((p) =>
 		[
 			`# ${p.title}`,
 			'',
-			`- Kaynak: ${BLOG}${p.id}/`,
+			`- Kaynak: ${p.url}`,
+			`- Tür: ${p.type === 'project' ? 'Proje' : 'Yazı'}`,
 			`- Tarih: ${p.pubDate}`,
 			...(p.updatedDate ? [`- Güncelleme: ${p.updatedDate}`] : []),
 			...(p.tags.length ? [`- Etiketler: ${p.tags.join(', ')}`] : []),
+			...(p.repo ? [`- Depo: ${p.repo}`] : []),
 			...(p.description ? [`- Özet: ${p.description}`] : []),
 			'',
 			p.body,
@@ -144,4 +160,6 @@ const llmsFullTxt = [
 
 fs.writeFileSync(path.join(OUT_DIR, 'llms.txt'), llmsTxt);
 fs.writeFileSync(path.join(OUT_DIR, 'llms-full.txt'), llmsFullTxt);
-console.log(`llms.txt ve llms-full.txt güncellendi (${posts.length} yazı, ${tags.length} etiket)`);
+console.log(
+	`llms.txt ve llms-full.txt güncellendi (${posts.length} yazı, ${projects.length} proje, ${tags.length} etiket)`,
+);

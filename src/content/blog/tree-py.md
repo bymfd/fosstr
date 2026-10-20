@@ -4,6 +4,8 @@ description: 'Python ile yazılmış, masaüstünde gösterilebilen interaktif N
 pubDate: '2026-09-10'
 heroImage: ../../assets/blog-placeholder-4.jpg
 tags: ['python', 'noel', 'masaüstü', 'eglence']
+type: project
+repo: 'https://github.com/bymfd/tree.py'
 ---
 
 Noel zamanı geldi ve masaüstüne biraz renk mi istiyorsun? `tree.py` ile Python'da kodladığın ama tamamen özelleştirebileceğin bir Noel ağacı.

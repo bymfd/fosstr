@@ -5,7 +5,7 @@ import Header from '../components/Header.astro';
 
 const title = 'Sayfa bulunamadı (404) | fosstr';
 const description =
-	'Aradığınız sayfa taşınmış veya silinmiş olabilir. Blog yazılarına ve site haritasına göz atabilirsiniz.';
+	'Aradığınız sayfa taşınmış veya silinmiş olabilir. Yazılar ve projeler arasından devam edebilirsiniz.';
 ---
 
 <!doctype html>
@@ -15,24 +15,28 @@ const description =
 	</head>
 	<body class="min-h-screen flex flex-col">
 		<Header />
-		<main class="flex-1 max-w-5xl mx-auto px-4 py-16">
-			<h1 class="text-6xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight">404</h1>
-			<p class="text-xl text-slate-600 dark:text-slate-400 mb-8">
-				Aradığınız sayfa bulunamadı. Taşınmış veya silinmiş olabilir.
-			</p>
-			<div class="grid sm:grid-cols-3 gap-6">
-				<a href="/" class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-accent dark:hover:border-accent transition-colors">
-					<h2 class="text-lg font-semibold text-slate-900 dark:text-white">Ana Sayfa</h2>
-					<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Başa dön</p>
-				</a>
-				<a href="/blog/" class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-accent dark:hover:border-accent transition-colors">
-					<h2 class="text-lg font-semibold text-slate-900 dark:text-white">Blog</h2>
-					<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Tüm yazılar</p>
-				</a>
-				<a href="/sitemap-index.xml" class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-accent dark:hover:border-accent transition-colors">
-					<h2 class="text-lg font-semibold text-slate-900 dark:text-white">Site Haritası</h2>
-					<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Tüm sayfalar</p>
-				</a>
+		<main class="flex-1 px-5 md:px-10">
+			<div class="mx-auto max-w-[var(--frame)] border-x border-line">
+				<section class="px-6 py-16 md:px-10 md:py-20">
+					<h1 class="t-display">404</h1>
+					<p class="t-lead mt-5 max-w-[58ch] text-muted">
+						Aradığınız sayfa bulunamadı. Taşınmış veya silinmiş olabilir.
+					</p>
+				</section>
+				<div class="grid gap-6 border-t border-line px-6 py-10 sm:grid-cols-3 md:px-10">
+					<a href="/" class="p-6 rounded-[10px] border border-line hover:border-accent transition-colors">
+						<h2 class="t-item">Ana Sayfa</h2>
+						<p class="t-sm mt-1 text-muted">Başa dön</p>
+					</a>
+					<a href="/blog/" class="p-6 rounded-[10px] border border-line hover:border-accent transition-colors">
+						<h2 class="t-item">Yazılar</h2>
+						<p class="t-sm mt-1 text-muted">Tüm yazılar</p>
+					</a>
+					<a href="/projects/" class="p-6 rounded-[10px] border border-line hover:border-accent transition-colors">
+						<h2 class="t-item">Projeler</h2>
+						<p class="t-sm mt-1 text-muted">Açık kaynak projeler</p>
+					</a>
+				</div>
 			</div>
 		</main>
 		<Footer />

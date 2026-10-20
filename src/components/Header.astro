@@ -1,25 +1,56 @@
 ---
 import { SITE_TITLE } from '../consts';
-import HeaderLink from './HeaderLink.astro';
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) =>
+	href === '/' ? pathname === '/' : pathname.startsWith(href);
 ---
 
-<header class="sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md">
-	<nav class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-		<a href="/" class="text-xl font-bold tracking-tight text-slate-900 dark:text-white hover:text-accent transition-colors">
-			{SITE_TITLE}
-		</a>
-		<div class="flex items-center gap-1">
-			<HeaderLink href="/">Ana Sayfa</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink>
-			<HeaderLink href="/about">Hakkımda</HeaderLink>
-		</div>
-		<div class="flex items-center gap-3">
-			<a href="https://github.com/bymfd" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
-				<svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+<header class="sticky top-0 z-50 border-b border-line bg-bg/90 backdrop-blur-md">
+	<div class="px-5 md:px-10">
+		<div class="relative mx-auto flex h-[var(--nav-h)] max-w-[var(--frame)] items-center justify-between gap-4 px-6 md:px-10">
+			<a href="/" class="flex shrink-0 items-center gap-2.5 text-[0.875rem] font-medium leading-5 text-ink">
+				<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+					<rect width="20" height="20" rx="5" fill="#1a1a1a" stroke="#ffffff" stroke-opacity="0.12" stroke-width="0.6"></rect>
+					<g fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M13 17.1V7.9c0-2.75-1.5-4.4-4-4.4-1.9 0-3.1 1.1-3.5 2.9"></path>
+						<path d="M13.5 11.6H9c-1.5 0-2.4.9-2.4 2.4v1.5"></path>
+					</g>
+				</svg>
+				{SITE_TITLE}
 			</a>
-			<a href="https://fosstr.com/rss.xml" aria-label="RSS" class="text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
-			</a>
+			<nav aria-label="Birincil" class="flex items-center gap-4 text-[0.8125rem] leading-5 sm:gap-7 sm:text-[0.875rem] md:absolute md:left-1/2 md:-translate-x-1/2 md:gap-10">
+				<a
+					href="/blog/"
+					aria-current={isActive('/blog') ? 'page' : undefined}
+					class:list={['transition-colors duration-150 hover:text-ink', isActive('/blog') ? 'text-ink' : 'text-nav']}
+				>
+					Yazılar
+				</a>
+				<a
+					href="/projects/"
+					aria-current={isActive('/projects') ? 'page' : undefined}
+					class:list={['transition-colors duration-150 hover:text-ink', isActive('/projects') ? 'text-ink' : 'text-nav']}
+				>
+					Projeler
+				</a>
+				<a
+					href="/about/"
+					aria-current={isActive('/about') ? 'page' : undefined}
+					class:list={['transition-colors duration-150 hover:text-ink', isActive('/about') ? 'text-ink' : 'text-nav']}
+				>
+					Hakkımda
+				</a>
+			</nav>
+			<div class="hidden shrink-0 items-center gap-2.5 sm:flex">
+				<a href="https://github.com/bymfd" target="_blank" rel="noopener noreferrer" class="btn-ghost">
+					<svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
+						<path fill="currentColor" d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38l-.01-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.93-.89-1.18-.89-1.18-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.23 1.88.88 2.34.67.07-.52.28-.88.51-1.08-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"></path>
+					</svg>
+					GitHub
+				</a>
+				<a href="mailto:hello@fosstr.com" class="btn-primary">İletişime geç</a>
+			</div>
 		</div>
-	</nav>
+	</div>
 </header>

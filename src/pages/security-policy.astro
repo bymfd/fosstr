@@ -23,11 +23,11 @@ const jsonLd = {
 	</head>
 	<body class="min-h-screen flex flex-col">
 		<Header />
-		<main class="flex-1 max-w-3xl mx-auto px-4 py-12 w-full">
-			<h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">
-				Güvenlik Politikası
-			</h1>
-			<div class="prose max-w-none">
+		<main class="flex-1 px-5 md:px-10">
+			<div class="mx-auto max-w-[var(--frame)] border-x border-line">
+				<article class="px-6 py-12 md:px-10 md:py-16">
+					<h1 class="t-display mb-6">Güvenlik Politikası</h1>
+					<div class="prose max-w-[var(--read)]">
 				<p>
 					fosstr sitesinde bir güvenlik açığı bulduysanız lütfen
 					<a href="mailto:security@fosstr.com">security@fosstr.com</a> adresine
@@ -55,6 +55,8 @@ const jsonLd = {
 					E-posta: <a href="mailto:security@fosstr.com">security@fosstr.com</a><br />
 					GitHub: <a href="https://github.com/bymfd" rel="noopener noreferrer">github.com/bymfd</a>
 				</p>
+			</div>
+				</article>
 			</div>
 		</main>
 		<Footer />

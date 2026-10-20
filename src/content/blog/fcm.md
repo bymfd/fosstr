@@ -4,6 +4,8 @@ description: 'Intel ve Apple Silicon Maclerde fan hızını kontrol eden, menü 
 pubDate: '2026-09-10'
 heroImage: ../../assets/blog-placeholder-3.jpg
 tags: ['macos', 'swift', 'smc', 'fan-control', 'menu-bar']
+type: project
+repo: 'https://github.com/bymfd/fcm'
 ---
 
 MacBook'unuz aşırı ısınıyor, fan hiç mi hiç açılmıyor ve aniden kapanıyor? macOS fan yönetimi bazen gerçekten kötü çalışıyor. `fcm` tam bu sorunu çözmek için var.

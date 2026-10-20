@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { SITE_TITLE } from '../../consts';
+
+const projects = (await getCollection('blog', (post) => post.data.type === 'project')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const title = `Projeler | ${SITE_TITLE}`;
+const description =
+	'Arch Linux otomasyonu, macOS fan kontrolü, Arduino bisiklet şanzımanı ve Python masaüstü araçları: yazılmış ve açık kaynak yayınlanmış projeler.';
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'CollectionPage',
+	name: title,
+	description,
+	inLanguage: 'tr',
+	url: new URL('/projects/', Astro.site).href,
+};
+---
+
+<!doctype html>
+<html lang="tr">
+	<head>
+		<BaseHead title={title} description={description} jsonLd={jsonLd} />
+	</head>
+	<body class="min-h-screen flex flex-col">
+		<Header />
+		<main class="flex-1 px-5 md:px-10">
+			<div class="mx-auto max-w-[var(--frame)] border-x border-line">
+				<section class="px-6 py-16 md:px-10 md:py-20">
+					<h1 class="t-display">Projeler</h1>
+					<p class="t-lead mt-5 max-w-[58ch] text-muted">
+						{description}
+					</p>
+				</section>
+				<div class="border-t border-line px-6 py-10 md:px-10">
+					{projects.length === 0 ? (
+						<p class="text-muted">Henüz proje yok.</p>
+					) : (
+						<ul class="grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2">
+							{projects.map((project) => (
+								<ProjectCard
+									href={`/projects/${project.id}/`}
+									title={project.data.title}
+									description={project.data.description}
+									heroImage={project.data.heroImage}
+									repo={project.data.repo}
+								/>
+							))}
+						</ul>
+					)}
+				</div>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

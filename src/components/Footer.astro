@@ -1,15 +1,43 @@
 ---
-import { SITE_AUTHOR } from '../consts';
+import { SITE_AUTHOR, SITE_TITLE } from '../consts';
 const today = new Date();
 ---
 
-<footer class="border-t border-slate-200 dark:border-slate-800 py-8 mt-16">
-	<div class="max-w-5xl mx-auto px-4 text-center text-sm text-slate-500 dark:text-slate-400">
-		<p>&copy; {today.getFullYear()} {SITE_AUTHOR}. Tüm hakları saklıdır.</p>
-		<p class="mt-2">
-			<a href="/rss.xml" class="hover:text-accent transition-colors">RSS</a>
-			<span class="mx-2">·</span>
-			<a href="https://github.com/bymfd/fosstr" target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">Kaynak</a>
-		</p>
+<footer class="border-t border-line">
+	<div class="px-5 py-12 md:px-10">
+		<div class="mx-auto max-w-[var(--frame)] px-6 md:px-10">
+			<div class="flex flex-col gap-10 sm:flex-row sm:justify-between">
+				<div class="max-w-[32ch]">
+					<p class="text-[0.875rem] font-medium leading-5 text-ink">{SITE_TITLE}</p>
+					<p class="mt-2 text-[0.875rem] leading-5 text-muted">
+						Yazılım, siber güvenlik ve sistem programlama üzerine Türkçe yazılar ve projeler.
+					</p>
+				</div>
+				<div class="flex gap-16 sm:gap-24">
+					<nav aria-label="Site">
+						<p class="label">Site</p>
+						<ul class="mt-3 space-y-2">
+							<li><a href="/blog/" class="text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">Yazılar</a></li>
+							<li><a href="/projects/" class="text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">Projeler</a></li>
+							<li><a href="/about/" class="text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">Hakkımda</a></li>
+							<li><a href="/rss.xml" class="text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">RSS</a></li>
+						</ul>
+					</nav>
+					<nav aria-label="Dış bağlantılar">
+						<p class="label">Bağlantılar</p>
+						<ul class="mt-3 space-y-2">
+							<li><a href="https://github.com/bymfd" target="_blank" rel="noopener noreferrer" class="link-arrow text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">GitHub</a></li>
+							<li><a href="https://github.com/bymfd/fosstr" target="_blank" rel="noopener noreferrer" class="link-arrow text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">Site kaynağı</a></li>
+							<li><a href="mailto:hello@fosstr.com" class="link-arrow text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">E-posta</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+			<div class="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5 font-mono text-[0.75rem] uppercase leading-4 tracking-[0.1em] text-faint">
+				<span>fosstr.com</span>
+				<span>{SITE_AUTHOR}</span>
+				<span class="tabular-nums">MMXXVI</span>
+			</div>
+		</div>
 	</div>
 </footer>

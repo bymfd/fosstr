@@ -4,6 +4,8 @@ description: 'Arduino tabanlı, kablolu vites sistemlerine uyumlu otomatik şanz
 pubDate: '2026-09-10'
 heroImage: ../../assets/blog-placeholder-2.jpg
 tags: ['arduino', 'bisiklet', 'mekatronik', 'diy']
+type: project
+repo: 'https://github.com/bymfd/velesbit'
 ---
 
 Bisiklet süren biliyorsun: tırmanmada vites değiştirmek, inişte fren, virajda denge... Peki ya bisikletin bunu kendisi yapsa?

@@ -4,6 +4,8 @@ description: 'Hibernate, pil ömrü ve bootloader ayarlarını otomatikleştiren
 pubDate: '2026-09-10'
 heroImage: ../../assets/blog-placeholder-5.jpg
 tags: ['linux', 'arch', 'bash', 'automation']
+type: project
+repo: 'https://github.com/bymfd/arch-kam'
 ---
 
 Arch Linux kullanan herkes bilir: her şey elle yapılır, her şeyi sen kurarsın. Bu güzel ama bazen tekrarlayan işler can sıkıyor. `arch-kam` tam olarak bu noktada devreye giriyor.

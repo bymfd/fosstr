@@ -1,8 +1,21 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import PostRow from '../components/PostRow.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Section from '../components/Section.astro';
 import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../consts';
+
+const posts = (await getCollection('blog', (post) => post.data.type === 'post'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 5);
+const postCount = (await getCollection('blog', (post) => post.data.type === 'post')).length;
+const projects = (await getCollection('blog', (post) => post.data.type === 'project'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 4);
+const projectCount = (await getCollection('blog', (post) => post.data.type === 'project')).length;
 
 const jsonLd = [
 	{
@@ -30,30 +43,84 @@ const jsonLd = [
 	</head>
 	<body class="min-h-screen flex flex-col">
 		<Header />
-		<main class="flex-1 max-w-5xl mx-auto px-4 py-16">
-			<section class="text-center mb-16">
-				<h1 class="text-5xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
-					fosstr
-				</h1>
-				<p class="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-					{SITE_DESCRIPTION}
-				</p>
-			</section>
+		<main class="flex-1 px-5 md:px-10">
+			<div class="mx-auto max-w-[var(--frame)] border-x border-line">
+				<section class="px-6 py-16 md:px-10 md:py-20">
+					<h1 class="t-display rise" style="animation-delay: 40ms">fosstr</h1>
+					<p class="t-lead mt-5 max-w-[58ch] text-muted rise" style="animation-delay: 100ms">
+						{SITE_DESCRIPTION} — güvenlik analizleri, açık kaynak araçlar ve
+						sistem programlama üzerine notlar.
+					</p>
+					<div class="mt-8 flex flex-wrap gap-3 rise" style="animation-delay: 160ms">
+						<a href="/blog/" class="btn-solid">Yazıları oku</a>
+						<a href="/projects/" class="btn-outline">Projeleri gör</a>
+					</div>
+				</section>
 
-			<section class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-				<a href="/blog" class="group p-6 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-accent dark:hover:border-accent transition-colors">
-					<h2 class="text-lg font-semibold text-slate-900 dark:text-white group-hover:text-accent transition-colors">Blog</h2>
-					<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Yazılarımı oku</p>
-				</a>
-				<a href="/about" class="group p-6 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-accent dark:hover:border-accent transition-colors">
-					<h2 class="text-lg font-semibold text-slate-900 dark:text-white group-hover:text-accent transition-colors">Hakkımda</h2>
-					<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Kimim?</p>
-				</a>
-				<a href="https://github.com/bymfd" target="_blank" rel="noopener noreferrer" class="group p-6 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-accent dark:hover:border-accent transition-colors">
-					<h2 class="text-lg font-semibold text-slate-900 dark:text-white group-hover:text-accent transition-colors">GitHub</h2>
-					<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Projelerim</p>
-				</a>
-			</section>
+				<div class="border-t border-line px-6 py-4 md:px-10">
+					<div class="flex items-center gap-6">
+						<span class="hidden h-px flex-1 bg-line sm:block"></span>
+						<p class="text-center font-mono text-[0.8125rem] leading-5 tracking-[0.025em] text-muted">
+							Güvenlik, yazılım ve yaptığım araçlar üzerine Türkçe yazılar
+						</p>
+						<span class="hidden h-px flex-1 bg-line sm:block"></span>
+					</div>
+				</div>
+
+				<Section label="Yazılar" id="yazilar">
+					<ul class="divide-y divide-line">
+						{posts.map((post) => (
+							<PostRow
+								href={`/blog/${post.id}/`}
+								title={post.data.title}
+								description={post.data.description}
+								date={post.data.pubDate}
+							/>
+						))}
+					</ul>
+					<a href="/blog/" class="link-accent mt-4 inline-flex">
+						Tüm yazılar ({postCount})
+						<span aria-hidden="true">→</span>
+					</a>
+				</Section>
+
+				<Section label="Projeler" id="projeler" contentClass="lg:py-10 pb-10 pt-6">
+					<ul class="grid grid-cols-1 gap-x-6 gap-y-9 sm:grid-cols-2">
+						{projects.map((project) => (
+							<ProjectCard
+								href={`/projects/${project.id}/`}
+								title={project.data.title}
+								description={project.data.description}
+								heroImage={project.data.heroImage}
+								repo={project.data.repo}
+							/>
+						))}
+					</ul>
+					<a href="/projects/" class="link-accent mt-9 inline-flex">
+						Tüm projeler ({projectCount})
+						<span aria-hidden="true">→</span>
+					</a>
+				</Section>
+
+				<Section label="İletişim" id="iletisim" contentClass="lg:py-10 pb-10 pt-4">
+					<p class="t-sub">
+						<a
+							href="mailto:hello@fosstr.com"
+							class="underline decoration-accent decoration-1 underline-offset-[0.25em] transition-colors duration-150 hover:text-accent"
+						>
+							hello@fosstr.com
+						</a>
+					</p>
+					<p class="t-lead mt-4 max-w-[56ch] text-muted">
+						Yazılım, güvenlik ve altyapı üzerine işbirlikleri ve uzun e-postalar için
+						açığım.
+					</p>
+					<div class="t-sm mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+						<a href="https://github.com/bymfd" target="_blank" rel="noopener noreferrer" class="link-arrow text-muted transition-colors duration-150 hover:text-ink">GitHub</a>
+						<a href="/rss.xml" class="link-arrow text-muted transition-colors duration-150 hover:text-ink">RSS</a>
+					</div>
+				</Section>
+			</div>
 		</main>
 		<Footer />
 	</body>

@@ -3,18 +3,20 @@
 > Yazılım, güvenlik ve daha fazlası
 
 Site: https://fosstr.com
-Blog: https://fosstr.com/blog/
+Yazılar: https://fosstr.com/blog/
+Projeler: https://fosstr.com/projects/
 RSS: https://fosstr.com/rss.xml
 Site haritası: https://fosstr.com/sitemap-index.xml
 Dizin (llms.txt): https://fosstr.com/llms.txt
 
-Bu dosya blogdaki tüm yazıların tam metnini, her yazı için kaynak URL ve tarih bilgisiyle birlikte verir.
+Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her biri için kaynak URL ve tarih bilgisiyle birlikte verir.
 
 ---
 
 # Eylül 2026 Siber Güvenlik Analizi: FBI Hacklendi, AI Agentları Saldırdı, 284M Hasta Kaydı Sızdı
 
 - Kaynak: https://fosstr.com/blog/eylul-2026-siber-guvenlik-analizi/
+- Tür: Yazı
 - Tarih: 2026-09-12
 - Etiketler: cybersecurity, ai-agents, ransomware, data-breach, fbi, shinyhunters, qilin, anthropic, openai
 - Özet: 2026 yılının ilk ayında yaşanan en kritik siber güvenlik olayları, AI saldırıları, casusluk kampanyaları ve veri ihlalleri detaylı analiz.
@@ -809,9 +811,11 @@ Berlin, McKesson ve JFrog olayları gösteriyor ki **temel hijyen hala en büyü
 
 # arch-kam: Arch Linux İçin Şamanik Bash Ritüelleri
 
-- Kaynak: https://fosstr.com/blog/arch-kam/
+- Kaynak: https://fosstr.com/projects/arch-kam/
+- Tür: Proje
 - Tarih: 2026-09-10
 - Etiketler: linux, arch, bash, automation
+- Depo: https://github.com/bymfd/arch-kam
 - Özet: Hibernate, pil ömrü ve bootloader ayarlarını otomatikleştiren, "şamanik" bir bash script koleksiyonu
 
 Arch Linux kullanan herkes bilir: her şey elle yapılır, her şeyi sen kurarsın. Bu güzel ama bazen tekrarlayan işler can sıkıyor. `arch-kam` tam olarak bu noktada devreye giriyor.
@@ -873,9 +877,11 @@ sudo ./*.sh
 
 # fcm: macOS İçin Fan Kontrol Menü Uygulaması
 
-- Kaynak: https://fosstr.com/blog/fcm/
+- Kaynak: https://fosstr.com/projects/fcm/
+- Tür: Proje
 - Tarih: 2026-09-10
 - Etiketler: macos, swift, smc, fan-control, menu-bar
+- Depo: https://github.com/bymfd/fcm
 - Özet: Intel ve Apple Silicon Maclerde fan hızını kontrol eden, menü çubuğunda çalışan hafif bir uygulama
 
 MacBook'unuz aşırı ısınıyor, fan hiç mi hiç açılmıyor ve aniden kapanıyor? macOS fan yönetimi bazen gerçekten kötü çalışıyor. `fcm` tam bu sorunu çözmek için var.
@@ -933,9 +939,11 @@ SMC'ye doğrudan yazıyorsun. Eğer donanımın bozulursa, garantin düşerse, g
 
 # tree.py: Masaüstüne Özelleştirilebilir Noel Ağacı
 
-- Kaynak: https://fosstr.com/blog/tree-py/
+- Kaynak: https://fosstr.com/projects/tree-py/
+- Tür: Proje
 - Tarih: 2026-09-10
 - Etiketler: python, noel, masaüstü, eglence
+- Depo: https://github.com/bymfd/tree.py
 - Özet: Python ile yazılmış, masaüstünde gösterilebilen interaktif Noel ağacı
 
 Noel zamanı geldi ve masaüstüne biraz renk mi istiyorsun? `tree.py` ile Python'da kodladığın ama tamamen özelleştirebileceğin bir Noel ağacı.
@@ -973,9 +981,11 @@ Ağacın rengini, boyutunu, süslerini değiştirebilirsin. Kod basit ve okunabi
 
 # velesbit: Otomatik Vitesli Bisiklet Sistemi
 
-- Kaynak: https://fosstr.com/blog/velesbit/
+- Kaynak: https://fosstr.com/projects/velesbit/
+- Tür: Proje
 - Tarih: 2026-09-10
 - Etiketler: arduino, bisiklet, mekatronik, diy
+- Depo: https://github.com/bymfd/velesbit
 - Özet: Arduino tabanlı, kablolu vites sistemlerine uyumlu otomatik şanzıman projesi
 
 Bisiklet süren biliyorsun: tırmanmada vites değiştirmek, inişte fren, virajda denge... Peki ya bisikletin bunu kendisi yapsa?
@@ -1018,6 +1028,7 @@ Hackaday.io'da da paylaşılan proje, açık kaynak topluluktan ilham almak içi
 # Hoş Geldiniz
 
 - Kaynak: https://fosstr.com/blog/welcome/
+- Tür: Yazı
 - Tarih: 2026-09-09
 - Özet: Astro ve Cloudflare Pages ile yeni blogum
 
