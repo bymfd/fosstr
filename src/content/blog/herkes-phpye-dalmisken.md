@@ -2,7 +2,7 @@
 title: 'Herkes PHP''ye Dalmışken: Ekim''in Gölgede Kalan Güvenlik Haberleri'
 description: 'PHP''nin acil güvenlik yaması 21 Ekim''de çıktı — ama aynı 36 saatte GitLab''ın regex derleyicisinde üçüncü kez aynı açık sınıfı, LiteLLM''in backdoorlu PyPI sürümü ve eMudhra''nın tahmin edilebilir CA anahtarları da gündemdeydi.'
 pubDate: '2026-10-22'
-heroImage: ../../assets/blog-placeholder-1.jpg
+heroImage: ../../assets/php2shell-hero.jpg
 tags: ['teknoloji-haberleri', 'security', 'open-source', 'tech-industry']
 ---
 
