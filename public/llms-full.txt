@@ -19,11 +19,11 @@ Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her 
 - Tür: Yazı
 - Tarih: 2026-10-22
 - Etiketler: teknoloji-haberleri, security, open-source, tech-industry
-- Özet: PHP''nin acil güvenlik yaması 21 Ekim''de çıktı — ama aynı 36 saatte GitLab''ın regex derleyicisinde üçüncü kez aynı açık sınıfı, LiteLLM''in backdoorlu PyPI sürümü ve eMudhra''nın tahmin edilebilir CA anahtarları da gündemdeydi.
+- Özet: PHP''nin acil güvenlik yaması 21 Ekim''de çıktı — ama aynı gün Node.js on CVE yayımladı; aynı 36 saatte GitLab''ın regex derleyicisinde tekrar eden açık sınıfı, LiteLLM''in backdoorlu PyPI sürümü, bir hafta önce nginx''in beş açığı ve eMudhra''nın tahmin edilebilir CA anahtarları da gündemdeydi.
 
 21 Ekim 2026, güvenlik açısından yılın en yoğun günlerinden biri oldu. Ve günün tek hikâyesi PHP'ydi: motorun kalbinde iki açık, on dört yıllık kod, dünya çapında milyonlarca açık kurulum ve acil bir yama. [21 Ekim saat 14:00 UTC'de](https://news.ycombinator.com/item?id=50172041) PHP 8.5.12, 8.4.27, 8.3.36 ve 8.2.35 çıktı ve o sırada [1.524 puanla](https://news.ycombinator.com/item?id=50172041) en çok konuşulan güvenlik haberi oldu.
 
-Ama aynı gün, aynı saat diliminde, tamamen farklı katmanlarda üç ciddi olay daha yaşandı — ve hepsinin ortak bir özelliği vardı: **kırılma uygulamanın kendisinde değil, uygulamanın altındaki altyapıda.** Bir Python paketi, bir GitLab CI derleyicisi, bir sertifika otoritesi. Herkes PHP'ye bakarken, geri kalan yığılma kendi yangın çıkardı.
+Ama aynı gün, aynı saat diliminde, tamamen farklı katmanlarda üç ciddi olay daha yaşandı: bir JavaScript runtime'ı, bir Python paketi, bir GitLab CI derleyicisi. Bir hafta önce nginx beş açık kapatmış, dört gün önce de bir sertifika otoritesinin anahtarları çözülmüştü. Hepsinde ortak bir özellik vardı: **kırılma uygulamanın kendisinde değil, uygulamanın altındaki altyapıda.** Herkes PHP'ye bakarken, geri kalan yığılma kendi yangın çıkardı.
 
 ## 1. php2shell: 14:00 UTC'de inen bıçak
 
@@ -53,7 +53,19 @@ PHP'nin kendi güvenlik ekibi benzer bir şey söyledi: sızıntıdan sonra beli
 
 Buradaki tartışma "yamalayalım mı" sorusunu değiştirmiyor. Ama "tek curl komutuyla root" beklentisi gerçekçi değil. En gerçekçi risk profili şu: önce **başka isteklerin verisini okuyan bir bellek sızıntısı** (parolalar, oturum token'ları, API anahtarları — Heartbleed'in yaptığı gibi), sonra da ağır heap mühendisliği gerektiren kod çalıştırma. Aynı gün "üçüncü bir kritik PHP CVE" söylentisi de dolaştı ([66 puan, 16 yorum](https://news.ycombinator.com/item?id=50185814)), ancak tartışma bunun motor seviyesinde bir RCE olmadığı, uygulama/betik seviyesinde bir bellek hatası olduğu yönünde sonuçlandı.
 
-## 2. LiteLLM: PyPI'ye sızan backdoor, PHP yamasıyla aynı gün
+## 2. Node.js: aynı gün, on CVE
+
+PHP yaması 14:00 UTC'de çıkarken Node.js de aynı gün [22.23.4, 24.22.1 ve 26.12.1](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases) sürümlerini yayımladı. Tek duyuruda **on CVE** vardı ve en yükseği "high" idi. [Brotli RCE haberi](https://news.ycombinator.com/item?id=50189292) HN'de **18 puan** alırken, PHP'nin danışma duyurusu 1.524 puandaydı.
+
+En ciddisi **CVE-2026-111497**: Node.js'in içindeki Brotli decoder'da sınır dışı yazma ve bunun üzerinden uzaktan kod çalıştırma. Node kendi başına Brotli çözmediği için her kurulum otomatik açık değil; uygulama veya kullandığı bir kütüphane **saldırgan kontrollü Brotli verisini** açtığında tetikleniyor — istek gövdesi ya da fetch edilen bir yanıt. Araştırmacılar süreç belleğinin ifşasını ve komut çalıştırmayı gösterdi; [yama](https://vercel.com/kb/bulletin/node-js-security-advisory) fetch edilen yanıtları da kapsıyor. Açığı bildiren kişi Node.js TSC üyesi Matteo Collina, düzelten ise Antoine du Hamel. Node 20 EOL olduğu için yama almıyor.
+
+Aynı duyuruda üç ayrı TLS hostname bypass'ı var: fullwidth rakamlarla yazılmış IP (CVE-2026-105483, yalnız 26.x ve 24.x), host'un gevşek biçimde bir IP'ye çözümlenmesi (CVE-2026-106069) ve non-canonical IPv4 adreslerinin DNS SAN ile kimlik doğrulaması (CVE-2026-106072). Üçü de sertifika doğrulamasının beklenen sınırını aşıyor. Buna `dns.resolve`'un NUL karakterinde ismi kesmesi (CVE-2026-105482) eklenince, bu sürümlerde "hangi sunucuya bağlandım" sorusunun cevabı güvenilir değil.
+
+Geri kalanlar daha düşük sesli: keep-alive soketinde istekten önce yazılmış yanıtın işlenmesi (CVE-2026-105481), `crypto.randomUUID()` ve `randomInt()` entropy cache'inin startup snapshot ve SEA'lara kaydedilmesi yüzünden her sürecin aynı değerleri üretmesi (CVE-2026-106074), ZipFile'ın başarısız başlık doğrulamasından sonra saldırgan kontrollü önek döndürmesi (CVE-2026-106070) ve permission model'de iki ayrı aşım (CVE-2026-106071, CVE-2026-106073).
+
+Duyurunun en önemli satırı belki de bağımlılık listesinde: c-ares, OpenSSL, SQLite, Undici ve **ca-cert (eMudhra Intermediate CA Compromise)**. Yani bu yazının ilerleyen bölümlerindeki sertifika otoritesi olayı, Node.js'in kendi güven deposuna kadar gelmişti.
+
+## 3. LiteLLM: PyPI'ye sızan backdoor, PHP yamasıyla aynı gün
 
 [SafeDep'in raporu](https://news.ycombinator.com/item?id=50181114) ([505 puan, 167 yorum](https://news.ycombinator.com/item?id=50181114)) olayın niteliğini tek cümlede anlatıyor: **litellm 1.107.0'ın PyPI'daki wheel'leri bir kimlik bilgisi hırsızı ve uzaktan kod çalıştırma backdoor'u taşıyordu.**
 
@@ -65,7 +77,7 @@ Saldırının teknik tarafı ilginç: saldırgan 13 Ekim'de `letters9813` adlı 
 
 Bu, LiteLLM'in ilk vakası değil: aynı `.pth` mekanizması [Mart 2026'da 1.82.7 ve 1.82.8'i](https://news.ycombinator.com/item?id=47501426) ([938 puan, 500 yorum](https://news.ycombinator.com/item?id=47501426)) aynı şekilde zehirlemişti. Yani aynı proje, yedi ay içinde ikinci kez aynı yöntemle vuruldu. LiteLLM haftalık 23 milyon indirme sayısına sahip bir paket; iki saatlik pencere bile bu ölçekte anlamlı.
 
-## 3. GitLab: aynı açık sınıfı, haftalar içinde tekrar tekrar
+## 4. GitLab: aynı açık sınıfı, haftalar içinde tekrar tekrar
 
 [GitLab'ın 21 Ekim tarihli kritik yama duyurusu](https://news.ycombinator.com/item?id=50185869) ([341 puan, 79 yorum](https://news.ycombinator.com/item?id=50185869)) [CVE-2026-110264](https://www.cve.org/CVERecord?id=CVE-2026-110264) ile birlikte geldi: **CVSS 3.1 ile 10.0**, CWE-190 integer overflow, düzenli ifade derleyicisinde. GitLab bunun **7.0'dan bu yana tüm sürümleri** etkilediğini ve düzeltmelerin **18.11.13, 19.0.10, 19.1.9, 19.2.9, 19.3.6, 19.4.3 ve 19.5.1** sürümlerine geri portlandığını açıkladı — yani ürünün **on yılı aşkın geçmişi** etkilenmiş.
 
@@ -75,7 +87,25 @@ Yeni olanın teknik olarak ayrı bir yolu var: GitLab `.org` dosyalarını `org-
 
 GitLab ayrıca iki tehdit tespit kuralı yayımladı — "Onigmo native worker crash" ve "Org mode render error burst" — ki bunlar istismar denemelerini görmek için. Zarar modeli büyük: kendi kurulumunuzda başarılı olan bir saldırgan, o kurulumun **tüm sırlarına** erişir.
 
-## 4. eMudhra: tek baytlık sekiz anahtar
+## 5. nginx: Temmuz'da kapatılan açık, Ekim'de yenisini doğurdu
+
+[14 Ekim'de](https://nginx.org/2026.html) nginx **1.30.6** (stable) ve **1.31.7** (mainline) yayımlandı — yılın sekizinci güvenlik sürümü. Beş açık vardı; nginx hepsini "medium" sayarken F5 üç bellek hatasına **CVSS v4 ile 9.2**, TLS hatasına **8.3**, HTTP/3 hatasına **6.9** verdi. Hepsi belirli bir yapılandırma gerektiriyor, ama o yapılandırmalar hiç de egzotik değil.
+
+| CVE | Ne yapıyor | Tetikleyen yapılandırma | Etkilenen |
+|---|---|---|---|
+| CVE-2026-15176 | worker'da heap overflow; çökme, ASLR kapalıysa kod çalıştırma | `alias` + `rewrite` + `$request_filename` okuyan bir yönerge | 0.1.29–1.31.6 |
+| CVE-2026-93479 | regex `map` capture'ları `root`/`log_format`'ta kullanılınca heap overflow | regex `map` + capture'ı kullanan `root` veya `log_format` | 1.30.0–1.30.5, 1.31.2–1.31.6 |
+| CVE-2026-97205 | AIO + SSI `include virtual` ile use-after-free | `aio on` + SSI sayfası | 0.8.11–1.31.6 |
+| CVE-2026-97629 | Sahte TLS oturumu; client-cert doğrulaması atlatılabilir | `ssl_session_cache shared` var, `ssl_session_ticket_key` yok | 1.23.2–1.31.6 |
+| CVE-2026-95101 | HTTP/3 isteğine fazladan bayt; `client_max_body_size` aşımı | HTTP/3 + varsayılan `proxy_request_buffering on` | 1.25.0–1.31.6 |
+
+En eskisi CVE-2026-15176: hata **Mayıs 2005'ten beri** kodda. En ilginci ise CVE-2026-93479. Temmuz'da kapatılan CVE-2026-42533 için eklenen koruma, verinin ayrılmış alana taşmasını engellemiyordu; ikinci bir yama da nihai string'in boyunu bu taşmış uzunluktan hesaplayınca string kendi tamponunu aşabiliyordu. Yani **Temmuz'daki düzeltme, Ekim'deki açığın zeminini hazırladı.** F5'in Temmuz'daki geçici çözümünün (named capture kullanmak) dar bir yol bıraktığını söyleyen araştırmacılar haklı çıktı.
+
+TLS hatası da aynı sınıftan: 1.23.2'den beri otomatik session ticket anahtar rotasyonu üç slotun yalnızca ikisini kopyalıyor; üçüncü slot bellekte ne varsa onunla kalıyor ve o slotu işaret eden bir ticket, başlatılmamış anahtar malzemesiyle doğrulanabiliyor. F5 sonucu "saldırganın kontrolü dışında, deterministik olmayan" bir sahteleme olarak tanımlıyor; yine de client-cert doğrulamasını atlatmaya yetebiliyor. Etkilenen `ssl_session_cache shared:SSL:10m` satırı, nginx belgelerinin kendi örneğinde geçen satır.
+
+15 Ekim itibarıyla hiçbiri CISA KEV'de değildi ve nginx/F5 aktif istismar bildirmedi. Ama Mayıs'ta CVE-2026-42945'in ifşadan günler sonra istismar edildiğini biliyoruz. Çözüm 1.30.6 veya 1.31.7; dağıtım paketleri yalnızca yamayı gerçekten geri portladıysa güvenli. [HN'de bu güvenlik sürümü](https://news.ycombinator.com/item?id=50194007) **1 puan** aldı.
+
+## 6. eMudhra: tek baytlık sekiz anahtar
 
 [17 Ekim'de bir araştırmacı](https://news.ycombinator.com/item?id=50166579) ([1.221 puan, 483 yorum](https://news.ycombinator.com/item?id=50166579)) Hindistan merkezli sertifika otoritesi **eMudhra**'nın sekiz ara sertifikasının özel anahtarlarının **milisaniyeler içinde** kırılabildiğini bildirdi. Kanıt olarak `emudhra.we-have-a-problem.com` adresinde, kırılmış anahtarlarla imzalanmış bir mesaj bıraktı: *"We have a problem here – Wayne."*
 
@@ -83,13 +113,13 @@ GitLab ayrıca iki tehdit tespit kuralı yayımladı — "Onigmo native worker c
 
 Anahtarlar **30 Nisan 2025'te** tek bir "key generation ceremony"de üretilmişti — yani **17 aylık** bir pencere. Helme'nin ifadesiyle: *"17 aylık bir pencere ve bunun istismar edilip edilmediğini bilmenin hiçbir yolu yok."*
 
-Bloklamalar hızlıydı: Mozilla raporu **17 Ekim 20:06 UTC**'de aldı, **22:59'da** Firefox'a OneCRL ile distrust gönderdi — *"raporu aldıktan sonra üç saatten kısa sürede"*. Chrome aynı akşam, Apple **19'unda**, Microsoft **20'de** blokladı. eMudhra sekiz sertifikayı 18 Ekim'de iptal etti, Sectigo çapraz imzalarını 19'unda tamamladı. Firefox 158.0.1, ESR 115.43.1 ve 153.5.1 ile NSS 3.131.1 yayımlandı, Go 1.27.3 ve 1.26.10 çıktı, Python `certifi`, Rust `webpki-roots` ve Electron güncellendi.
+Bloklamalar hızlıydı: Mozilla raporu **17 Ekim 20:06 UTC**'de aldı, **22:59'da** Firefox'a OneCRL ile distrust gönderdi — *"raporu aldıktan sonra üç saatten kısa sürede"*. Chrome aynı akşam, Apple **19'unda**, Microsoft **20'de** blokladı. eMudhra sekiz sertifikayı 18 Ekim'de iptal etti, Sectigo çapraz imzalarını 19'unda tamamladı. Firefox 158.0.1, ESR 115.43.1 ve 153.5.1 ile NSS 3.131.1 yayımlandı, Go 1.27.3 ve 1.26.10 çıktı, Python `certifi`, Rust `webpki-roots` ve Electron güncellendi; Node.js de 21 Ekim'de 22.23.4, 24.22.1 ve 26.12.1 sürümleriyle ca-cert paketini yeniledi.
 
 En rahatsız edici kısım: **tarayıcılar sorunu çözdü, gerisi çözmedi.** Birçok yazılım iptal durumunu hiç kontrol etmiyor. Helme'in testinde `curl`, Python, Node, Go ve Java — Stripe API'si için üretilmiş sahte bir sertifikayı **kabul etti**. Ve iptal dalgası araç ekosistemini de sarstı: [mitmproxy'ye `--emudhra` seçeneği eklendi](https://news.ycombinator.com/item?id=50189232) ([445 puan, 111 yorum](https://news.ycombinator.com/item?id=50189232)), Tailscale `TS-2026-013` ile **1.104.2** sürümüne geçti, [Oracle kendi uyarısını](https://news.ycombinator.com/item?id=50188443) yayımladı. [MCU güvenlik araştırmacısının analizi](https://news.ycombinator.com/item?id=50183280) ([60 puan, 24 yorum](https://news.ycombinator.com/item?id=50183280)) ise şu sonuca varıyor: gömülü sistemlerin büyük kısmı etkilenmedi, ama **bunu ancak her cihazı tek tek denetleyerek** öğrenebilirsiniz.
 
-## 5. Kessler sendromu: yamaladıkça açığa çıkan şey
+## 7. Kessler sendromu: yamaladıkça açığa çıkan şey
 
-[HN'de "The Kessler Syndrome (where blowups multiply exponentially) applied to software" başlıklı bir soru](https://news.ycombinator.com/item?id=50189771) ([6 puan](https://news.ycombinator.com/item?id=50189771)) Ekim ayında bu yazının çerçevesini verdi. Teşhis şu: birbiriyle bağlı sistemlerde tek bir arıza, zincirleme yeni arızalar üretir. Güvenlikte bunun adı "saldırı yüzeyi dönüşümü" — ve Ekim 2026 bu teşhisi hafta boyunca doğruladı.
+[HN'de "The Kessler Syndrome (where blowups multiply exponentially) applied to software" başlıklı bir soru](https://news.ycombinator.com/item?id=50189771) ([6 puan](https://news.ycombinator.com/item?id=50189771)) Ekim ayında bu yazının çerçevesini verdi. Teşhis şu: birbiriyle bağlı sistemlerde tek bir arıza, zincirleme yeni arızalar üretir. Güvenlikte bunun adı "saldırı yüzeyi dönüşümü" — ve Ekim 2026 bu teşhisi hafta boyunca doğruladı. GitLab'da aynı regex derleyicisi kısa sürede dört ayrı CVE üretti; nginx'te Temmuz'da kapatılan CVE-2026-42533, Ekim'de CVE-2026-93479'un zeminini hazırladı; PHP'de 2024'ten beri ertelenen düzeltme ise 2026'da iki kritik CVE olarak geri döndü.
 
 **GhostAction** ile başlayalım: GitGuardian'ın [bulduğu kampanya](https://blog.gitguardian.com/ghostaction-github-actions-supply-chain-attack-returns/) 8–9 Ekim'de **1.900 GitHub hesabını** ve **30.000'den fazla repoyu** hedefledi; saldırganlar **3.174 sırrı** çıkarmayı denedi. Saldırı, GitHub Actions'ın `push` ve `workflow_dispatch` tetikleyicilerine enjekte edilmiş kötücül workflow dosyaları üzerinden çalışıyordu; payload `fetch-depth: 0` ile Git geçmişini tarayıp AWS anahtarlarını, GitHub/GitLab PAT'lerini ve Anthropic/OpenAI anahtarlarını topluyor, sonra düz HTTP ile `193.32.204[.]199/?c=monami` adresine gönderiyordu. Vektör GitHub'ın kendisi değildi — **çalınmış PAT'ler ve infostealer loglarıydı.** Önceki dalgalarda 772 repo, 373 kullanıcı ve 26 sır sızdı; 5 Ekim'e kadar yalnızca yüzde 16'sı temizlenmişti. Kampanya, teknik olarak Eylül 2025'te Wiz tarafından fark edilmişti ve Ekim'de yeniden canlanmıştı.
 
@@ -101,20 +131,22 @@ En rahatsız edici kısım: **tarayıcılar sorunu çözdü, gerisi çözmedi.**
 
 **SAP Cloud SDK** ise tam tersi bir ders veriyor: [CVE-2026-89111, CVSS 10.0](https://github.com/SAP/cloud-sdk-python/security/advisories/GHSA-4mv3-jxxm-9cx2), CWE-918 SSRF, `sap-cloud-sdk` paketinin **0.45.2'den eski** tüm sürümleri. Saldırgan `tenant_subdomain` üzerinde kontrol ederse OAuth2 token isteği yönlendiriliyor ve **client ID ile client secret dışarı sızıyor.** Düzeltme **21 Ağustos'ta** çıktı — ama danışmanlık **13 Ekim'de**, **53 gün sonra** yayımlandı. O 53 gün boyunca herkesin lockfile'ında kırılgan sürüm kalmaya devam etti ve sürüm notları güvenlik değişikliğinden hiç bahsetmiyordu. Buna karşılık **Cisco Secure Email Gateway**'de [CVE-2026-76519 (CVSS 9.8)](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-esa-afw-zqYJkjxp) **CISA KEV listesine 14 Ekim'de girdi** ve Shadowserver internete açık **yaklaşık 300** örneği takip ediyor — yönlendirme dosyası yolu geçişli bir dosya yazma + AsyncOS üzerinde root yetkisiyle komut çalıştırma. Ve **Langflow** tarafında IBM tek duyuruda **25 CVE** açıkladı; ikisi kritik ve kimlik doğrulaması gerektirmiyordu ([CVE-2026-104334](https://www.ibm.com/support/pages/node/7290694) ve CVE-2026-93674, ikisi de 9.8), KEV listesine düşen Langflow CVE sayısı ise altıya çıktı.
 
-Bu listenin asıl meselesi sayılar değil, **görünürlük farkı.** php2shell'in danışma duyurusu [1.524 puan ve 654 yorum](https://news.ycombinator.com/item?id=50172041) alırken, CVSS 10.0 olan SAP açığının haberi **1 puan** aldı. GitHub Actions kampanyasının haberi 4 puan. ConnectWise'in 162 kiracıyı etkileyen kimlik bilgisi hırsızlığı 1 puan. Langflow'un 25 CVE'lik duyurusu da HN'de neredeyse görünmedi. Yani **en çok konuşulan zafiyet, en çok zarar veren zafiyet değildi** — sadece en çok konuşulabilendi.
+Bu listenin asıl meselesi sayılar değil, **görünürlük farkı.** php2shell'in danışma duyurusu [1.524 puan ve 654 yorum](https://news.ycombinator.com/item?id=50172041) alırken, CVSS 10.0 olan SAP açığının haberi **1 puan** aldı; Node.js'in Brotli RCE'si 18 puan, nginx'in sekizinci güvenlik sürümü 1 puan. GitHub Actions kampanyasının haberi 4 puan. ConnectWise'in 162 kiracıyı etkileyen kimlik bilgisi hırsızlığı 1 puan. Langflow'un 25 CVE'lik duyurusu da HN'de neredeyse görünmedi. Yani **en çok konuşulan zafiyet, en çok zarar veren zafiyet değildi** — sadece en çok konuşulabilendi.
 
 ## Ne yapmalı
 
 1. **PHP'yi yamalayın.** 8.5.12, 8.4.27, 8.3.36 veya 8.2.35'e yükseltin. 7.4/8.0/8.1 için minimal backport'lar var ama bu sürümler EOL — yükseltme doğru cevap.
 2. **Yama yapamıyorsanız durdurun, kapanın.** NCSC'nin önerisi bu ve ciddi. Acil geçici önlem olarak `session.upload_progress.enabled = 0` (php.ini / .user.ini / .htaccess) — bu ayar CVE-2026-109619'a karşı özellikle önemli görünüyor; aynı zamanda web sunucunuzun multipart POST trafiğini kısıtlayın ve PHP 8.5'te `fatal_error_backtraces = 0`. Apache üzerinde `php_admin_value memory_limit -1` gibi agresif denemeler yerine, **yükleme kapatmak** daha güvenilir.
-3. **LiteLLM'i 1.106.2'ye pinleyin** ve imajları digest ile sabitleyin. 1.107.0 çalıştırdıysanız o makineyi, o konteyneri ve o runner'ı **ele geçirilmiş kabul edin** — paketi kaldırmak yetmez, dışarı çıkan bütün sırları döndürün.
-4. **Self-hosted GitLab'ı 19.5.1'e (veya 19.4.3 / 19.3.6 / 19.2.9 / 19.1.9 / 19.0.10 / 18.11.13'e) yükseltin** ve Org mode render'ı ile ilgili logları inceleyin.
-5. **Kendi trust store'unuzu denetleyin.** eMudhra'nın iptal ettiği sertifikaları kullanan araçlar — curl, Node, Java — iptali kontrol etmiyor. Sertifika iptalini doğrulamayan her istemci sizin için bir MITM yüzeyi.
-6. **Paket ve CI zincirinizi kilitleyin.** Sabitlenmemiş sürüm, imzasız artifact ve CI'da gizliye erişen `pip install` komutu, bu yazıdaki üç ayrı olayın ortak noktası.
+3. **Node.js'i 22.23.4, 24.22.1 veya 26.12.1'e yükseltin.** Özellikle saldırgan kontrollü Brotli verisi çözen servisler için; Node 20 EOL olduğu için yama almıyor.
+4. **LiteLLM'i 1.106.2'ye pinleyin** ve imajları digest ile sabitleyin. 1.107.0 çalıştırdıysanız o makineyi, o konteyneri ve o runner'ı **ele geçirilmiş kabul edin** — paketi kaldırmak yetmez, dışarı çıkan bütün sırları döndürün.
+5. **Self-hosted GitLab'ı 19.5.1'e (veya 19.4.3 / 19.3.6 / 19.2.9 / 19.1.9 / 19.0.10 / 18.11.13'e) yükseltin** ve Org mode render'ı ile ilgili logları inceleyin.
+6. **nginx'i 1.30.6 veya 1.31.7'ye yükseltin.** `nginx -T` ile `alias`+`rewrite`, regex `map`, `aio`+`ssi`, `ssl_session_cache shared` ve HTTP/3 kullanımını denetleyin; dağıtım paketinin yamayı gerçekten içerdiğini doğrulayın.
+7. **Kendi trust store'unuzu denetleyin.** eMudhra'nın iptal ettiği sertifikaları kullanan araçlar — curl, Node, Java — iptali kontrol etmiyor. Sertifika iptalini doğrulamayan her istemci sizin için bir MITM yüzeyi.
+8. **Paket ve CI zincirinizi kilitleyin.** Sabitlenmemiş sürüm, imzasız artifact ve CI'da gizliye erişen `pip install` komutu, bu yazıdaki olayların ortak noktası.
 
 ---
 
-Kısacası haftanın dersi tek cümlede: **21 Ekim'de tek bir zafiyet değil, bir altyapı seviyesi sorunu vardı.** PHP'nin motoru, GitLab'ın regex derleyicisi, PyPI'ın yayın hattı ve bir sertifika otoritesinin anahtar üretim töreni — dördü de aynı yerde kırıldı: **varsayılanlarda, otomasyonda ve güvenilen üçüncü taraf zincirlerinde.** Bu da yamalama listelerinin neden yetmediğini gösteriyor; bir yamayı uygulamak, sizinkini üstüne yeni bir yama daha yazmak demek.
+Kısacası haftanın dersi tek cümlede: **Ekim'in ortasında tek bir zafiyet değil, bir altyapı seviyesi sorunu vardı.** PHP'nin motoru, Node.js'in Brotli decoder'ı, GitLab'ın regex derleyicisi, nginx'in string işleme kodu, PyPI'ın yayın hattı ve bir sertifika otoritesinin anahtar üretim töreni — altısı da aynı yerde kırıldı: **varsayılanlarda, otomasyonda ve güvenilen üçüncü taraf zincirlerinde.** Bu da yamalama listelerinin neden yetmediğini gösteriyor; bir yamayı uygulamak, sizinkini üstüne yeni bir yama daha yazmak demek.
 
 *Bu yazıdaki puan ve yorum sayıları 22 Ekim 2026 tarihli Hacker News verileridir; tüm olaylar birincil kaynaklardan (PHP Vakfı, PHP güvenlik danışmanlıkları, GitLab belgeleri, SafeDep, LiteLLM olay raporu, Mozilla güvenlik bülteni, CISA KEV) doğrulanmıştır.*
 
