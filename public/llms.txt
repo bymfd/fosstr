@@ -27,7 +27,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Projeler
 
-- [arch-kam: Arch Linux İçin Şamanik Bash Ritüelleri](https://fosstr.com/projects/arch-kam/) — Hibernate, pil ömrü ve bootloader ayarlarını otomatikleştiren, "şamanik" bir bash script koleksiyonu (repo: https://github.com/bymfd/arch-kam)
+- [arch-kam: Arch Linux İçin Şamanik Bash Ritüelleri](https://fosstr.com/projects/arch-kam/) — Hibernate, pil ömrü, bootloader, teşhis ve temizlik işlerini tek menüde toplayan "şamanik" bash araç seti (repo: https://github.com/bymfd/arch-kam)
 - [fcm: macOS İçin Fan Kontrol Menü Uygulaması](https://fosstr.com/projects/fcm/) — Intel ve Apple Silicon Maclerde fan hızını kontrol eden, menü çubuğunda çalışan hafif bir uygulama (repo: https://github.com/bymfd/fcm)
 - [tree.py: Masaüstüne Özelleştirilebilir Noel Ağacı](https://fosstr.com/projects/tree-py/) — Python ile yazılmış, masaüstünde gösterilebilen interaktif Noel ağacı (repo: https://github.com/bymfd/tree.py)
 - [velesbit: Otomatik Vitesli Bisiklet Sistemi](https://fosstr.com/projects/velesbit/) — Arduino tabanlı, kablolu vites sistemlerine uyumlu otomatik şanzıman projesi (repo: https://github.com/bymfd/velesbit)

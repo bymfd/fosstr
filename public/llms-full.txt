@@ -1417,9 +1417,10 @@ Berlin, McKesson ve JFrog olayları gösteriyor ki **temel hijyen hala en büyü
 - Kaynak: https://fosstr.com/projects/arch-kam/
 - Tür: Proje
 - Tarih: 2026-09-10
+- Güncelleme: 2026-10-26
 - Etiketler: linux, arch, bash, automation
 - Depo: https://github.com/bymfd/arch-kam
-- Özet: Hibernate, pil ömrü ve bootloader ayarlarını otomatikleştiren, "şamanik" bir bash script koleksiyonu
+- Özet: Hibernate, pil ömrü, bootloader, teşhis ve temizlik işlerini tek menüde toplayan "şamanik" bash araç seti
 
 Arch Linux kullanan herkes bilir: her şey elle yapılır, her şeyi sen kurarsın. Bu güzel ama bazen tekrarlayan işler can sıkıyor. `arch-kam` tam olarak bu noktada devreye giriyor.
 
@@ -1433,29 +1434,70 @@ Yıllar boyunca Arch Linux kurdum, sildim, tekrar kurdum. Her seferinde aynı ad
 
 ## Ritüeller
 
+### Menü: `arch-kam.sh`
+
+Tüm ritüelleri tek bir menüden çalıştırabilirsin. Menüyü açmak için:
+
+```bash
+sudo ./arch-kam.sh
+```
+
+Doğrudan bir ritüel de çağırabilirsin:
+
+```bash
+sudo ./arch-kam.sh doctor
+sudo ./arch-kam.sh hibernate --size 32768
+sudo ./arch-kam.sh battery
+sudo ./arch-kam.sh boot
+sudo ./arch-kam.sh clean --dry-run
+```
+
 ### 1. Hibernate Enabler (Uyku Ritüeli)
 
-Swap dosyası oluşturur, GRUB ve mkinitcpio'yu yapılandırır, sistemi hibernate moduna hazırlar. BTRFS ve EXT4 destekliyor. Önce yedek alır, sonra değişiklik yapar.
+Swap dosyası oluşturur, GRUB veya systemd-boot ayarlarını ve mkinitcpio hook'larını yapılandırır. BTRFS ve EXT4 destekliyor. Varsayılan swap boyutu RAM + 2 GB; `--size` ile değiştirilebilir. Mevcut swap dosyasını `--force` olmadan ezmez, disk alanını ve RAM'i kontrol eder. `resume` hook'unu `block`/`udev` sonrasına, `filesystems` öncesine ekler. Önce yedek alır, sonra değişiklik yapar.
 
 ```bash
 sudo ./hibernate-enabler.sh
+sudo ./hibernate-enabler.sh --size 32768
+sudo ./hibernate-enabler.sh --force
+sudo ./hibernate-enabler.sh --restore
 ```
+
+`--restore`, resume parametrelerini, hook'u ve swap dosyasını kaldırır.
 
 ### 2. ARKUN: Dayanıklılık Ruhu (Pil Optimizasyonu)
 
-TLP kurarak pil ömrünü uzatır. Kur/kaldır komutu tek bir satır.
+TLP kurarak pil ömrünü uzatır. Kurulum, kaldırma, durum görüntüleme ve şarj eşiği ayarlama aynı menüde. `power-profiles-daemon` çalışıyorsa TLP ile çakışmayı algılar ve devre dışı bırakmayı önerir.
 
 ```bash
-sudo ./battery.sh grant-kut   # Kur
-sudo ./battery.sh recall-kut  # Kaldır
+sudo ./battery.sh
 ```
+
+Şarj eşikleri `/etc/tlp.d/99-arch-kam.conf` dosyasına yazılır; her cihazda desteklenmeyebilir, `tlp-stat -b` ile doğrulanmalı.
 
 ### 3. TIN: Vizyon ve Boşluk (Bootloader Arkaplanı)
 
-GRUB veya systemd-boot için özel arkaplan resmi ayarlar. Ya da tamamen siyah, "pure" bir arayüz için temizler.
+GRUB için özel arkaplan resmi ayarlar. PNG doğrudan kullanılır; JPG, ImageMagick varsa PNG'ye çevrilir. Ya da tamamen siyah, "pure" bir arayüz için temizler. systemd-boot arkaplan görselini desteklemediği için bu ritüel yalnızca GRUB'da çalışır.
 
 ```bash
 sudo ./bootloader-bg.sh
+```
+
+### 4. Doctor (Teşhis Ritüeli)
+
+Salt okunur teşhis. Dağıtımı, bootloader'ı, kök dosya sistemini, disk alanını, swap/zram durumunu, hibernate desteğini, `resume` parametrelerini, mkinitcpio hook sırasını, TLP çakışmasını, başarısız systemd unit'lerini ve yetim paketleri raporlar. Root gerektirmez ve hiçbir şeyi değiştirmez.
+
+```bash
+./doctor.sh
+```
+
+### 5. Clean (Temizlik Ritüeli)
+
+`paccache` ile paket önbelleğini temizler, journal'ı 14 günle sınırlar, yetim paketleri gösterip kaldırır ve `systemd-tmpfiles --clean` çalıştırır. Önce `--dry-run` ile ne yapılacağını görebilirsin.
+
+```bash
+sudo ./clean.sh --dry-run
+sudo ./clean.sh
 ```
 
 ## Kurulum
@@ -1464,8 +1506,17 @@ sudo ./bootloader-bg.sh
 git clone https://github.com/bymfd/arch-kam.git
 cd arch-kam
 chmod +x *.sh
-sudo ./*.sh
+sudo ./arch-kam.sh
 ```
+
+Menü yerine doğrudan bir ritüel çalıştırmak için `sudo ./arch-kam.sh <ritüel>` kullanabilirsin.
+
+## Gereksinimler
+
+- Arch tabanlı bir dağıtım (`pacman`)
+- BTRFS hibernate için `btrfs-progs`
+- `paccache` için `pacman-contrib`
+- JPG boot arkaplanı için ImageMagick
 
 ## Neden "Şamanik"?
 
