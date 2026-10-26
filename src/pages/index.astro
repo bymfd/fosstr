@@ -39,7 +39,7 @@ const jsonLd = [
 <!doctype html>
 <html lang="tr">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} jsonLd={jsonLd} />
+		<BaseHead title={`${SITE_TITLE} — Türkçe siber güvenlik, yazılım ve açık kaynak notları`} description={SITE_DESCRIPTION} jsonLd={jsonLd} />
 	</head>
 	<body class="min-h-screen flex flex-col">
 		<Header />
@@ -48,8 +48,7 @@ const jsonLd = [
 				<section class="px-6 py-16 md:px-10 md:py-20">
 					<h1 class="t-display rise" style="animation-delay: 40ms">fosstr</h1>
 					<p class="t-lead mt-5 max-w-[58ch] text-muted rise" style="animation-delay: 100ms">
-						{SITE_DESCRIPTION} — güvenlik analizleri, açık kaynak araçlar ve
-						sistem programlama üzerine notlar.
+						{SITE_DESCRIPTION}
 					</p>
 					<div class="mt-8 flex flex-wrap gap-3 rise" style="animation-delay: 160ms">
 						<a href="/blog/" class="btn-solid">Yazıları oku</a>
