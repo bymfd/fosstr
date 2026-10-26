@@ -1,0 +1,113 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+
+const title = 'Gizlilik Politikası | fosstr';
+const description =
+	'fosstr.com gizlilik politikası: Google Analytics, çerezler, reklamlar, veri saklama ve iletişim.';
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'WebPage',
+	name: title,
+	description,
+	inLanguage: 'tr',
+	url: new URL('/privacy-policy/', Astro.site).href,
+};
+---
+
+<!doctype html>
+<html lang="tr">
+	<head>
+		<BaseHead title={title} description={description} jsonLd={jsonLd} />
+	</head>
+	<body class="min-h-screen flex flex-col">
+		<Header />
+		<main class="flex-1 px-5 md:px-10">
+			<div class="mx-auto max-w-[var(--frame)] border-x border-line">
+				<article class="px-6 py-12 md:px-10 md:py-16">
+					<h1 class="t-display mb-6">Gizlilik Politikası</h1>
+					<div class="prose max-w-[var(--read)]">
+						<p>
+							Bu politika, fosstr.com'u ziyaret ettiğinizde hangi verilerin
+							işlendiğini, neden işlendiğini ve haklarınızı açıklar. Son
+							güncelleme: <strong>26 Ekim 2026</strong>.
+						</p>
+
+						<h2>Toplanan veriler</h2>
+						<p>
+							Site statik olarak yayınlanır; üyelik, yorum veya form yoktur.
+							Sunucu ve CDN sağlayıcısı Cloudflare, güvenlik ve performans
+							için trafik verilerini işleyebilir. E-posta ile iletişime
+							geçerseniz adresiniz ve mesajınız yalnızca yanıt vermek için
+							saklanır.
+						</p>
+
+						<h2>Google Analytics</h2>
+						<p>
+							Ziyaretleri ölçmek için Google Analytics 4 kullanılır (ölçüm
+							kimliği: <code>G-VSS9KPGCLD</code>). Google Analytics; çerezler
+							ve benzeri tanımlayıcılar aracılığıyla sayfa görüntüleme,
+							oturum ve cihaz/tarayıcı bilgilerini işler. Bu veriler Google
+							tarafından kendi gizlilik politikasına göre işlenir:
+							<a href="https://policies.google.com/privacy" rel="noopener noreferrer">policies.google.com/privacy</a>.
+							Tarayıcınızdan çerezleri engelleyebilirsiniz; bu durumda bazı
+							ölçümler çalışmayabilir.
+						</p>
+
+						<h2>Reklamlar</h2>
+						<p>
+							Siteye Google AdSense eklendiğinde Google ve iş ortakları, reklam
+							göstermek ve performansı ölçmek için çerez kullanabilir.
+							Reklamların kişiselleştirilmesi bölgenize ve verdiğiniz onaya
+							göre değişir. Google reklam ayarları:
+							<a href="https://adssettings.google.com" rel="noopener noreferrer">adssettings.google.com</a>;
+							çerez tercihleri için:
+							<a href="https://www.aboutads.info/choices/" rel="noopener noreferrer">aboutads.info/choices</a>.
+						</p>
+
+						<h2>Çerezler</h2>
+						<p>
+							Site kendi tarafında zorunlu oturum çerezi kullanmaz. Cloudflare
+							güvenlik çerezleri ile Google Analytics ve AdSense çerezleri
+							yukarıdaki amaçlarla kullanılabilir. Tarayıcı ayarlarınızdan
+							çerezleri silebilir veya engelleyebilirsiniz.
+						</p>
+
+						<h2>Veri saklama ve paylaşım</h2>
+						<p>
+							Veriler amaç için gerekli süre boyunca saklanır; yasal zorunluluk
+							olmadıkça satılmaz veya paylaşılmaz. Hizmet sağlayıcılar:
+							Cloudflare (barındırma/CDN) ve Google (analytics/reklam).
+						</p>
+
+						<h2>Haklarınız</h2>
+						<p>
+							KVKK ve GDPR kapsamında verilerinize erişme, düzeltme, silme ve
+							işlemeye itiraz etme haklarınız olabilir. Başvuru için:
+							<a href="mailto:hello@fosstr.com">hello@fosstr.com</a>.
+						</p>
+
+						<h2>Çocuklar</h2>
+						<p>
+							Site 13 yaş altı çocuklara yönelik değildir; bilerek çocuklardan
+							veri toplanmaz.
+						</p>
+
+						<h2>Değişiklikler</h2>
+						<p>
+							Politika güncellendiğinde bu sayfadaki tarih değişir. Önemli
+							değişiklikler site üzerinden duyurulur.
+						</p>
+
+						<h2>İletişim</h2>
+						<p>
+							E-posta: <a href="mailto:hello@fosstr.com">hello@fosstr.com</a>
+						</p>
+					</div>
+				</article>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

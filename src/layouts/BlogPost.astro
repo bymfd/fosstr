@@ -1,6 +1,7 @@
 ---
 import { getImage, Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import AdSlot from '../components/AdSlot.astro';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
@@ -50,7 +51,12 @@ const pageJsonLd = isPost
 				dateModified: (updatedDate ?? pubDate).toISOString(),
 				inLanguage: 'tr',
 				mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL.href },
-				author: { '@type': 'Person', name: SITE_AUTHOR, url: 'https://github.com/bymfd' },
+				author: {
+					'@type': 'Person',
+					name: SITE_AUTHOR,
+					url: 'https://github.com/bymfd',
+					sameAs: ['https://github.com/bymfd'],
+				},
 				publisher: { '@type': 'Person', name: SITE_TITLE, url: SITE_URL },
 				...(heroImageURL && { image: [heroImageURL] }),
 				...(tags.length > 0 && { keywords: tags.join(', ') }),
@@ -131,6 +137,8 @@ const pageJsonLd = isPost
 					<div class="prose max-w-[var(--read)]">
 						<slot />
 					</div>
+
+					{isPost && <AdSlot />}
 				</article>
 			</div>
 		</main>

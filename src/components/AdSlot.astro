@@ -1,0 +1,20 @@
+---
+const client = import.meta.env.PUBLIC_ADSENSE_CLIENT;
+const slot = import.meta.env.PUBLIC_ADSENSE_SLOT;
+---
+
+{client && slot && (
+	<aside class="mt-12 border-t border-line pt-8" aria-label="Reklam">
+		<p class="label mb-3">Reklam</p>
+		<ins
+			class="adsbygoogle block"
+			style="display:block"
+			data-ad-client={client}
+			data-ad-slot={slot}
+			data-ad-format="auto"
+			data-full-width-responsive="true"></ins>
+		<script is:inline>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+	</aside>
+)}

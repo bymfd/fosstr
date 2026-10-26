@@ -18,10 +18,10 @@ function slugify(input) {
 
 function unquote(value) {
 	const v = value.trim();
-	if (
-		(v.startsWith("'") && v.endsWith("'")) ||
-		(v.startsWith('"') && v.endsWith('"'))
-	) {
+	if (v.startsWith("'") && v.endsWith("'")) {
+		return v.slice(1, -1).replace(/''/g, "'");
+	}
+	if (v.startsWith('"') && v.endsWith('"')) {
 		return v.slice(1, -1);
 	}
 	return v;

@@ -45,7 +45,7 @@ const ogImageAlt = image ? title : SITE_TITLE;
 
 <title>{title}</title>
 <meta name="description" content={description} />
-{noindex && <meta name="robots" content="noindex, follow" />}
+{noindex ? <meta name="robots" content="noindex, follow" /> : <meta name="robots" content="max-image-preview:large" />}
 
 <meta property="og:type" content={type} />
 <meta property="og:url" content={Astro.url} />
@@ -81,6 +81,13 @@ const ogImageAlt = image ? title : SITE_TITLE;
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+{import.meta.env.PUBLIC_ADSENSE_CLIENT && (
+	<script
+		async
+		src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${import.meta.env.PUBLIC_ADSENSE_CLIENT}`}
+		crossorigin="anonymous"></script>
+)}
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-VSS9KPGCLD"></script>
