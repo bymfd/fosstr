@@ -17,6 +17,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Yazılar
 
+- [Broccoli2Shell: Brotli decoder''ındaki açık Node.js, Python ve 20+ projeyi vurdu](https://fosstr.com/blog/broccoli2shell-brotli-acigi/) — CVE-2026-111497, Google''ın Brotli C decoder''ında aylar boyunca sessizce duran bir sınır dışı yazma hatası. Node.js, Python ve gömülü kopya taşıyan 20''den fazla proje etkilendi; aynı hafta sonu eMudhra global SSL/TLS işini kapattı, Calif iPhone demolarını gösterdi, Roku GitLab''a taşındı, OpenSSL 4.1.0 ve Kimi K3.1 Pro çıktı.
 - [Herkes PHP''ye Dalmışken: Ekim''in Gölgede Kalan Güvenlik Haberleri](https://fosstr.com/blog/herkes-phpye-dalmisken/) — PHP''nin acil güvenlik yaması 21 Ekim''de çıktı — ama aynı gün Node.js on CVE yayımladı; aynı 36 saatte GitLab''ın regex derleyicisinde tekrar eden açık sınıfı, LiteLLM''in backdoorlu PyPI sürümü, bir hafta önce nginx''in beş açığı ve eMudhra''nın tahmin edilebilir CA anahtarları da gündemdeydi.
 - [OpenCode Sızıntısından Muse Spark Open''a: Haftanın 8 Büyük Teknoloji Haberi](https://fosstr.com/blog/haftanin-8-teknoloji-haberi/) — 15–20 Ekim haftası: OpenCode API anahtar sızıntısı, Meta''nın 816B açık ağırlıklı Muse Spark Open''ı, DeepSeek''in açık kaynak inference motoru DeepInfer, Citizen Lab''in AdFection raporu, Linux 7.3, Timestral ve Mercor''un benchmark haritası.
 - [Hacker News Bülteni (20 Eylül – 20 Ekim 2026): Model Seli, Passkeys Savaşı ve Deno''nun Sonu](https://fosstr.com/blog/hn-bulteni-ekim-2026/) — Ayın Hacker News taraması: Opus 5.5, GPT-6, Gemini 4 Argon ve Mistral Large 4 fiyat savaşından passkeys tartışmasına, Cloudflare–Deno satın almasından Pentagon''un AI itirafına 23 haberin ayrıntılı özeti.
@@ -32,11 +33,11 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Tags
 
-- [open-source](https://fosstr.com/blog/tags/open-source/) — 3 içerik
-- [security](https://fosstr.com/blog/tags/security/) — 3 içerik
+- [open-source](https://fosstr.com/blog/tags/open-source/) — 4 içerik
+- [security](https://fosstr.com/blog/tags/security/) — 4 içerik
 - [tech-industry](https://fosstr.com/blog/tags/tech-industry/) — 3 içerik
+- [teknoloji-haberleri](https://fosstr.com/blog/tags/teknoloji-haberleri/) — 3 içerik
 - [ai-models](https://fosstr.com/blog/tags/ai-models/) — 2 içerik
-- [teknoloji-haberleri](https://fosstr.com/blog/tags/teknoloji-haberleri/) — 2 içerik
 - [ai-agents](https://fosstr.com/blog/tags/ai-agents/) — 1 içerik
 - [anthropic](https://fosstr.com/blog/tags/anthropic/) — 1 içerik
 - [arch](https://fosstr.com/blog/tags/arch/) — 1 içerik
@@ -58,6 +59,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [masaüstü](https://fosstr.com/blog/tags/masaustu/) — 1 içerik
 - [mekatronik](https://fosstr.com/blog/tags/mekatronik/) — 1 içerik
 - [menu-bar](https://fosstr.com/blog/tags/menu-bar/) — 1 içerik
+- [nodejs](https://fosstr.com/blog/tags/nodejs/) — 1 içerik
 - [noel](https://fosstr.com/blog/tags/noel/) — 1 içerik
 - [openai](https://fosstr.com/blog/tags/openai/) — 1 içerik
 - [python](https://fosstr.com/blog/tags/python/) — 1 içerik
