@@ -17,6 +17,8 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Yazılar
 
+- [Dux Shell: Waybar, Rofi ve swaylock'u tek pakette değiştiren Wayland kabuğu](https://fosstr.com/blog/dux-shell-wayland-rehberi/) — Wayland masaüstünü parça parça kurmaktan sıkılanlar için Dux Shell rehberi: niri, Hyprland ve Sway ile kurulum, v2.1 yenilikleri, güçlü ve zayıf tarafları.
+- [llama-modchip: 284B DeepSeek'i 64 GB RAM'de çalıştırma iddiası](https://fosstr.com/blog/llama-modchip-284b-64gb/) — 284B parametreli DeepSeek-V4-Flash'i GPU olmadan 64 GB RAM'de çalıştırdığını iddia eden llama-modchip'i inceliyoruz: 1.71 bpw quantizasyon, 9-14 tok/s hız ve henüz doğrulanmamış taraflar.
 - [Broccoli2Shell: Brotli decoder'ındaki açık Node.js, Python ve 20+ projeyi vurdu](https://fosstr.com/blog/broccoli2shell-brotli-acigi/) — CVE-2026-111497, Google'ın Brotli C decoder'ında aylar boyunca sessizce duran bir sınır dışı yazma hatası. Node.js, Python ve gömülü kopya taşıyan 20'den fazla proje etkilendi; aynı hafta sonu eMudhra global SSL/TLS işini kapattı, Calif iPhone demolarını gösterdi, Roku GitLab'a taşındı, OpenSSL 4.1.0 ve Kimi K3.1 Pro çıktı.
 - [iPhone Duo ilk gününde iki kez kırıldı: ekran çatlağı ve jailbreak](https://fosstr.com/blog/iphone-duo-jailbreak-crackgate/) — iPhone Duo çıktığı gün Calif tarafından jailbreak'lendi; ekran çatlakları raporlandı. iOS 27.1, 27.2 yaması ve iFixit'in hinge analizi ne anlama geliyor?
 - [Herkes PHP'ye Dalmışken: Ekim'in Gölgede Kalan Güvenlik Haberleri](https://fosstr.com/blog/herkes-phpye-dalmisken/) — PHP'nin acil güvenlik yaması 21 Ekim'de çıktı — ama aynı gün Node.js on CVE yayımladı; aynı 36 saatte GitLab'ın regex derleyicisinde tekrar eden açık sınıfı, LiteLLM'in backdoorlu PyPI sürümü, bir hafta önce nginx'in beş açığı ve eMudhra'nın tahmin edilebilir CA anahtarları da gündemdeydi.
@@ -34,22 +36,27 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Tags
 
+- [open-source](https://fosstr.com/blog/tags/open-source/) — 5 içerik
 - [security](https://fosstr.com/blog/tags/security/) — 5 içerik
-- [open-source](https://fosstr.com/blog/tags/open-source/) — 4 içerik
+- [linux](https://fosstr.com/blog/tags/linux/) — 3 içerik
 - [tech-industry](https://fosstr.com/blog/tags/tech-industry/) — 3 içerik
 - [teknoloji-haberleri](https://fosstr.com/blog/tags/teknoloji-haberleri/) — 3 içerik
 - [ai-models](https://fosstr.com/blog/tags/ai-models/) — 2 içerik
+- [arch](https://fosstr.com/blog/tags/arch/) — 2 içerik
+- [llm](https://fosstr.com/blog/tags/llm/) — 2 içerik
 - [ai-agents](https://fosstr.com/blog/tags/ai-agents/) — 1 içerik
 - [anthropic](https://fosstr.com/blog/tags/anthropic/) — 1 içerik
 - [apple](https://fosstr.com/blog/tags/apple/) — 1 içerik
-- [arch](https://fosstr.com/blog/tags/arch/) — 1 içerik
 - [arduino](https://fosstr.com/blog/tags/arduino/) — 1 içerik
 - [automation](https://fosstr.com/blog/tags/automation/) — 1 içerik
 - [bash](https://fosstr.com/blog/tags/bash/) — 1 içerik
 - [bisiklet](https://fosstr.com/blog/tags/bisiklet/) — 1 içerik
 - [bulten](https://fosstr.com/blog/tags/bulten/) — 1 içerik
+- [cpu](https://fosstr.com/blog/tags/cpu/) — 1 içerik
 - [cybersecurity](https://fosstr.com/blog/tags/cybersecurity/) — 1 içerik
 - [data-breach](https://fosstr.com/blog/tags/data-breach/) — 1 içerik
+- [deepseek](https://fosstr.com/blog/tags/deepseek/) — 1 içerik
+- [desktop](https://fosstr.com/blog/tags/desktop/) — 1 içerik
 - [diy](https://fosstr.com/blog/tags/diy/) — 1 içerik
 - [donanim](https://fosstr.com/blog/tags/donanim/) — 1 içerik
 - [eglence](https://fosstr.com/blog/tags/eglence/) — 1 içerik
@@ -58,8 +65,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [hacker-news](https://fosstr.com/blog/tags/hacker-news/) — 1 içerik
 - [ios](https://fosstr.com/blog/tags/ios/) — 1 içerik
 - [jailbreak](https://fosstr.com/blog/tags/jailbreak/) — 1 içerik
-- [linux](https://fosstr.com/blog/tags/linux/) — 1 içerik
-- [llm](https://fosstr.com/blog/tags/llm/) — 1 içerik
+- [local-ai](https://fosstr.com/blog/tags/local-ai/) — 1 içerik
 - [macos](https://fosstr.com/blog/tags/macos/) — 1 içerik
 - [masaüstü](https://fosstr.com/blog/tags/masaustu/) — 1 içerik
 - [mekatronik](https://fosstr.com/blog/tags/mekatronik/) — 1 içerik
@@ -69,10 +75,12 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [openai](https://fosstr.com/blog/tags/openai/) — 1 içerik
 - [python](https://fosstr.com/blog/tags/python/) — 1 içerik
 - [qilin](https://fosstr.com/blog/tags/qilin/) — 1 içerik
+- [quantization](https://fosstr.com/blog/tags/quantization/) — 1 içerik
 - [ransomware](https://fosstr.com/blog/tags/ransomware/) — 1 içerik
 - [shinyhunters](https://fosstr.com/blog/tags/shinyhunters/) — 1 içerik
 - [smc](https://fosstr.com/blog/tags/smc/) — 1 içerik
 - [swift](https://fosstr.com/blog/tags/swift/) — 1 içerik
+- [wayland](https://fosstr.com/blog/tags/wayland/) — 1 içerik
 
 ## Contact
 
