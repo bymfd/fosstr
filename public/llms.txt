@@ -17,6 +17,10 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Yazılar
 
+- [22 açık kaynak proje neden AI katkısı kabul etmiyor?](https://fosstr.com/blog/acik-kaynak-ai-katkisi-yasaklari/) — immich'ten QEMU'ya, Zig'den Gentoo'ya kadar 22 proje AI üretimi katkıları yasaklıyor. Politikaların ortak noktaları, gerekçeleri ve katkıcılar için pratik sonuçları.
+- [GPUStack CVE-2026-102895: 9.8'lik kimlik doğrulama atlatması nasıl çalışıyor?](https://fosstr.com/blog/gpustack-cve-2026-102895/) — GPUStack'te 127.0.0.1'e güvenen kimlik doğrulama mantığı, uzaktan yönetici erişimine yol açtı. CVE-2026-102895'in teknik detayları, CISA KEV süreci ve yükseltme rehberi.
+- [OpenShell: NVIDIA'nın ajan kum havuzu CNCF'ye geçti](https://fosstr.com/blog/openshell-cncf-ajan-guvenligi/) — NVIDIA, otonom AI ajanlarını politika ile sınırlayan OpenShell'i CNCF Sandbox'a bağışladı. Çekirdek seviyesinde izolasyon, Cedar politikaları ve kurulum rehberi.
+- [Vino: Synaptics patent mektupları DisplayLink'in açık kaynak sürücüsünü nasıl kapattı](https://fosstr.com/blog/vino-displaylink-patent-synaptics/) — DisplayLink DL3 için Rust ile yazılan açık kaynak Vino sürücüsü, Synaptics'in patent mektuplarının ardından GitHub'dan kalktı. Olayın kronolojisi, hukuki tartışma ve Linux kullanıcıları için sonuçları.
 - [Dux Shell: Waybar, Rofi ve swaylock'u tek pakette değiştiren Wayland kabuğu](https://fosstr.com/blog/dux-shell-wayland-rehberi/) — Wayland masaüstünü parça parça kurmaktan sıkılanlar için Dux Shell rehberi: niri, Hyprland ve Sway ile kurulum, v2.1 yenilikleri, güçlü ve zayıf tarafları.
 - [llama-modchip: 284B DeepSeek'i 64 GB RAM'de çalıştırma iddiası](https://fosstr.com/blog/llama-modchip-284b-64gb/) — 284B parametreli DeepSeek-V4-Flash'i GPU olmadan 64 GB RAM'de çalıştırdığını iddia eden llama-modchip'i inceliyoruz: 1.71 bpw quantizasyon, 9-14 tok/s hız ve henüz doğrulanmamış taraflar.
 - [Broccoli2Shell: Brotli decoder'ındaki açık Node.js, Python ve 20+ projeyi vurdu](https://fosstr.com/blog/broccoli2shell-brotli-acigi/) — CVE-2026-111497, Google'ın Brotli C decoder'ında aylar boyunca sessizce duran bir sınır dışı yazma hatası. Node.js, Python ve gömülü kopya taşıyan 20'den fazla proje etkilendi; aynı hafta sonu eMudhra global SSL/TLS işini kapattı, Calif iPhone demolarını gösterdi, Roku GitLab'a taşındı, OpenSSL 4.1.0 ve Kimi K3.1 Pro çıktı.
@@ -36,14 +40,17 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Tags
 
-- [open-source](https://fosstr.com/blog/tags/open-source/) — 5 içerik
-- [security](https://fosstr.com/blog/tags/security/) — 5 içerik
-- [linux](https://fosstr.com/blog/tags/linux/) — 3 içerik
+- [open-source](https://fosstr.com/blog/tags/open-source/) — 8 içerik
+- [security](https://fosstr.com/blog/tags/security/) — 7 içerik
+- [linux](https://fosstr.com/blog/tags/linux/) — 4 içerik
+- [ai](https://fosstr.com/blog/tags/ai/) — 3 içerik
+- [llm](https://fosstr.com/blog/tags/llm/) — 3 içerik
 - [tech-industry](https://fosstr.com/blog/tags/tech-industry/) — 3 içerik
 - [teknoloji-haberleri](https://fosstr.com/blog/tags/teknoloji-haberleri/) — 3 içerik
 - [ai-models](https://fosstr.com/blog/tags/ai-models/) — 2 içerik
 - [arch](https://fosstr.com/blog/tags/arch/) — 2 içerik
-- [llm](https://fosstr.com/blog/tags/llm/) — 2 içerik
+- [kubernetes](https://fosstr.com/blog/tags/kubernetes/) — 2 içerik
+- [agents](https://fosstr.com/blog/tags/agents/) — 1 içerik
 - [ai-agents](https://fosstr.com/blog/tags/ai-agents/) — 1 içerik
 - [anthropic](https://fosstr.com/blog/tags/anthropic/) — 1 içerik
 - [apple](https://fosstr.com/blog/tags/apple/) — 1 içerik
@@ -52,19 +59,27 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [bash](https://fosstr.com/blog/tags/bash/) — 1 içerik
 - [bisiklet](https://fosstr.com/blog/tags/bisiklet/) — 1 içerik
 - [bulten](https://fosstr.com/blog/tags/bulten/) — 1 içerik
+- [cncf](https://fosstr.com/blog/tags/cncf/) — 1 içerik
+- [community](https://fosstr.com/blog/tags/community/) — 1 içerik
 - [cpu](https://fosstr.com/blog/tags/cpu/) — 1 içerik
+- [cve](https://fosstr.com/blog/tags/cve/) — 1 içerik
 - [cybersecurity](https://fosstr.com/blog/tags/cybersecurity/) — 1 içerik
 - [data-breach](https://fosstr.com/blog/tags/data-breach/) — 1 içerik
 - [deepseek](https://fosstr.com/blog/tags/deepseek/) — 1 içerik
 - [desktop](https://fosstr.com/blog/tags/desktop/) — 1 içerik
+- [displaylink](https://fosstr.com/blog/tags/displaylink/) — 1 içerik
 - [diy](https://fosstr.com/blog/tags/diy/) — 1 içerik
 - [donanim](https://fosstr.com/blog/tags/donanim/) — 1 içerik
 - [eglence](https://fosstr.com/blog/tags/eglence/) — 1 içerik
+- [ethics](https://fosstr.com/blog/tags/ethics/) — 1 içerik
 - [fan-control](https://fosstr.com/blog/tags/fan-control/) — 1 içerik
 - [fbi](https://fosstr.com/blog/tags/fbi/) — 1 içerik
+- [github](https://fosstr.com/blog/tags/github/) — 1 içerik
+- [gpustack](https://fosstr.com/blog/tags/gpustack/) — 1 içerik
 - [hacker-news](https://fosstr.com/blog/tags/hacker-news/) — 1 içerik
 - [ios](https://fosstr.com/blog/tags/ios/) — 1 içerik
 - [jailbreak](https://fosstr.com/blog/tags/jailbreak/) — 1 içerik
+- [kernel](https://fosstr.com/blog/tags/kernel/) — 1 içerik
 - [local-ai](https://fosstr.com/blog/tags/local-ai/) — 1 içerik
 - [macos](https://fosstr.com/blog/tags/macos/) — 1 içerik
 - [masaüstü](https://fosstr.com/blog/tags/masaustu/) — 1 içerik
@@ -72,11 +87,15 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [menu-bar](https://fosstr.com/blog/tags/menu-bar/) — 1 içerik
 - [nodejs](https://fosstr.com/blog/tags/nodejs/) — 1 içerik
 - [noel](https://fosstr.com/blog/tags/noel/) — 1 içerik
+- [nvidia](https://fosstr.com/blog/tags/nvidia/) — 1 içerik
 - [openai](https://fosstr.com/blog/tags/openai/) — 1 içerik
+- [patent](https://fosstr.com/blog/tags/patent/) — 1 içerik
 - [python](https://fosstr.com/blog/tags/python/) — 1 içerik
 - [qilin](https://fosstr.com/blog/tags/qilin/) — 1 içerik
 - [quantization](https://fosstr.com/blog/tags/quantization/) — 1 içerik
 - [ransomware](https://fosstr.com/blog/tags/ransomware/) — 1 içerik
+- [rust](https://fosstr.com/blog/tags/rust/) — 1 içerik
+- [self-hosted](https://fosstr.com/blog/tags/self-hosted/) — 1 içerik
 - [shinyhunters](https://fosstr.com/blog/tags/shinyhunters/) — 1 içerik
 - [smc](https://fosstr.com/blog/tags/smc/) — 1 içerik
 - [swift](https://fosstr.com/blog/tags/swift/) — 1 içerik

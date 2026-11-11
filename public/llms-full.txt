@@ -13,6 +13,432 @@ Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her 
 
 ---
 
+# 22 açık kaynak proje neden AI katkısı kabul etmiyor?
+
+- Kaynak: https://fosstr.com/blog/acik-kaynak-ai-katkisi-yasaklari/
+- Tür: Yazı
+- Tarih: 2026-11-11
+- Etiketler: open-source, ai, llm, github, community, ethics
+- Özet: immich'ten QEMU'ya, Zig'den Gentoo'ya kadar 22 proje AI üretimi katkıları yasaklıyor. Politikaların ortak noktaları, gerekçeleri ve katkıcılar için pratik sonuçları.
+
+Açık kaynak dünyasında 2026'nın en tartışmalı konularından biri, AI ile üretilmiş katkıların kabul edilip edilmeyeceği. Bazı projeler "AI desteği serbest, sorumluluk katkıcıda" derken, bazıları kapıyı tamamen kapatıyor.
+
+[Open Source Says No](https://osssaysno.com/) adlı site, bu politikaları tek yerde topluyor. 11 Kasım 2026 itibarıyla sitede **22 proje** "Banned" kategorisinde listeleniyor; yani üretken AI ile oluşturulmuş katkıları kabul etmiyor. Site, politikaları kendi yorumuyla değil, projelerin resmî metinlerinden alıntılayarak ve doğrulama tarihiyle birlikte yayınlıyor.
+
+Bu yazı, listenin öne çıkan örneklerini, yasakların ortak gerekçelerini ve bir katkıcı olarak ne yapmanız gerektiğini anlatıyor.
+
+## Liste nasıl oluşuyor?
+
+Sitenin [hakkında sayfasına](https://osssaysno.com/about) göre bir proje listeye girmek için iki koşuldan birini sağlamalı:
+
+- En az **5.000 GitHub yıldızı** olmalı, veya
+- Yıldız sayısından bağımsız olarak **yaygın kullanılan altyapı** olmalı (dağıtım, dil çalışma zamanı, büyük kütüphane, forge).
+
+Her giriş, projenin resmî politika metnine veya o politikayı belirten sayfaya bağlanıyor ve ilgili pasajı **birebir alıntılıyor**. Etiketleme, politikanın kendi ifadesine göre yapılıyor; site etiketi yukarı veya aşağı çekmiyor. Üç kategori var:
+
+| Kategori | Anlamı |
+|---|---|
+| **Banned** | AI ile üretilmiş katkılar tamamen veya büyük ölçüde yasak |
+| **Restricted** | AI desteği yalnızca koşullarla serbest (bildirim, kapsam sınırı, insan incelemesi) |
+| **Assist allowed** | AI desteği serbest, sorumluluk katkıcıda |
+
+Yazı sırasında "Banned" listesinde 22 proje var. Bu sayı sabit değil; politikalar değiştikçe güncelleniyor.
+
+## Öne çıkan projeler
+
+| Proje | Yıldız (yaklaşık) | Politika özeti |
+|---|---|---|
+| **immich** | 118.800 | "LLM ile üretilmiş PR açmayın" |
+| **Meilisearch** | 59.800 | Kod, test, doküman, PR/issue metni dahil AI üretimi kabul edilmiyor |
+| **okhttp** | 47.100 | Kaynak kodda ve dokümanda LLM/üretken araç kullanılmıyor |
+| **Servo** | 38.100 | LLM veya olasılıksal araçlarla üretilmiş içerik yasak |
+| **stb** | 34.900 | AI ile üretilmiş kod, doküman ve hatta AI ile incelenmiş hata raporu yasak |
+| **Redox OS** | 16.600 | LLM üretimi katkı kabul edilmiyor |
+| **MonoGame** | 14.600 | Yeni kod, doküman, hata düzeltmesi ve sanat dahil tüm AI içeriği yasak |
+| **QEMU** | 13.800 | AI üretimi olduğu düşünülen katkılar reddediliyor |
+| **Zig** | 6.800 | "Yama / pull request için LLM yok" |
+| **Gentoo Linux** | — | NLP/AI aracıyla üretilmiş her türlü içerik açıkça yasak |
+
+Listede ayrıca Fyrox, libvips, pdfcpu, endless-sky, Veloren, Flask-SocketIO, fast-check, gh-dash, ArchiveTune, Modern-CPP-Programming, awesome-claude-skills ve sebastianbergmann/recursion-context gibi projeler var. Zig Codeberg'de, Gentoo kendi altyapısında; geri kalanı ağırlıklı olarak GitHub'da.
+
+## Ortak gerekçeler
+
+Politikaların metinlerine bakınca birkaç tema öne çıkıyor.
+
+**1. İnceleme yükü.** Bir AI ajanı saatler içinde yüzlerce satırlık PR üretebiliyor. Bunu incelemek, test etmek ve doğrulamak yine insan zamanı istiyor. Projeler, "üretmek kolay, incelemek zor" dengesinin kendi aleyhlerine bozulduğunu söylüyor. Özellikle küçük ekipler için bu, gönüllü bakımcıların tükenmesine yol açıyor.
+
+**2. Sorumluluk ve anlayış.** Bir katkının altına imza atan kişinin, o kodu anladığını ve savunabileceğini varsaymak istiyorlar. AI ile üretilmiş bir yamayı gönderen kişi, hata çıktığında ne olduğunu açıklayamıyorsa, bakım yükü yine projeye kalıyor. stb'nin politikası bunu sert biçimde ifade ediyor: AI ile incelenmiş hata raporları bile kabul edilmiyor; çünkü raporun doğruluğu ve bağlamı kaybolabiliyor.
+
+**3. Telif ve kaynak (provenance).** AI çıktısının hangi eğitim verisinden türediği çoğu zaman bilinmiyor. Projeler, lisans uyumluluğu ve telif riski taşıyan kodu kabul etmek istemiyor. Bu, özellikle hukuki olarak temkinli projelerde öne çıkan bir gerekçe.
+
+**4. Kalite ve güvenlik.** AI, ikna edici görünen ama yanlış kod üretebiliyor. Güvenlik açığı, bellek hatası veya sessiz mantık hatası içeren bir yama, inceleme sürecinden geçse bile üretime sızabiliyor. QEMU gibi düşük seviyeli projelerde bunun maliyeti yüksek.
+
+**5. Topluluk kültürü.** Bazı projeler açıkça "el yapımı" olmayı bir değer olarak görüyor. Fyrox'un "AI-generated slop kabul edilmez, bu el yapımı bir oyun motoru" ifadesi bunun örneği. Bu, teknik bir gerekçeden çok kültürel bir tercih.
+
+## "AI desteği" ile "AI üretimi" aynı şey değil
+
+Politikaların çoğu, "AI'ı hiç kullanmayın" demiyor; **AI ile üretilmiş içeriği göndermeyin** diyor. Aradaki fark önemli:
+
+- Yerel olarak AI'dan fikir almak, kod okumak, hata ayıklamak veya test senaryosu üretmek genellikle yasak değil.
+- Ama ürettiğiniz kodu anlamadan, test etmeden, kendi cümlelerinizle açıklamadan PR olarak göndermek birçok projede yasak.
+- Bazı projeler AI kullanımının **bildirilmesini** istiyor; bazıları hiçbir şekilde kabul etmiyor.
+- "AI ile incelenmiş" veya "AI ile özetlenmiş" katkılar bile bazı projelerde sorunlu; çünkü inceleme sürecinin kendisi AI'a devredilmiş oluyor.
+
+Yani soru "AI kullandım mı?" değil, "gönderdiğim katkının sahibi ve sorumlusu ben miyim?" olmalı.
+
+## Katkıcı olarak ne yapmalı?
+
+**1. Önce CONTRIBUTING dosyasını okuyun.** Projenin politikası README'de değil, `CONTRIBUTING.md`, `CONTRIBUTING` veya kendi web sitesindeki "contribute" sayfasında olabilir. QEMU gibi projelerde GitHub PR'ları kapalı; süreç tamamen farklı işliyor.
+
+**2. Politikayı yorumlamaya çalışmayın.** "Küçük bir düzeltme, AI sayılmaz" veya "sadece doküman, kod değil" gibi esnetmeler çoğu politikada açıkça yasak. Meilisearch örneğinde doküman, test, PR açıklaması ve issue yorumu dahil her şey kapsamda.
+
+**3. AI'ı yerel araştırma için kullanın, teslimatta kullanmayın.** Kod tabanını anlamak, olası çözümleri karşılaştırmak veya test yazmak için AI'dan yardım alabilirsiniz; ama gönderdiğiniz metni ve kodu kendi kelimelerinizle yeniden yazın, satır satır anlayın ve savunabileceğinizden emin olun.
+
+**4. Açıkça bildirin.** Politika AI kullanımını yasaklamıyorsa bile, katkı açıklamasında AI'dan nasıl yararlandığınızı belirtmek güven oluşturur. Bazı projeler bunu zorunlu tutuyor; bazıları teşvik ediyor.
+
+**5. Saygılı olun.** Bakımcıların zamanı sınırlı. "Sadece bir PR" diye ısrar etmek, politikayı sorgulamak veya AI ile yeniden denemek, kalıcı yasakla sonuçlanabilir. recursion-context politikası bunu açıkça söylüyor: büyük ölçüde AI üretimi bir PR göndermek, projeden yasaklanmanıza yol açar.
+
+## Bakımcılar için not
+
+Politika yazmak, uygulamaktan kolay. Birkaç pratik öneri:
+
+- Politikayı `CONTRIBUTING.md` içinde, kısa ve net tutun; "AI" kelimesini açıkça kullanın.
+- Hangi kapsamın yasak olduğunu belirtin: kod, test, doküman, issue, çeviri, sanat.
+- AI kullanımının bildirilmesini mi istiyorsunuz, tamamen mi yasaklıyorsunuz, yoksa koşullu mu izin veriyorsunuz? Bunu örneklerle yazın.
+- Tespit zor; ama tutarlı bir politika, en azından beklentiyi netleştirir ve tartışmayı azaltır.
+- Katkıyı reddederken gerekçeyi politikaya bağlayın; kişisel yargı gibi görünmesin.
+
+## Büyük resim
+
+Bu liste, açık kaynağın AI karşısında tek bir tavır almadığını gösteriyor. Bazı projeler AI'ı bir üretkenlik aracı olarak görüp kurallara bağlıyor; bazıları ise inceleme yükü, telif belirsizliği ve kültürel nedenlerle kapıyı kapatıyor.
+
+Türkiye'de açık kaynağa katkı veren geliştiriciler için pratik sonuç şu: **hedef projenin politikasını okumadan AI destekli PR göndermeyin.** Küçük bir doküman düzeltmesi bile, projenin kuralına takılırsa hem emeğiniz boşa gider hem de hesabınız riske girer.
+
+Liste 22 projeyle sınırlı değil; siteye yeni projeler ekleniyor ve mevcut politikalar değişiyor. Katkı göndermeden önce bir kez daha kontrol etmek, en ucuz önlem.
+
+---
+
+# GPUStack CVE-2026-102895: 9.8'lik kimlik doğrulama atlatması nasıl çalışıyor?
+
+- Kaynak: https://fosstr.com/blog/gpustack-cve-2026-102895/
+- Tür: Yazı
+- Tarih: 2026-11-11
+- Etiketler: security, gpustack, cve, ai, kubernetes, self-hosted
+- Özet: GPUStack'te 127.0.0.1'e güvenen kimlik doğrulama mantığı, uzaktan yönetici erişimine yol açtı. CVE-2026-102895'in teknik detayları, CISA KEV süreci ve yükseltme rehberi.
+
+GPUStack, birden fazla sunucudaki GPU'ları tek bir havuz gibi yönetmek ve üzerinde model servis etmek için kullanılan açık kaynak bir platform. Özellikle kendi donanımında LLM çalıştıran ekipler için pratik: GPU düğümlerini ekliyorsunuz, model indirip dağıtıyorsunuz, API üzerinden erişiyorsunuz.
+
+4 Kasım 2026'da yayınlanan **CVE-2026-102895**, bu platformda CVSS 9.8'lik bir kimlik doğrulama atlatması tanımlıyor. 9 Kasım'da CISA'nın Known Exploited Vulnerabilities (KEV) kataloğuna eklendi; yani aktif olarak istismar edildiğine dair kanıt var. Bu yazı, açığın teknik mekanizmasını ve savunma tarafında ne yapılması gerektiğini anlatıyor.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-102895 |
+| CVSS 3.1 | 9.8 (Critical) |
+| Vektör | `AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` |
+| Zayıflık sınıfı | CWE-287, CWE-290, CWE-346 |
+| Etkilenen sürümler | 2.2.0 öncesi |
+| Düzeltme | 2.2.0 (tek başına), 2.2.2 (önerilen) |
+| CISA KEV | 9 Kasım 2026 eklendi |
+| Federal son tarih | 12 Kasım 2026 |
+
+## Açık nasıl çalışıyor?
+
+Sorunun kökü, `gpustack/api/auth.py` içindeki `get_current_user` fonksiyonunda. GPUStack, `force_auth_localhost` ayarı kapalıyken (varsayılan) **loopback'ten gelen isteği yerleşik yönetici olarak kabul ediyor.** Mantık şu: "127.0.0.1'den gelen kişi zaten sunucunun başındadır, ona tekrar şifre sormayalım."
+
+Bu varsayım, uygulama doğrudan kullanıcıyla konuştuğunda makul. Ama GPUStack çoğu kurulumda bir ters proxy'nin (nginx, Traefik, Caddy) arkasında çalışıyor. Ve istemcinin IP'sini belirleyen `client_ip_getter`, iki durumda yanlış sonuç veriyor:
+
+1. **Aynı makinedeki ters proxy**, isteği 127.0.0.1'den iletiyorsa, GPUStack bunu gerçek istemci sanıyor.
+2. İstemci, `X-GPUStack-Real-IP` başlığını kendisi gönderip değerini `127.0.0.1` yaparsa, uygulama bu başlığa güveniyor.
+
+Yani uzaktan gelen bir saldırgan, isteğini yerel makineden geliyormuş gibi gösterebiliyor. Kimlik doğrulama atlanıyor ve oturum, yerleşik yönetici olarak açılıyor.
+
+## Elde edilen erişim ne kadar geniş?
+
+CVE kaydına göre atlatma sonrası saldırgan şunları yapabiliyor:
+
+- Kullanıcı ve model tanımlarını değiştirmek,
+- Kalıcı yönetici API anahtarı oluşturmak,
+- Worker ve bulut sağlayıcı sırlarını okumak,
+- `POST /v2/inference-backends/from-yaml` üzerinden kod çalıştırmak.
+
+Son madde, olayın en kritik kısmı. GPUStack'in "inference backend" mekanizması, YAML tanımıyla özel bir çalışma zamanı veya konteyner başlatmaya izin veriyor. Yönetici yetkisiyle bu uç noktaya erişen biri, pratikte GPU düğümünde kod çalıştırabiliyor. GPUStack düğümleri genellikle model ağırlıklarına, Hugging Face token'larına, bulut kimlik bilgilerine ve iç ağ erişimine sahip; yani tek bir auth bypass'ı, tüm AI altyapısına açılan kapı olabiliyor.
+
+## Gerçekten istismar edildi mi?
+
+Evet. GPUStack'in 31 Temmuz 2026'da yayınlanan [GHSA-gj9m-f8ph-pmhr](https://github.com/gpustack/gpustack/security/advisories/GHSA-gj9m-f8ph-pmhr) duyurusu, açığın **2.1.1 sürümlü bir kurulumda** aktif olarak istismar edildiğini söylüyor. Saldırganların özel backend'ler üzerinden ters kabuk (reverse shell) çalıştırdığı belirtiliyor. İstismarı bildiren kişi Javier Sixto (Ulex Innovative Systems).
+
+CISA, 9 Kasım 2026'da açığı KEV kataloğuna ekledi. [CISA duyurusunda](https://www.cisa.gov/news-events/alerts/2026/11/09/cisa-adds-four-known-exploited-vulnerabilities-catalog) dört açık birlikte listeleniyor; GPUStack bunlardan biri. Federal kurumlar için verilen son tarih **12 Kasım 2026**.
+
+Bu son tarih yalnızca ABD federal sivil kurumları için bağlayıcı. Ama KEV'e girmek, açığın teorik değil, sahada kullanıldığının işareti. EPSS skorunun düşük görünmesi (yazı sırasında yaklaşık %0,6) yanıltmasın; EPSS bir olasılık tahmini, KEV ise gözlemlenmiş istismar.
+
+## Hangi kurulumlar risk altında?
+
+Risk, üç koşulun birlikte oluşmasına bağlı:
+
+1. GPUStack sürümü **2.2.0'dan eski**,
+2. `force_auth_localhost` **kapalı** (varsayılan),
+3. API'ye **güvenilmeyen bir ağdan** erişilebiliyor; ya aynı makinede ters proxy var ya da uygulama `X-GPUStack-Real-IP` başlığına güveniyor.
+
+Kurulum yalnızca iç ağda, VPN arkasında ve ters proxy olmadan çalışıyorsa risk daha düşük. Ama "iç ağ" tek başına güvenlik değil; yanlış yapılandırılmış bir proxy veya başlık yönlendirmesi kapıyı açabilir. Ayrıca aynı sunucuda çalışan başka bir uygulamanın ele geçirilmesi, loopback'e istek atmasına yetebilir.
+
+## Düzeltme ve yükseltme
+
+İlk düzeltme **2.2.0** sürümünde (18 Haziran 2026) yayınlandı. Ancak aynı dönemde başka bir kimlik doğrulama sorunu daha vardı: **CVE-2026-102894**, 0.7.1'den 2.2.2'ye kadar olan sürümleri etkiliyor. Bu yüzden önerilen hedef **2.2.2** (24 Temmuz 2026).
+
+```bash
+# Docker ile çalıştırıyorsanız imajı güncelleyin
+docker pull gpustack/gpustack:v2.2.2
+
+# Helm kullanıyorsanız chart sürümünü ve image tag'ini kontrol edin
+helm list -A | grep gpustack
+```
+
+Yükseltmeden sonra şunları doğrulayın:
+
+- `force_auth_localhost` ayarının açık olduğundan emin olun. Varsayılana güvenmeyin; kurulumunuzda açıkça `true` yapın.
+- Ters proxy, istemciden gelen `X-GPUStack-Real-IP` başlığını **silin** veya yalnızca kendi eklediği değeri geçirin. Başlığı körü körüne iletmeyin.
+- Yönetici API anahtarlarını gözden geçirin; tanımadığınız anahtar varsa iptal edin.
+- Worker ve bulut sağlayıcı kimlik bilgilerini döndürün (rotate). Açık istismar edilmişse bu sırlar ele geçmiş olabilir.
+- Denetim kayıtlarında `POST /v2/inference-backends/from-yaml` çağrılarını ve beklenmeyen kullanıcı/model değişikliklerini arayın.
+
+## Hemen yükseltemiyorsanız
+
+Geçici önlemler, yamayı ertelemek için makul; kalıcı çözüm değil:
+
+- GPUStack API'sini doğrudan internete açmayın. VPN veya kimlik doğrulamalı bir edge proxy arkasında tutun.
+- Ters proxy'de `X-GPUStack-Real-IP` başlığını temizleyin.
+- `force_auth_localhost` ayarını `true` yapın; loopback istisnası kapansın.
+- Aynı makinede çalışan diğer servisleri ayrı bir kullanıcı/konteyner olarak izole edin.
+- GPU düğümlerinden dış ağa giden trafiği kısıtlayın; ters kabuk ve veri sızdırma hareketini zorlaştırın.
+
+## Daha geniş ders
+
+GPUStack olayı, "iç ağda zaten" varsayımının ne kadar kırılgan olduğunu gösteriyor. Loopback'e güvenmek, özellikle ters proxy'li kurulumlarda sık görülen bir hata. Aynı desen yalnızca GPUStack'te değil, birçok self-hosted uygulamada var: `X-Forwarded-For` veya `X-Real-IP` başlığına doğrulamadan güvenmek.
+
+AI altyapısı söz konusu olduğunda risk daha da büyüyor; çünkü bu sistemlerde model ağırlıkları, bulut kimlik bilgileri ve GPU kapasitesi bir arada. Bir auth bypass'ı yalnızca veri sızdırmıyor, aynı zamanda saldırganın sizin pahalı GPU'larınızda istediği işi çalıştırmasına da izin veriyor.
+
+Kısacası: GPUStack kullanıyorsanız sürümü 2.2.2'ye çıkarın, `force_auth_localhost` ayarını açık tutun ve proxy başlıklarına güvenmeyi bırakın. CISA'nın 12 Kasım tarihi ABD federal kurumları için; ama aktif istismar herkes için geçerli.
+
+---
+
+# OpenShell: NVIDIA'nın ajan kum havuzu CNCF'ye geçti
+
+- Kaynak: https://fosstr.com/blog/openshell-cncf-ajan-guvenligi/
+- Tür: Yazı
+- Tarih: 2026-11-11
+- Etiketler: ai, agents, cncf, kubernetes, security, nvidia, open-source
+- Özet: NVIDIA, otonom AI ajanlarını politika ile sınırlayan OpenShell'i CNCF Sandbox'a bağışladı. Çekirdek seviyesinde izolasyon, Cedar politikaları ve kurulum rehberi.
+
+AI ajanları artık yalnızca sohbet etmiyor; dosya okuyor, paket kuruyor, API çağırıyor, kabuk komutu çalıştırıyor. Bu yetenekler işe yaradığı için değerli, ama aynı yetenekler bir hata veya istem enjeksiyonu (prompt injection) durumunda felakete dönüşebiliyor. Ajanın eline verdiğiniz kimlik bilgileri, erişebildiği dosyalar ve konuşabildiği ağ, onun güvenlik sınırınızı belirliyor.
+
+10 Kasım 2026'da KubeCon + CloudNativeCon North America'da NVIDIA, bu sınırı yönetmek için geliştirdiği **OpenShell** projesini Cloud Native Computing Foundation'a (CNCF) bağışladığını duyurdu. Proje, CNCF **Sandbox** seviyesine kabul edildi. Bu yazı, OpenShell'in ne yaptığını, nasıl kurulduğunu ve neye güvenip neye güvenmemek gerektiğini anlatıyor.
+
+## OpenShell nedir?
+
+[OpenShell](https://github.com/NVIDIA/OpenShell), otonom AI ajanlarını güvenli ve politika denetimli bir çalışma zamanında çalıştıran bir altyapı. Ajanın kendisini değiştirmiyor; ajanın etrafındaki ortamı kontrol ediyor.
+
+Temel fikir şu: Ajan, dosya sistemine, ağa ve kimlik bilgilerine doğrudan erişmesin. Bunun yerine izole bir kum havuzunda (sandbox) çalışsın; her dosya erişimi, sistem çağrısı ve ağ bağlantısı politika kontrolünden geçsin. Ajan gerçek kimlik bilgilerini hiç görmesin; OpenShell, kimlik bilgisini yalnızca onaylı bir uç noktaya giden isteğe eklesin.
+
+İki katmanlı bir savunma var:
+
+- **Çekirdek seviyesinde zorlama.** Her ajan ayrı bir kum havuzunda çalışıyor. Hangi dosyalara erişebileceği ve hangi sistem çağrılarını yapabileceği çekirdek kontrolleriyle sınırlanıyor. Her ağ bağlantısı, kum havuzundan çıkmadan önce politika kontrolünden geçiyor.
+- **Biçimsel doğrulamalı politika değişiklikleri.** Bir politika değişikliği onaylanmadan önce OpenShell, bu değişikliğin hangi yeni erişimleri açacağını biçimsel doğrulama ile işaretliyor. Örneğin yeni bir host'a kimlik bilgisiyle erişim veya yeni bir API metodunun çağrılması, insan incelemesi bekliyor.
+
+Politika dili olarak **Cedar** kullanılıyor. Cedar da CNCF projesi; yani OpenShell, başka bir CNCF projesinin üzerine inşa edilmiş oluyor. Bu, CNCF ekosisteminde beklenen bir olgunluk işareti.
+
+## Neden CNCF'ye taşındı?
+
+OpenShell'in ilk commit'i 29 Ocak 2026. Yani proje bir yıldan kısa sürede 21 binin üzerinde GitHub yıldızına ve 2.700'den fazla katkıcıya ulaştı. Bu hız, tek bir şirketin kontrolündeki bir güvenlik katmanı için hem başarı hem de risk.
+
+NVIDIA'nın açıklamasına göre proje, NVIDIA, Red Hat, Docker ve Canonical'dan çekirdek katkıcılarla başladı. CNCF Sandbox'a geçişle birlikte geliştirme, **ai-openshell** adlı tarafsız GitHub organizasyonuna taşınıyor. Geçiş tamamlanana kadar kod, issue ve pull request'ler NVIDIA/OpenShell deposunda kalıyor.
+
+[CNCF duyurusu](https://www.cncf.io/blog/2026/11/10/welcoming-openshell-to-the-cncf-open-governance-to-secure-agentic-ai/) şunu vurguluyor: "Ajanların altyapı katmanı ortak, satıcıdan bağımsız ve ona bağlı olan herkese açık olmalı." Bu, özellikle ajan güvenliği gibi hassas bir konuda önemli. Politikayı tek bir satıcının yol haritası belirlememeli.
+
+## Kurulum
+
+OpenShell; Linux, Apple Silicon üzerinde macOS veya WSL 2 ile Windows'ta çalışıyor. Docker, Podman veya ana makine sanallaştırması gerekiyor. Hızlı başlangıç:
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/NVIDIA/OpenShell/main/install.sh | sh
+openshell sandbox create --name demo
+```
+
+Kurulum betiği CLI'yı ve yerel bir ağ geçidini (gateway) kuruyor. Varsayılan kum havuzu imajı, ajan yüklü olmayan minimal bir Ubuntu. Gerçek bir ajan çalıştırmak için [Run Your First Agent](https://docs.nvidia.com/openshell/latest/about/run-your-first-agent) rehberi, ücretsiz bir OpenRouter modeliyle OpenCode'u çalıştırıyor ve ajan yeni erişim istedikçe nasıl onay verileceğini gösteriyor.
+
+Not: `curl | sh` her zaman riskli. Betiği indirip inceleyerek de kurabilirsiniz:
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/NVIDIA/OpenShell/main/install.sh -o install.sh
+less install.sh
+sh install.sh
+```
+
+Kodlama ajanınıza OpenShell kullanmayı öğretmek için:
+
+```bash
+npx skills add NVIDIA/OpenShell
+```
+
+SDK'lar da var: Python (`uv add openshell`), TypeScript (`@nvidia/openshell-sdk`), Go ve Rust. SDK'lar uygulamanızı bir OpenShell ağ geçidine bağlıyor; CLI'yı kurmuyor.
+
+## Mimari
+
+OpenShell üç parçadan oluşuyor:
+
+| Bileşen | Görevi |
+|---|---|
+| **Gateway** | Kontrol düzlemi: kum havuzları, politika ve erişim yönetimi |
+| **Supervisor** | Kum havuzunun dışında çalışır; her isteği politikaya göre denetler ve kaydeder |
+| **Sandbox** | Ajanın çalıştığı izole ortam |
+
+Ajan, kum havuzundan dışarı doğrudan ağ erişimi yapamıyor. Her istek supervisor'dan geçiyor; supervisor politikayı uyguluyor ve kararı kaydediyor. Kimlik bilgileri yalnızca onaylı uç noktalara giden isteklerde ekleniyor.
+
+Kubernetes üzerinde çalıştırmak için Helm chart'ı var. Ancak önemli bir şart: CNI'nizin `NetworkPolicy` uygulaması gerekiyor. Aksi halde ağ politikaları kâğıt üzerinde kalır.
+
+## Ajan güvenliğinde neyi çözüyor?
+
+Klasik yaklaşım, ajana bir konteyner vermek ve içine ihtiyacı olan her şeyi koymak. Ama konteyner izolasyonu, ajanın konteyner içinde yapabileceklerini sınırlamaz. Ajan, konteynerdeki tüm dosyaları okuyabilir, tüm ağa çıkabilir ve ortam değişkenlerindeki tüm sırları görebilir.
+
+OpenShell bunu üç noktada daraltıyor:
+
+- **Dosya erişimi**: Ajan yalnızca politikada izin verilen yolları görüyor.
+- **Ağ erişimi**: Yalnızca izin verilen host'lar ve portlar; her bağlantı denetleniyor.
+- **Kimlik bilgileri**: Ajan sırrı görmüyor; sır, onaylı uç noktaya giden isteğe supervisor tarafından ekleniyor.
+
+Bu, özellikle şu senaryolarda anlamlı:
+
+- Kodlama ajanlarına depo erişimi vermek, ama üretim sırlarına erişim vermemek,
+- Ajanın dış API'lere çıkmasını kontrol etmek,
+- Çok kiracılı (multi-tenant) bir ortamda her ekibin ajanını ayrı politika ile sınırlamak,
+- Ajanın çalıştırdığı komutları denetlemek ve tekrarlanabilir hale getirmek.
+
+## Neye dikkat etmeli?
+
+OpenShell ilginç bir proje, ama sihirli bir güvenlik katmanı değil. Birkaç sınırı var:
+
+**1. Sandbox seviyesi.** CNCF Sandbox, "deneysel, üretimde yaygın test edilmemiş" anlamına geliyor. OpenShell henüz olgunluk seviyelerinin en altında. Üretimde kullanacaksanız kendi risk değerlendirmenizi yapın.
+
+**2. Genç proje.** İlk commit Ocak 2026. Altı ayda 21 bin yıldız etkileyici, ama aynı zamanda hızlı değişen bir API ve olgunlaşmamış kenar durumları demek.
+
+**3. Politika doğru yazılmalı.** Yanlış yapılandırılmış bir politika, ajanı gereğinden fazla serbest bırakabilir. Biçimsel doğrulama yardımcı oluyor, ama "onayladım" demek "güvenli" demek değil. Değişiklikleri gözden geçirin.
+
+**4. Kimlik bilgisi yine de güçlü.** OpenShell sırrı ajandan saklıyor, ama onaylı uç noktaya giden isteğe ekliyor. Ajan, o uç noktayı kötüye kullanacak bir istek üretebilirse sır hâlâ risk altında. Yetki kapsamını dar tutun.
+
+**5. Telemetri.** OpenShell anonim telemetri topluyor. Kum havuzu adları, dosya yolları, istemler veya kimlik bilgileri toplanmıyor; yalnızca operasyonel kategoriler ve sayılar. Yine de kapatmak isterseniz ağ geçidinde `OPENSHELL_TELEMETRY_ENABLED=false`, Helm kurulumunda `server.telemetryEnabled=false` ayarlayabilirsiniz.
+
+**6. Taşınma süreci.** Proje şu an ai-openshell organizasyonuna taşınıyor. Dokümantasyon ve depo adresleri değişebilir; otomasyon yazarken sabit URL'lere değil, sürümlenmiş referanslara bağlanın.
+
+## Kim denemeli?
+
+Kendi ajanlarını çalıştıran ve "bu ajan tam olarak neye erişebiliyor?" sorusuna net cevap vermek isteyen ekipler için OpenShell ciddi bir aday. Özellikle Kubernetes üzerinde çok sayıda ajan çalıştırıyorsanız, ağ politikası ve kimlik bilgisi yönetimini tek bir katmanda toplamak işleri kolaylaştırabilir.
+
+Basit bir yerel kurulum için ise hızlı başlangıç yeterli: bir kum havuzu oluşturun, içine OpenCode kurun, ajanın hangi erişimleri istediğini görün ve tek tek onaylayın. Bu deneme, ajan güvenliğinin neden "konteynere koy ve unut" olmadığını hızlıca gösteriyor.
+
+OpenShell'in CNCF'ye geçişi, ajan güvenliğinin tek bir satıcının kontrolünden çıkıp ortak bir altyapı sorununa dönüştüğünün işareti. Proje henüz genç; ama yön doğru. Ajanlara kabuk erişimi veriyorsanız, en azından politikayı nerede uyguladığınızı bilmeniz gerekiyor.
+
+---
+
+# Vino: Synaptics patent mektupları DisplayLink'in açık kaynak sürücüsünü nasıl kapattı
+
+- Kaynak: https://fosstr.com/blog/vino-displaylink-patent-synaptics/
+- Tür: Yazı
+- Tarih: 2026-11-11
+- Etiketler: linux, displaylink, patent, rust, kernel, open-source
+- Özet: DisplayLink DL3 için Rust ile yazılan açık kaynak Vino sürücüsü, Synaptics'in patent mektuplarının ardından GitHub'dan kalktı. Olayın kronolojisi, hukuki tartışma ve Linux kullanıcıları için sonuçları.
+
+DisplayLink, USB üzerinden harici ekran bağlamanın en yaygın yollarından biri. Windows'ta sürücüyü kurup unutuyorsunuz; Linux'ta ise yıllardır aynı hikâye var: eski USB2 nesli için açık kaynak `udl` sürücüsü çalışır, yeni DL3 nesli için ise Synaptics'in ağaç dışı (out-of-tree) çekirdek modülü ve kapalı kaynak `DisplayLinkManager` daemon'u gerekir.
+
+2026'nın ortasında bu boşluğu kapatmak için **Vino** adında bir proje çıktı: temiz oda (clean-room) yöntemiyle tersine mühendislik yapılmış, çekirdek içinde çalışan, Rust ile yazılmış bir DRM sürücüsü. Aradan geçen aylarda Vino, Synaptics'in patent mektuplarıyla karşılaştı ve GitHub deposu yayından kalktı. Bu yazı, olayı tarih sırasıyla ve abartmadan anlatıyor.
+
+## Vino nedir?
+
+[Phoronix'in 17 Haziran 2026'daki haberiyle](https://www.phoronix.com/news/Experimental-Vino-DRM-Driver) duyurulan Vino, Dell Universal Dock D6000 gibi **DisplayLink DL3** yuvalarına yönelik deneysel bir sürücüydü. Geliştiricisi Mike Lothian. Sürücü, Rust ile yazılmış ve çekirdek içinde DRM/KMS katmanına oturuyor; yani kullanıcı alanında ayrı bir kapalı daemon çalıştırmaya ihtiyaç duymuyor.
+
+İki nokta önemli:
+
+- **Temiz oda**: Lothian, Synaptics'in kaynak kodunu kopyalamadığını, cihazın davranışını gözlemleyerek bağımsız bir uygulama yazdığını söylüyor.
+- **AI desteği**: Sürücünün bir kısmı Claude Code ve Opus 4.8 modeliyle yazıldı. Bu, lisans veya patent tartışmasının merkezinde değil; ama projenin kamuoyunda "AI ile yazılmış sürücü" olarak anılmasına yol açtı.
+
+Haziran ayındaki ilk sunumda sürücü henüz tam değildi. Lothian cihaz kurulumunu ve iletişimi doğrulamış, ancak şifreli kontrol kanalındaki yanıtları çözememişti; yani gerçek bir görüntü çıkışı test edilmemişti. Yine de hedef netti: Synaptics'in ağaç dışı sürücüsü ve kapalı daemon'una bağımlılığı kaldırmak ve ileride ana çekirdeğe girebilecek bir alternatif üretmek.
+
+## Kronoloji
+
+| Tarih | Olay |
+|---|---|
+| 17 Haziran 2026 | Vino, dri-devel posta listesinde tanıtıldı; Phoronix haber yaptı. |
+| 17 Ağustos 2026 | Lothian, Open Invention Network (OIN) lisansı aldı. |
+| 17 Ağustos 2026 | Synaptics tarafından ilk "cease and desist" mektubu gönderildi. |
+| 5 Ekim 2026 | Takip mektubu: GB2484736 ve GB2485613 numaralı patentlerin 11. istemleri öne sürüldü. |
+| 11 Ekim 2026 | Mektupta verilen yanıt süresi doldu. |
+| 14 Ekim 2026 | J A Kemp avukatı Clive So, patent kopyalarını ve mektubu LKML'e ekledi; Lothian aynı gün yanıt verdi. |
+| 4 Kasım 2026 | Phoronix, Vino deposunun artık erişilebilir olmadığını duyurdu. |
+
+Tarihlerin bir kısmı ikincil kaynaklara dayanıyor; özellikle 5 Ekim takip mektubundaki 11. istem iddiası ve 25.000 dolarlık haftalık ceza tehdidi, Joho no Todai'nin [haberinde](https://joho-todai.com/synaptics-vino-driver-linux-development-halt/) aktarılıyor. Birincil kaynak olarak elimizde LKML'e düşen 14 Ekim yazışması var.
+
+## Synaptics ne istedi?
+
+LKML arşivindeki [14 Ekim 2026 tarihli ileti](https://lkml.rescloud.iu.edu/hypermail/linux/kernel/2610.1/14966.html), J A Kemp LLP'den Clive So imzalı bir mektubun eklerini içeriyor. Mektupta iki Birleşik Krallık patentine atıf var:
+
+- **GB2484736**
+- **GB2485613**
+
+Lothian'ın yanıtına göre Synaptics'in pozisyonu, patentlerin hâlâ yürürlükte olduğu ve "buluşun kolay veya tanıdık olmasının önemli olmadığı" yönünde. Şirket, Vino'nun bu patentlerdeki yöntemleri uyguladığını iddia ediyor. Mektupta ayrıca 125 patentlik daha geniş bir liste bulunduğu, ancak bunların ilk aşamada kodla tek tek eşleştirilmediği belirtiliyor.
+
+Synaptics'in kendi kamuoyu açıklaması yok. Elimizdeki metinlerde şirketin görüşü yalnızca karşı tarafın mektubu ve Lothian'ın özeti üzerinden aktarılıyor. Bu, bir mahkeme kararı değil; bir hukuki tehdit ve müzakere süreci.
+
+## Lothian'ın savunması
+
+Lothian, 14 Ekim'deki yanıtında üç ana argüman kuruyor.
+
+**1. Yetki ve yer.** Kendisinin İskoçya'da yerleşik olduğunu, İngiltere ve Galler'de değil; dolayısıyla olası bir davanın İskoçya'da, Court of Session'da açılması gerektiğini söylüyor.
+
+**2. Patentlerin geçersizliği.** İngiltere Patent Yasası'nın 74(1)(a) maddesi uyarınca geçersizliğin tam bir savunma olduğunu, ayrıca 72. madde kapsamında iptal karşı talebi açacağını belirtiyor. Dayandığı noktalar:
+
+- GB2484736'nın 2011 tarihli arama raporunda yedi belgenin, GB2485613'ün raporunda altı belgenin bağımsız istemlere karşı "X" kategorisinde cite edildiğini söylüyor.
+- Her iki patentte de bağımsız istemlerin başlangıçta ağ/taşıma sınırlaması içermediğini; istemlerin ancak "genel amaçlı veri ağı" ve "taşıma protokolü" eklenerek kabul edildiğini savunuyor.
+- Bu eklenen özelliğin de yeni olmadığını; RFB/VNC protokolünün 1998'de benzer bir akışı tanımladığını ve US5835082 ile US6272180 gibi önceki patentlerin sıkıştırılmış çerçeve tamponu ve Haar kodlu döşeme özelliklerini açıkladığını ileri sürüyor.
+- Patentlerin kendi açıklamasının, USB üzerinden ek ekran bağlamanın zaten yaygın olduğunu kabul ettiğini not ediyor.
+
+**3. OIN lisansı.** Synaptics'in OIN üyesi olduğunu, kendisinin de 17 Ağustos 2026'dan beri OIN lisansı sahibi olduğunu söylüyor. OIN tanımında "Affiliate" kavramının "şimdi veya gelecekte" bir yan kuruluşu kapsadığını, DisplayLink'in Temmuz 2020'de Synaptics'e katıldığını hatırlatıyor. Synaptics'in DisplayLink patentlerini OIN kapsamı dışında tuttuğunu düşündüğünü, bunun hangi hükme veya sınırlama seçimine dayandığını soruyor.
+
+**4. İşlemi kim yapıyor?** Son olarak, istemlerdeki yöntemlerin kullanıcının kendi cihazında, yani Synaptics'in ürettiği DisplayLink donanımında gerçekleştiğini savunuyor. Bu, patent hukukunda "doğrudan ihlal" tartışmasını donanım satıcısına kaydırma girişimi.
+
+Bu argümanların hiçbiri bir mahkeme veya patent ofisi tarafından doğrulanmadı. Yazıda yer almalarının nedeni, tartışmanın taraflarını göstermek; hukuki bir sonuç ilan etmek değil.
+
+## Temiz oda neden korumuyor?
+
+En sık karıştırılan nokta bu: **telif hakkı ve patent farklı şeyler.**
+
+Telif hakkı, kodun kendisini korur. Kaynak kodu kopyalamadıysanız, bağımsız yazdıysanız telif ihlali iddiası zayıflar. Patent ise **yöntemi** korur. Aynı davranışı sıfırdan, farklı kodla, hatta farklı dille uygulasanız bile patentteki istemler kapsamına giriyorsanız ihlal iddiası doğabilir. Bu yüzden "temiz oda" bir patent kalkanı değil.
+
+Vino özelinde tartışma tam olarak burada düğümleniyor: Synaptics, kodun kopyalanmasını değil, DisplayLink protokolünün belirli adımlarının patentli yöntemlere girdiğini iddia ediyor. Lothian ise yöntemlerin zaten bilinen teknikler olduğunu ve istemlerin geçersiz olması gerektiğini savunuyor.
+
+OIN tarafı da otomatik bir koruma değil. OIN, üyelerine belirli Linux ile ilgili patentlerde çapraz lisans sağlar; ancak kapsam, tanımlar ve istisnalar dikkatle okunmalı. Synaptics'in DisplayLink patentlerinin bu kapsama girip girmediği tartışmalı. Lothian'ın mektubu, bu belirsizliği kapatmak için şirketten somut hüküm istiyor.
+
+## Linux kullanıcıları için ne değişiyor?
+
+Kısa vadede fazla bir şey değişmiyor; çünkü Vino zaten deneysel ve tamamlanmamıştı. Ama uzun vadede etkisi büyük:
+
+- **DL3 için açık kaynak sürücü yok.** Kullanıcılar Synaptics'in ağaç dışı modülüne ve kapalı `DisplayLinkManager` daemon'una bağımlı kalmaya devam ediyor.
+- **Çekirdek güncellemeleri kırılgan.** Ağaç dışı modüller her yeni çekirdek sürümünde yeniden derlenmek zorunda; DKMS veya benzeri çözümler her zaman sorunsuz değil.
+- **Denetlenebilirlik yok.** Kapalı daemon, ağ erişimi ve ekran verisi üzerinde ne yaptığını dışarıdan incelemeye izin vermiyor.
+- **ARM ve alternatif platformlar.** Resmî sürücü ağırlıklı olarak x86 için dağıtılıyor; ARM tabanlı Linux cihazlarında DisplayLink desteği daha da sınırlı.
+- **Upstream umudu ertelendi.** Vino'nun ana çekirdeğe girme hedefi, hukuki süreç çözülmeden gerçekçi değil.
+
+Synaptics'in resmî sürücüsü çalışmaya devam ediyor. Eğer DisplayLink yuvanız varsa pratik tavsiye şu: çalışan çekirdek ve sürücü sürümünü sabitleyin, büyük dağıtım yükseltmelerinden önce yuvanın çalıştığını test edin ve yedek bir ekran bağlantınız olsun.
+
+## Bu olay neden önemli?
+
+Çünkü açık kaynak donanım desteğinin önündeki engel her zaman teknik değil. Bazen lisans, bazen patent, bazen de "kamuoyuna duyurulsa bile davayı göze alamayacak bireysel geliştirici" gerçeği devreye giriyor.
+
+Vino'nun hikâyesi, tersine mühendisliğin ve temiz oda geliştirmenin yasal bir sihir olmadığını gösteriyor. Bir sürücüyü sıfırdan yazmak, o sürücünün patent riskinden muaf olduğu anlamına gelmiyor. Aynı şekilde, bir şirketin mektup göndermesi de patentlerin geçerli olduğu veya ihlalin kanıtlandığı anlamına gelmiyor. Ortada şu an bir mahkeme kararı yok; yalnızca bir çekişme var.
+
+Türkiye'de DisplayLink yuva kullanan Linux kullanıcıları için bu, doğrudan bir günlük sorun değil. Ama donanım üreticilerinin Linux desteğini nasıl gönülsüz yürüttüğünü ve açık kaynak topluluğunun hukuki baskıyla nasıl geri çekilebildiğini görmek için iyi bir örnek. Vino geri dönerse, muhtemelen sessizce değil; bir lisans anlaşması veya patent istisnasıyla döner. O zamana kadar DL3 Linux desteği, satıcının insafına kalmış durumda.
+
+---
+
 # Dux Shell: Waybar, Rofi ve swaylock'u tek pakette değiştiren Wayland kabuğu
 
 - Kaynak: https://fosstr.com/blog/dux-shell-wayland-rehberi/
