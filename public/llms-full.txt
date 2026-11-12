@@ -13,6 +13,368 @@ Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her 
 
 ---
 
+# Apache mod_http2 CVE-2026-119618: HTTP/2 yarış koşulu nasıl RCE'ye dönüşüyor?
+
+- Kaynak: https://fosstr.com/blog/apache-mod-http2-cve-2026-119618/
+- Tür: Yazı
+- Tarih: 2026-11-12
+- Etiketler: security, apache, http2, cve, rce, linux
+- Özet: Apache HTTP Server 2.4.55-2.4.70 arasındaki mod_http2, paylaşılan başlık tablosundaki bir yarış koşuluyla heap bozulmasına ve uzaktan kod çalıştırmaya yol açıyor. Düzeltme 2.4.71'de.
+
+Apache HTTP Server, internetin görünmez iş atlarından biri. Önünde CDN veya ters proxy olsa bile arka planda sayısız kurulumda hâlâ httpd çalışıyor. 11 Kasım 2026'da yayınlanan **2.4.71** sürümü, bu sunucunun HTTP/2 modülünde kritik bir açığı kapatıyor: **CVE-2026-119618**.
+
+Apache açığı "kritik" olarak sınıflandırıyor. Red Hat CVSS 3.1 skorunu **9.8** veriyor. Etkilenen sürüm aralığı geniş: **2.4.55'ten 2.4.70'e** kadar. Açık, HTTP/2 açık olan sunucularda kimlik doğrulaması gerektirmeden heap bozulmasına ve potansiyel olarak uzaktan kod çalıştırmaya (RCE) yol açabiliyor.
+
+Bu yazı, açığın teknik mekanizmasını, hangi kurulumların gerçekten risk altında olduğunu ve yükseltme dışında ne yapılabileceğini anlatıyor.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-119618 |
+| Önem | Kritik (Apache), CVSS 9.8 (Red Hat) |
+| Vektör | `AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` |
+| Zayıflık sınıfı | CWE-362 (uygunsuz eşitleme ile paylaşılan kaynak) |
+| Etkilenen | Apache HTTP Server 2.4.55–2.4.70, mod_h2 2.0.8–2.0.42 |
+| Düzeltme | Apache HTTP Server 2.4.71, mod_h2 2.0.43 |
+| Düzeltme commit'i | `824beab9b942` |
+| Bildirim | Anthropic OSS Scanner (26 Ekim), Google Cloud VR (3 Kasım) |
+| CISA KEV | Hayır (12 Kasım 2026 itibarıyla) |
+| Aktif istismar | Doğrulanmış rapor yok; kamuya açık laboratuvar PoC'leri var |
+
+## Açık nasıl çalışıyor?
+
+Sorun, `modules/http2/h2_request.c` içindeki `assign_headers()` fonksiyonunda. HTTP/2'de her istek, bağlantı seviyesindeki paylaşılan bir `h2_request` yapısından türetiliyor. Fonksiyon önce paylaşılan başlık tablosunu isteğe özel `r->headers_in` yapısına kopyalıyor:
+
+```c
+r->headers_in = apr_table_clone(r->pool, req->headers);
+```
+
+Sonra, gövdesiz bir istek için `Content-Length` başlığını sentezliyor. Normalde bu yazma işleminin isteğe özel tabloya gitmesi gerekir. Ancak hatalı kod yolu, yazmayı **paylaşılan `req->headers` tablosuna** yapıyor:
+
+```c
+apr_table_setn(req->headers, "Content-Length", "0");
+```
+
+Tetikleyici istek şekli oldukça dar görünüyor: HTTP/2 üzerinden `Content-Type` başlığı taşıyan, `Content-Length` içermeyen ve hemen `END_STREAM` ile biten bir istek. Bu durumda `assign_headers()` paylaşılan tabloya `Content-Length: 0` ekliyor.
+
+Asıl mesele burada başlıyor. `apr_table_t` thread-safe değil. Paylaşılan tablo, HTTP/2 bağlantı iş parçacığı (connection thread) tarafından da kullanılıyor. Worker thread'in bu tabloya yazması, bağlantı thread'i aynı tabloyu okurken veya değiştirirken çalışabiliyor. `apr_table_setn` çağrısı, tablonun altındaki `apr_array` için yeniden tahsis (reallocation) tetikleyebiliyor. İki thread aynı pool/heap üzerinde yarışınca bellek bozuluyor. Bozulan heap, uygun koşullarda kontrol akışının ele geçirilmesine ve kod çalıştırmaya kadar gidebiliyor.
+
+Kısacası: tek bir hatalı yazma hedefi, çok iş parçacıklı bir sunucuda bellek güvenliği açığına dönüşüyor.
+
+## Gerçekten istismar edildi mi?
+
+12 Kasım 2026 itibarıyla **doğrulanmış bir aktif istismar raporu yok**. Açık CISA'nın Known Exploited Vulnerabilities kataloğunda değil (KEV'e girmemesi, teorik olduğu anlamına gelmez; sadece sahada gözlemlenmiş istismar kanıtı olmadığını söyler).
+
+Ancak bunu "saldırı yok" diye okumamak lazım:
+
+- Apache ve Red Hat, yayın sırasında kamuya açık bir istismar bildirimi olmadığını söylüyor.
+- Kısa süre içinde bağımsız araştırmacılar, etkilenen sürümlerde heap bozulmasını gösteren laboratuvar PoC'leri ve diferansiyel test ortamları yayınladı. Yani "tetiklenemez" bir açık değil.
+- HTTP/2, Apache'nin yaygın olarak etkinleştirilen bir özelliği. Sunucunun internete bakan yüzeyi geniş.
+
+Bu kombinasyon, yamayı ertelemek için kötü bir bahis. Özellikle açık, kimlik doğrulaması istemiyor ve ağ üzerinden tetiklenebiliyor.
+
+## Hangi kurulumlar risk altında?
+
+Risk, üç koşulun birlikte oluşmasına bağlı:
+
+1. Apache HTTP Server sürümü **2.4.55 ile 2.4.70 arasında**,
+2. HTTP/2 etkin: `Protocols` yönergesinde `h2` (TLS üzerinden) veya `h2c` (şifresiz) var,
+3. Sunucuya güvenilmeyen bir ağdan erişilebiliyor.
+
+Yalnızca HTTP/1.1 sunan kurulumlar etkilenmiyor. Bu ayrımı netleştirmek için:
+
+```bash
+# Sürüm
+httpd -v
+
+# mod_http2 yüklü mü?
+apachectl -M | grep http2
+
+# Protocols yönergesinde h2/h2c var mı?
+grep -RniE '^\s*Protocols' /etc/httpd /etc/apache2 2>/dev/null
+```
+
+Varsayılan yapılandırmalarda `Protocols h2 http/1.1` gibi bir satır varsa HTTP/2 açık demektir. Yalnızca `http/1.1` yazıyorsa bu CVE kapsamında değilsiniz.
+
+Ters proxy arkasındaki kurulumlar da muaf değil: proxy ile Apache arasında HTTP/2 konuşuluyorsa, açık proxy katmanında değil Apache tarafında tetiklenir.
+
+## Düzeltme: 2.4.71
+
+Yükseltme hedefi net: **Apache HTTP Server 2.4.71** veya dağıtımınızın yamalı paketi. Kaynaktan derliyorsanız:
+
+```bash
+# 2.4.71 tarball'ı ile derleyin; mod_h2 ayrı kullanılıyorsa 2.0.43'e çıkın
+wget https://dlcdn.apache.org/httpd/httpd-2.4.71.tar.gz
+```
+
+Dağıtım paketleri her zaman upstream sürüm numarasını taşımaz. RHEL 9 ve 10'da `mod_http2` ayrı bir paket olarak geliyor; düzeltme `httpd` değil `mod_http2` paketiyle geliyor. Kontrol:
+
+```bash
+rpm -q httpd mod_http2
+rpm -q --changelog mod_http2 | grep CVE-2026-119618
+```
+
+Debian/Ubuntu tarafında `apache2` paketinin dağıtım sürümüne bakın; güvenlik güncellemesi geldiyse uygulayın:
+
+```bash
+apt update
+apt install --only-upgrade apache2
+```
+
+Aynı 2.4.71 sürümü iki ek sorunu da kapatıyor: `mod_md`'de NULL pointer dereference (**CVE-2026-106023**, önemli) ve `mod_vhost_alias`'ta 1 baytlık stack taşması (**CVE-2026-109163**, düşük). Yani yükseltmeyi sadece bu CVE için değil, paket bütünü için yapın.
+
+## Hemen yükseltemiyorsanız
+
+Apache bu açık için bir yapılandırma yaması yayınlamadı. En etkili geçici önlem HTTP/2'yi kapatmak:
+
+```apache
+# h2/h2c'yi Protocols satırından çıkarın
+Protocols http/1.1
+```
+
+Bunun bedeli var: HTTP/2'nin multiplexing ve başlık sıkıştırma avantajlarını kaybedersiniz. Ama internete bakan ve yamayı hemen uygulayamadığınız sunucularda, bilinmeyen bir heap bozulması açığını açık tutmaktan iyidir.
+
+Ek olarak:
+
+- Ters proxy'de HTTP/2'yi sonlandırıp backend'e HTTP/1.1 ile gitmek, Apache tarafındaki riski azaltır. Proxy ile Apache arasında `h2c` kullanmayın.
+- Apache'yi mümkün olduğunca düşük yetkili bir kullanıcı ve ayrı konteyner içinde çalıştırın; RCE'nin etkisini sınırlar.
+- `mod_http2`'ye ihtiyacınız yoksa modülü tamamen kaldırın. Kullanmıyorsanız yüklemenin bir anlamı yok.
+
+## Daha geniş ders
+
+Bu açık, iki ayrı hikâyeyi aynı anda anlatıyor.
+
+Birincisi, klasik bellek güvenliği: C'de paylaşılan bir veri yapısını, onu kullanan tüm thread'leri hesaba katmadan değiştirmek. `apr_table_t`'nin thread-safe olmadığı biliniyor; buna rağmen paylaşılan tabloya yazma yolu kodda kalmış. HTTP/2 gibi eşzamanlılığın yoğun olduğu bir modülde bu tür hatalar nadir değil, ama sonuçları ağır.
+
+İkincisi, açığı **Anthropic'in OSS Scanner aracı** buldu; Google Cloud Vulnerability Research ekibi de bağımsız olarak aynı sorunu raporladı. Yani otomatik kod analizi, artık gerçek dünyada kritik RCE bulacak seviyeye geldi. Bu, yama seli tartışmasının diğer yüzü: aynı otomasyon, kodu yazarken de denetlerken de ölçeği değiştiriyor.
+
+Pratik sonuç basit. Apache kullanıyorsanız sürümü kontrol edin, HTTP/2'nin açık olup olmadığını doğrulayın ve 2.4.71'e (veya dağıtım yamanıza) çıkın. İnternete bakan bir HTTP sunucusunda "muhtemelen tetiklenmez" yeterli bir gerekçe değil.
+
+## Kaynaklar
+
+- [Apache HTTP Server 2.4 güvenlik duyuruları](https://httpd.apache.org/security/vulnerabilities_24.html)
+- [CVE-2026-119618 kaydı](https://www.cve.org/CVERecord?id=CVE-2026-119618)
+- [oss-security duyurusu (Eric Covener)](https://www.openwall.com/lists/oss-security/2026/11/11/13)
+- [Düzeltme commit'i 824beab](https://github.com/apache/httpd/commit/824beab9b9424d6cfb29595248fdbf6c3dddeab1)
+- [Red Hat CVE sayfası](https://access.redhat.com/security/cve/cve-2026-119618)
+
+---
+
+# Linux çekirdeğinde AI yama seli: Lorenzo Stoakes bazı review görevlerini bıraktı
+
+- Kaynak: https://fosstr.com/blog/linux-kernel-ai-yama-seli-stoakes/
+- Tür: Yazı
+- Tarih: 2026-11-12
+- Etiketler: linux, kernel, ai, open-source, maintainers
+- Özet: Linux bellek yönetimi uzmanı Lorenzo Stoakes, AI üretimi yama akını nedeniyle core, reclaim, Rust, THP ve misc incelemelerinden çekildi. Bu, çekirdek geliştirme modelinin darboğazını gösteriyor.
+
+Linux çekirdeği, açık kaynak dünyasının en katı kalite süreçlerinden birine sahip. Bir yama, kabul edilmeden önce alt sistem maintainer'larının incelemesinden geçiyor; bu inceleme çoğu zaman yamanın kendisinden daha uzun sürüyor. Son yıllarda bu sürece yeni bir değişken eklendi: AI ile üretilen yamalar.
+
+Kasım 2026'nın başında, bellek yönetimi (MM) alanının en deneyimli isimlerinden **Lorenzo Stoakes**, bazı review görevlerini bıraktığını Linux kernel mailing listesinde (LKML) duyurdu. Nedeni, AI kaynaklı yama akınının inceleme kapasitesini tüketmesi.
+
+Bu, "bir geliştirici yoruldu" haberi değil. Çekirdek geliştirme modelinin ölçek sorununu gösteren somut bir işaret.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| Kişi | Lorenzo Stoakes (Arm) |
+| Katkı | 2014'ten beri Linux çekirdeği; bellek yönetimi ve `mm/` alt sistemleri |
+| Duyuru | LKML, 10 Kasım 2026 |
+| Bıraktığı review alanları | MM core, reclaim, Rust, THP (Huge Pages), misc |
+| Devam ettiği işler | Maintainer olduğu alanlar, KVM, elindeki yama serisini tamamlama |
+| Gerekçe | AI/LLM kaynaklı yama akını ve gelen kutusu yükü |
+| Ton | Karşılıklı anlayış; kırgınlık veya "AI karşıtı" bir manifesto yok |
+
+## Lorenzo Stoakes kim?
+
+Stoakes, Arm'da çalışan ve 2014'ten beri Linux çekirdeğine katkı veren bir geliştirici. Bellek yönetimi tarafında uzun süredir review yapıyor; `The Linux Memory Manager` kitabının da yazarı. Yani "çekirdeğe ara sıra bakan" biri değil, alt sistemin günlük işleyişini taşıyan isimlerden biri.
+
+LKML'deki duyuruda, review listelerinden kendisini çıkardığı yama serisinde şunu yazıyor:
+
+> "Çekirdekteki mevcut AI üretimi yama hacmi göz önüne alındığında, ne yazık ki maintainer olduğum alanlar dışında genel olarak review yapabilecek bant genişliğine sahip değilim."
+
+Stoakes, ayrılmanın nedenini "gelen kutusunu biraz daha yönetilebilir hale getirme isteği" olarak açıklıyor. Elindeki yama serilerini tamamlayacağını ve zaman zaman katkı vermeye devam edeceğini söylüyor. Yani çekirdekten tamamen ayrılmıyor; review yükünü azaltıyor.
+
+## AI yama seli ne demek?
+
+"AI slop" ifadesi, büyük dil modelinin ürettiği, yüzeysel olarak makul görünen ama bakımı zor veya gereksiz yamalar için kullanılıyor. Bu yamalar derleniyor, bazen testleri geçiyor, hatta mantıklı bir hata düzeltmesi gibi görünüyor. Asıl maliyet, **anlamlı bir katkı ile gürültüyü ayırma** aşamasında ortaya çıkıyor.
+
+Stoakes bunu yeni bir sorun olarak görmüyor. Temmuz 2026'da bellek yönetimi listesinde "son dönemdeki slop dalgasından" söz etmiş ve şunu söylemişti:
+
+> "AI slop'una harcanan zaman zaten çok fazla ve biz daha bu işin başındayız."
+
+Ekim 2026'da ise daha net bir tablo çizmiş: projeyi öldüren şeyin 1.000 slop gönderisi olduğunu ve bunlarla 2-3 kişinin uğraşmak zorunda kaldığını söylemiş. Bu, rakamın kendisinden çok oranı anlatıyor: üretim tarafı ölçekleniyor, inceleme tarafı ölçeklenmiyor.
+
+## Neden review, neden şimdi?
+
+Linux çekirdeğinde kod yazmak hiç bu kadar "kolay" olmamıştı. Bir modelden yama taslağı istemek, saniyeler sürüyor. Ama o yamanın doğru olduğunu, kenar durumları bozmadığını, alt sistemin kurallarına uyduğunu ve gerçekten gerekli olduğunu doğrulamak hâlâ insan zamanı istiyor.
+
+Çekirdek topluluğu AI katkılarını etiketleme zorunluluğu getirmedi. Bu tercih, katkı verenin kimliğine göre değil, yamanın kendisine göre değerlendirme yapma geleneğine dayanıyor. Ancak pratikte triyajı zorlaştırıyor: maintainer, gelen yamanın bir model tarafından üretilip üretilmediğini çoğu zaman bilmiyor. Kötü niyetli bir "slop" ile deneyimsiz ama gerçek bir katkıyı ayırmak için yine kodu okumak gerekiyor.
+
+Stoakes'in durumu, bu işin sürdürülebilirliğini gösteriyor. Review yapan kişi sayısı sabit; gelen yama sayısı artıyor. Bir noktada ya inceleme kalitesi düşüyor ya da inceleme yapan kişi miktarı azaltıyor. Stoakes ikinci yolu seçti.
+
+## Bu "AI karşıtı" bir isyan mı?
+
+Hayır. Tabloyu doğru okumak için birkaç noktayı ayırmak gerekiyor.
+
+**1. Stoakes çekirdekten ayrılmıyor.** Maintainer olduğu alanlarda ve KVM tarafında çalışmaya devam ediyor. Duyuru, topyekûn bir "bırakıyorum" değil, review yükünü daraltma kararı. Tonu da suçlayıcı değil; yama serisini alt sistem maintainer'larına bölüştürüp kolaylaştırmaya çalışıyor.
+
+**2. Linux'ta AI kullanımı zaten var.** Linus Torvalds, AI destekli katkılara karşı değil; hatta Linux 7.4-rc2 sürecinin önemli bir kısmının AI kaynaklı düzeltmelerle ilerlediğini söyledi. Çekirdek, hata bulma ve düzeltme tarafında AI'dan fiilen yararlanıyor. Sorun, AI'ın varlığı değil, **düşük kaliteli üretimin review kapasitesini tüketmesi**.
+
+**3. Karar amicable.** Tom's Hardware ve Phoronix'in aktardığı tabloda kırgın bir ayrılık yok. Stoakes, "bu trend göz önüne alındığında gelen kutumla ilgili bir şey yapmak istiyorum" diyor. Bu, bir sistemin sınırına geldiğini kabul etmek anlamına geliyor.
+
+Yani mesele "AI kötü" değil; **üretim maliyeti düşerken doğrulama maliyetinin düşmemesi**.
+
+## Daha geniş tablo
+
+Linux, AI katkıları konusunda tek örnek değil. 2026 boyunca projeler farklı yönlere savruldu: Debian, Ağustos 2026'da AI üretimi katkılara izin verme yönünde oy kullandı. Gentoo ve NetBSD gibi projeler ise telif, kalite ve etik gerekçelerle daha sıkı kurallar uyguluyor. Aynı soruya verilen farklı cevaplar, ortak bir standardın henüz oluşmadığını gösteriyor.
+
+Çekirdek tarafında ise pratik bir gerçek var: proje, katkıların AI ile üretilip üretilmediğini zorunlu olarak sormuyor. Bu, katkı verenler için özgürlük; maintainer'lar için ise filtreleme yükü demek.
+
+Uzun vadede akla gelen çözümler şunlar:
+
+- **Etiketleme ve köken bilgisi.** Zorunlu olmasa bile "bu yama AI destekli üretildi" bilgisini taşımak, maintainer'ın nasıl okuyacağını değiştirebilir.
+- **Otomatik ön inceleme.** Derleme, stil, temel test ve statik analiz katmanlarının AI yamalarını insan sırasına girmeden elemek için daha agresif kullanılması.
+- **Katkı reputasyonu.** Aynı kişiden gelen düşük kaliteli yamaların tekrar tekrar insan zamanı tüketmesini engelleyen süreçler.
+- **Review kapasitesine yatırım.** Maintainer'lık çoğu projede gönüllü veya yarı gönüllü bir iş. Üretim tarafı otomatikleşirken inceleme tarafının aynı hızda büyümemesi, bu tür ayrılıkları kaçınılmaz hale getiriyor.
+
+## Sonuç
+
+Lorenzo Stoakes'in kararı, Linux çekirdeğinin "AI ile kod yazma" tartışmasında geldiği noktayı gösteriyor: mesele artık kod üretmek değil, üretilen kodu **güvenilir şekilde ayıklamak**. Bir modelin saniyeler içinde ürettiği yamayı, bir insanın saatler içinde incelemesi gerekiyorsa, ölçek sorunu çözülmemiş demektir.
+
+Bu, AI'ın açık kaynağa katkısını reddetmek için bir gerekçe değil. Tam tersine, katkının değerini korumak için inceleme sürecinin yeniden tasarlanması gerektiğinin işareti. Aksi halde daha fazla deneyimli maintainer, aynı nedenden dolayı yükünü azaltacak.
+
+## Kaynaklar
+
+- [LKML: Stoakes'in review listelerinden çekilme yama serisi](https://lore.kernel.org/lkml/avMRk95T26rsq4JK@gremlin/T/)
+- [Phoronix: Longtime Linux Developer Steps Down From Some Roles Due To Patch Flood Caused By AI](https://www.phoronix.com/news/Lorenzo-Stoakes-AI-Flood)
+- [Tom's Hardware: Linux kernel reviewer steps down from memory management duties due to influx of AI slop patches](https://www.tomshardware.com/software/linux/linux-kernel-reviewer-steps-down-from-memory-management-duties-due-to-influx-of-ai-slop-patches-the-amount-of-time-wasted-on-ai-slop-is-already-too-much-and-were-only-at-the-start-of-this-volume-of-submissions-and-low-manpower-forces-the-step-back)
+- [MLQ.ai: Linux memory-management reviewer Lorenzo Stoakes drops most review duties](https://mlq.ai/news/linux-memory-management-reviewer-lorenzo-stoakes-drops-most-review-duties-citing-a-flood-of-ai-generated-patches)
+
+---
+
+# NTP 40 yıldır imzasızdı: Meta nts.meta.com ile saati doğrulanabilir yaptı
+
+- Kaynak: https://fosstr.com/blog/meta-nts-dogrulanabilir-saat/
+- Tür: Yazı
+- Tarih: 2026-11-12
+- Etiketler: security, ntp, nts, meta, time, tls, open-source
+- Özet: Meta, genel saat servisine RFC 8915 NTS desteği ekledi. Saat paketleri artık kimlik doğrulanabiliyor; sunucular durum tutmuyor. Ancak gecikme saldırıları ve mobil istemciler hâlâ açık.
+
+Bir cihazın saati yanlışsa, güvenlik kararları da yanlış olur. TLS sertifikalarının geçerlilik penceresi, erişim token'larının süresi, replay koruması ve log sıralaması; hepsi yerel saate göre değerlendirilir. Ama internetin saat protokolü NTP, 1985'ten beri büyük ölçüde **imzasız** çalışıyor: istemci 48 bayt gönderiyor, karşı taraf 48 bayt döndürüyor ve istemci buna inanıyor.
+
+Meta, Ekim 2026'da bu açığı kendi genel saat servisinde kapatma adımını duyurdu: **nts.meta.com** artık Network Time Security (NTS, RFC 8915) konuşuyor. Duyuru, Kasım başında Hacker News'te yeniden gündeme geldi. Bu yazı, NTS'in ne yaptığını, Meta'nın durumsuz (stateless) sunucu tasarımını ve çözmediği sorunları anlatıyor.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| Servis | `nts.meta.com` (anahtar değişimi), `time.meta.com` (zaman yanıtları) |
+| Protokol | NTS / RFC 8915 |
+| Anahtar değişimi | TLS 1.3, TCP/4460, ALPN `ntske/1` |
+| Zaman trafiği | NTPv4, UDP/123 + NTS uzantı alanları |
+| Sunucu durumu | İstemci başına kayıt yok; çerez anahtarı günlük türetiliyor |
+| İstemci tarafı | chrony, ntpsec |
+| Kod | [github.com/facebook/time](https://github.com/facebook/time) (açık kaynak) |
+| Duyuru | 6 Ekim 2026 |
+
+## Neden saat güvenliği önemli?
+
+NTP'nin imzasız olması uzun süre "kabul edilebilir" görüldü; çünkü saat birkaç saniye kaydığında bu bir operasyonel rahatsızlıktı, güvenlik olayı değildi. Bugün durum farklı:
+
+- **Sertifika doğrulama:** `notBefore` ve `notAfter` yerel saate göre kontrol edilir. Saat yanlışsa cevap da yanlıştır.
+- **Token ve kimlik bilgisi süresi:** "15 dakika geçerli" ifadesi, bir saate dair iddiadır.
+- **Replay pencereleri:** "N saniyeden eski isteği reddet" demek, şu anın ne olduğunu bilmeyi gerektirir.
+- **Log korelasyonu:** Saatleri uyuşmayan iki host, hiç yaşanmamış bir zaman çizelgesi üretir.
+
+Ve kontrol döngüseldir: X.509 süre doğrulaması yapmak için zaten doğru saate ihtiyacınız var. İki yaygın geçici çözüm de kötü. Birincisi, saat ayarlanana kadar sertifika doğrulamasını kapatmak; cihazı en savunmasız olduğu anda korumasız bırakır. İkincisi, her iki tarafa da tolerans payı koymak; herkes karşısındakinin ne kadar yanlış olduğunu tahmin etmeye çalışır.
+
+Bu, sertifikalar 398 gün geçerliyken katlanılabilirdi. CA/Browser Forum'un SC-081v3 takvimiyle yeni sertifikaların azami geçerliliği Mart 2026'da 200 güne, Mart 2027'de 100 güne, Mart 2029'da 47 güne iniyor. 47 günde manuel sertifika yönetimi ölçekte sürdürülemez; yenileme ayda bir, genellikle ACME ile ve gözetimsiz çalışır. Saati kaymış bir host'ta otomatik yenileme döngüsü bilet açmaz; ya yeniden imzalar ya da kimsenin izlemediği bir takvimde başarısız olur.
+
+## NTS nasıl çalışıyor?
+
+NTS, kimlik doğrulamayı iki aşamaya ayırıyor. Bu ayrım, protokolü dağıtılabilir kılan şey.
+
+**1. Anahtar değişimi (NTS-KE).** İstemci, TCP/4460 üzerinden TLS 1.3 ile bağlanır ve `ntske/1` ALPN kimliğini kullanır. Taraflar bir AEAD algoritması üzerinde anlaşır; iki yönlü oturum anahtarları (C2S ve S2C) TLS oturumundan RFC 5705 exporter ile türetilir. Sunucu sekiz çerez (cookie) verir, istemciye hangi NTP sunucusunu kullanacağını bir "server negotiation" kaydıyla söyler ve bağlantıyı kapatır. Bu işlem her paket için değil, bir kez yapılır.
+
+Meta üç AEAD müzakere ediyor: RFC 8915'in zorunlu tuttuğu **AES-SIV-CMAC-256** (ID 15), **AES-SIV-CMAC-512** (17) ve **AES-128-GCM-SIV** (30). İstemcinin tercihi kazanıyor.
+
+**2. Kimlik doğrulanmış NTP.** Standart NTPv4, UDP/123 üzerinden ve NTS uzantı alanlarıyla. İstek benzersiz bir tanımlayıcı, bir çerez ve bir authenticator taşır. Authenticator kendinden önceki her şeyi kapsar ama hiçbir şeyi şifrelemez. Sunucu çerezi açıp oturum anahtarlarını çıkarır, authenticator'ı doğrular ve yanıtlar: tanımlayıcı geri yansıtılır, yeni çerezler yanıtın authenticator'ının içinde şifreli olarak gönderilir.
+
+Sahte bir paket doğrulamadan geçemez ve düşer. Meta, NTS NAK göndermiyor; böylece başarısızlık paket kaybından ayırt edilemiyor ve saldırgan istemciyi yeni bir anahtar değişimine zorlayamıyor. Tekrarlanan (replayed) yanıt yanlış tanımlayıcı taşıdığı için eşleşmiyor. Yeni çerezler açıkta değil, yanıt authenticator'ının içinde gittiği için gözlemci her alışverişte farklı bir opak blob görüyor ve istemciyi ağlar arasında takip edemiyor.
+
+## Durumsuz çerezler: kopyalanan anahtar yok
+
+Bir çerez, sunucunun istemciye emanet ettiği durumdur. Oturum anahtarlarını AES-SIV ile mühürleyerek taşır; yalnızca sunucu açabilir. Akla gelen ilk uygulama, her sunucuya kopyalanan bir anahtar halkasıdır; ama bu, saat servisini dağıtık bir durum problemi haline getirir.
+
+Meta anahtar kopyalamıyor. Her sunucu, mühürleme anahtarını paylaşılan bir master secret ve **o günün** değerinden türetiyor:
+
+```text
+key = HKDF-SHA256(master, salt = BE32(day), info = "fbnts-cookie-seal-v1")
+```
+
+`day`, Unix epoch'tan bu yana tam 24 saatlik periyotlar olarak ölçülüyor; takvim günü değil. Yani saat dilimi ve yaz saati yok; aynı an için her host aynı tamsayıyı hesaplıyor. Bu tamsayı, çerezin anahtar kimliği olarak açıkça taşınıyor. Daha önce hiç görmediği bir sunucudan çerez alan bir makine bile anahtarı yeniden türetip açabiliyor. Meta, dönüş sınırındaki sapmalar için iki gün geriye ve bir gün ileriye tolerans veriyor.
+
+Sonuç: anahtar halkası yok, replikasyon yok, oturum tablosu yok, senkronizasyondan çıkacak paylaşılan durum yok. Anahtar değişimi sunucusu ile zaman sunucuları farklı makinelerde ve hiçbir şey paylaşmıyor. Sunucu eklemek, sadece sunucu eklemek oluyor.
+
+## Nasıl kullanılır?
+
+chrony için tek satır:
+
+```text
+pool nts.meta.com nts iburst maxsources 5
+```
+
+`nts.meta.com` yalnızca anahtar değişimi yapıyor. El sıkışma sırasında bir server negotiation kaydıyla `time.meta.com`'daki bir NTP yanıtlayıcısını işaret ediyor. Yani yapılandırdığınız host, sonunda konuştuğunuz host değil.
+
+Bu yönlendirme yüzünden `server` yerine `pool` kullanılıyor. Tek bir `server` satırı tek bir ilişki ve tek bir yanıtlayıcı verir; bu da tek hata noktası demek. NTP ise kötü bir kaynağı çoğunlukla saf dışı bırakabilmek için birkaç kaynak ister. `pool` ile `maxsources` kadar bağımsız ilişki kuruluyor; her biri kendi TLS oturumunda kendi anahtar değişimini yapıyor ve farklı oturum anahtarlarına sahip oluyor. Meta'ya göre beş kaynak yaklaşık 20 dakikada ayağa kalkıyor.
+
+Durumu kontrol etmek için:
+
+```bash
+chronyc authdata
+```
+
+Çıktıda her kaynak için `NTS`, anahtar kimliği, AEAD tipi ve elde kalan çerez sayısı görünür. `NAK 0` reddedilen çerez olmadığını gösterir.
+
+## Neyi çözüyor, neyi çözmüyor?
+
+NTS, yoldaki bir saldırganın **yanıtı uydurmasını** engelliyor. Klasik bir MITM saldırısı kriptografi kırmak zorunda değil; gerçek sunucudan önce cevap vermesi yeterli. Saldırgan saati geri alırsa süresi dolmuş sertifikalar yeniden geçerli görünebilir, iptal edilmiş token'lar çalışabilir. Saati ileri alırsa her şey aynı anda süresini doldurur. Meta'nın örneğiyle: cihazı 2037'ye ikna eden bir saldırgan, NTP'nin 2036'da sarmalanan 32 bitlik alanı yüzünden düzeltmeyi yanlış döneme yazdırabilir; cihazın tüm sertifikaları süresiz hale gelir, TLS çalışmaz, güncelleme servisine ulaşılamaz. Kurtarma, fabrika ayarı veya servis merkezi demektir.
+
+Ama NTS'in kapsamı dar ve bunu açıkça söylemek gerekiyor:
+
+- **Gecikme saldırıları.** RFC 8915 açık: paketleri tutan bir saldırgan saatinizi gecikmenin yarısına kadar kaydırabilir. Her bayt gerçek olduğu için kriptografi bunu tespit etmez. Kimlik doğrulama, paketi kimin yazdığını söyler; ne kadar süre yolda kaldığını söylemez. Çözüm yine birden fazla bağımsız kaynak, mantıklı sınırlar ve sınırlı adımlar.
+- **Önyükleme (bootstrapping).** NTS-KE TLS üzerinden çalışır; TLS ise çalışan bir saat ister. RTC'si ölü bir cihaz yine de ilk el sıkışmadan önce kabaca doğru saate ihtiyaç duyar.
+- **Yanlış sunucu.** NTS yolu doğrular, cevabı değil. Doğru yapılandırılmış, doğru kimlik doğrulanmış ama saati yanlış bir sunucu, size kusursuz imzalı yanlış zaman verebilir. Quorum, akıl sağlığı kontrolleri ve izleme hâlâ gerekli.
+- **Monotonluk.** Kimlik doğrulanmış zaman yine duvar saatidir ve duvar saatleri geri gidebilir: artık saniyede veya bir düzeltme geldiğinde. Geçen süreyi ölçen kod monotonik saat kullanmalı.
+
+## Asıl eksik: mobil
+
+Sunucu tarafında NTS yaygınlaşıyor. chrony ve ntpsec RFC 8915'i uyguluyor. Kamuya açık NTS sunucuları listesinde çoğunlukla ulusal metroloji enstitüleri ve altyapı operatörleri var: PTB, Netnod, time.nl gibi. Cloudflare, RFC yayınlanmadan önce 2019'da NTS'li servisini açmıştı.
+
+Sorun istemci tarafında. Android'in platform saat senkronizasyonu düz SNTP: UDP/123 üzerinden sabit 48 baytlık paket, uzantı alanı yok. Apple cihazlar `timed` ile `time.apple.com`'a bağlanıyor ve Meta'nın bildiği kadarıyla orada da NTS desteği yok. Milyarlarca telefon, saat ve kulaklığın saatini kuran bu iki yığın, hâlâ kimlik doğrulanmamış bir UDP paketine güveniyor.
+
+Bir cihaz üreticisi bugün ayrı bir NTS istemcisi gönderebilir; chrony Android'de çalışıyor. Ama bu, platformun kendisinin yapması gereken bir işin etrafından dolaşmak demek. Meta'nın çağrısı da buraya: protokol hazır, sunucular çoğalıyor, istemci uygulamaları var. Eksik olan mobil.
+
+## Sonuç
+
+Meta'nın NTS hamlesi, saat servisini "doğru saat" vermekten "doğrulanabilir saat" vermeye taşıyor. Durumsuz çerez tasarımı, ölçeklenebilir ve dağıtık bir servis için zekice bir çözüm: anahtar halkası yok, oturum tablosu yok, sunucu eklemek kolay.
+
+Ama tek başına sihir değil. Gecikme saldırıları, önyükleme sorunu, yanlış sunucu ve monotonluk hâlâ sizin sorununuz. NTS, "bu zamanı kim gönderdi ve yolda değişti mi?" sorusunu cevaplıyor; "bu zaman doğru mu?" sorusunu değil.
+
+Yine de yön doğru. Saat, her güvenlik kararının ölçüldüğü girdi; onu imzasız bir UDP paketine emanet etmek 2026 için fazla iyimser. Kendi altyapınızda chrony veya ntpsec kullanıyorsanız NTS'li bir kaynak eklemek tek satırlık bir iş. Yapmaya değer.
+
+## Kaynaklar
+
+- [Engineering at Meta: NTS: Authenticated Time at Meta](https://engineering.fb.com/2026/10/06/production-engineering/nts-authenticated-time-at-meta/)
+- [Meta Time kütüphanesi (GitHub)](https://github.com/facebook/time)
+- [RFC 8915: Network Time Security for the Network Time Protocol](https://datatracker.ietf.org/doc/html/rfc8915)
+- [CA/Browser Forum SC-081v3](https://cabforum.org/2025/04/11/ballot-sc081v3-introduce-schedule-of-reducing-validity-and-data-reuse-periods/)
+
+---
+
 # 22 açık kaynak proje neden AI katkısı kabul etmiyor?
 
 - Kaynak: https://fosstr.com/blog/acik-kaynak-ai-katkisi-yasaklari/

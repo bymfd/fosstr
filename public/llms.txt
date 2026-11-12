@@ -17,6 +17,9 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Yazılar
 
+- [Apache mod_http2 CVE-2026-119618: HTTP/2 yarış koşulu nasıl RCE'ye dönüşüyor?](https://fosstr.com/blog/apache-mod-http2-cve-2026-119618/) — Apache HTTP Server 2.4.55-2.4.70 arasındaki mod_http2, paylaşılan başlık tablosundaki bir yarış koşuluyla heap bozulmasına ve uzaktan kod çalıştırmaya yol açıyor. Düzeltme 2.4.71'de.
+- [Linux çekirdeğinde AI yama seli: Lorenzo Stoakes bazı review görevlerini bıraktı](https://fosstr.com/blog/linux-kernel-ai-yama-seli-stoakes/) — Linux bellek yönetimi uzmanı Lorenzo Stoakes, AI üretimi yama akını nedeniyle core, reclaim, Rust, THP ve misc incelemelerinden çekildi. Bu, çekirdek geliştirme modelinin darboğazını gösteriyor.
+- [NTP 40 yıldır imzasızdı: Meta nts.meta.com ile saati doğrulanabilir yaptı](https://fosstr.com/blog/meta-nts-dogrulanabilir-saat/) — Meta, genel saat servisine RFC 8915 NTS desteği ekledi. Saat paketleri artık kimlik doğrulanabiliyor; sunucular durum tutmuyor. Ancak gecikme saldırıları ve mobil istemciler hâlâ açık.
 - [22 açık kaynak proje neden AI katkısı kabul etmiyor?](https://fosstr.com/blog/acik-kaynak-ai-katkisi-yasaklari/) — immich'ten QEMU'ya, Zig'den Gentoo'ya kadar 22 proje AI üretimi katkıları yasaklıyor. Politikaların ortak noktaları, gerekçeleri ve katkıcılar için pratik sonuçları.
 - [GPUStack CVE-2026-102895: 9.8'lik kimlik doğrulama atlatması nasıl çalışıyor?](https://fosstr.com/blog/gpustack-cve-2026-102895/) — GPUStack'te 127.0.0.1'e güvenen kimlik doğrulama mantığı, uzaktan yönetici erişimine yol açtı. CVE-2026-102895'in teknik detayları, CISA KEV süreci ve yükseltme rehberi.
 - [OpenShell: NVIDIA'nın ajan kum havuzu CNCF'ye geçti](https://fosstr.com/blog/openshell-cncf-ajan-guvenligi/) — NVIDIA, otonom AI ajanlarını politika ile sınırlayan OpenShell'i CNCF Sandbox'a bağışladı. Çekirdek seviyesinde izolasyon, Cedar politikaları ve kurulum rehberi.
@@ -40,19 +43,22 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Tags
 
-- [open-source](https://fosstr.com/blog/tags/open-source/) — 8 içerik
-- [security](https://fosstr.com/blog/tags/security/) — 7 içerik
-- [linux](https://fosstr.com/blog/tags/linux/) — 4 içerik
-- [ai](https://fosstr.com/blog/tags/ai/) — 3 içerik
+- [open-source](https://fosstr.com/blog/tags/open-source/) — 10 içerik
+- [security](https://fosstr.com/blog/tags/security/) — 9 içerik
+- [linux](https://fosstr.com/blog/tags/linux/) — 6 içerik
+- [ai](https://fosstr.com/blog/tags/ai/) — 4 içerik
 - [llm](https://fosstr.com/blog/tags/llm/) — 3 içerik
 - [tech-industry](https://fosstr.com/blog/tags/tech-industry/) — 3 içerik
 - [teknoloji-haberleri](https://fosstr.com/blog/tags/teknoloji-haberleri/) — 3 içerik
 - [ai-models](https://fosstr.com/blog/tags/ai-models/) — 2 içerik
 - [arch](https://fosstr.com/blog/tags/arch/) — 2 içerik
+- [cve](https://fosstr.com/blog/tags/cve/) — 2 içerik
+- [kernel](https://fosstr.com/blog/tags/kernel/) — 2 içerik
 - [kubernetes](https://fosstr.com/blog/tags/kubernetes/) — 2 içerik
 - [agents](https://fosstr.com/blog/tags/agents/) — 1 içerik
 - [ai-agents](https://fosstr.com/blog/tags/ai-agents/) — 1 içerik
 - [anthropic](https://fosstr.com/blog/tags/anthropic/) — 1 içerik
+- [apache](https://fosstr.com/blog/tags/apache/) — 1 içerik
 - [apple](https://fosstr.com/blog/tags/apple/) — 1 içerik
 - [arduino](https://fosstr.com/blog/tags/arduino/) — 1 içerik
 - [automation](https://fosstr.com/blog/tags/automation/) — 1 içerik
@@ -62,7 +68,6 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [cncf](https://fosstr.com/blog/tags/cncf/) — 1 içerik
 - [community](https://fosstr.com/blog/tags/community/) — 1 içerik
 - [cpu](https://fosstr.com/blog/tags/cpu/) — 1 içerik
-- [cve](https://fosstr.com/blog/tags/cve/) — 1 içerik
 - [cybersecurity](https://fosstr.com/blog/tags/cybersecurity/) — 1 içerik
 - [data-breach](https://fosstr.com/blog/tags/data-breach/) — 1 içerik
 - [deepseek](https://fosstr.com/blog/tags/deepseek/) — 1 içerik
@@ -77,16 +82,20 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [github](https://fosstr.com/blog/tags/github/) — 1 içerik
 - [gpustack](https://fosstr.com/blog/tags/gpustack/) — 1 içerik
 - [hacker-news](https://fosstr.com/blog/tags/hacker-news/) — 1 içerik
+- [http2](https://fosstr.com/blog/tags/http2/) — 1 içerik
 - [ios](https://fosstr.com/blog/tags/ios/) — 1 içerik
 - [jailbreak](https://fosstr.com/blog/tags/jailbreak/) — 1 içerik
-- [kernel](https://fosstr.com/blog/tags/kernel/) — 1 içerik
 - [local-ai](https://fosstr.com/blog/tags/local-ai/) — 1 içerik
 - [macos](https://fosstr.com/blog/tags/macos/) — 1 içerik
+- [maintainers](https://fosstr.com/blog/tags/maintainers/) — 1 içerik
 - [masaüstü](https://fosstr.com/blog/tags/masaustu/) — 1 içerik
 - [mekatronik](https://fosstr.com/blog/tags/mekatronik/) — 1 içerik
 - [menu-bar](https://fosstr.com/blog/tags/menu-bar/) — 1 içerik
+- [meta](https://fosstr.com/blog/tags/meta/) — 1 içerik
 - [nodejs](https://fosstr.com/blog/tags/nodejs/) — 1 içerik
 - [noel](https://fosstr.com/blog/tags/noel/) — 1 içerik
+- [ntp](https://fosstr.com/blog/tags/ntp/) — 1 içerik
+- [nts](https://fosstr.com/blog/tags/nts/) — 1 içerik
 - [nvidia](https://fosstr.com/blog/tags/nvidia/) — 1 içerik
 - [openai](https://fosstr.com/blog/tags/openai/) — 1 içerik
 - [patent](https://fosstr.com/blog/tags/patent/) — 1 içerik
@@ -94,11 +103,14 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [qilin](https://fosstr.com/blog/tags/qilin/) — 1 içerik
 - [quantization](https://fosstr.com/blog/tags/quantization/) — 1 içerik
 - [ransomware](https://fosstr.com/blog/tags/ransomware/) — 1 içerik
+- [rce](https://fosstr.com/blog/tags/rce/) — 1 içerik
 - [rust](https://fosstr.com/blog/tags/rust/) — 1 içerik
 - [self-hosted](https://fosstr.com/blog/tags/self-hosted/) — 1 içerik
 - [shinyhunters](https://fosstr.com/blog/tags/shinyhunters/) — 1 içerik
 - [smc](https://fosstr.com/blog/tags/smc/) — 1 içerik
 - [swift](https://fosstr.com/blog/tags/swift/) — 1 içerik
+- [time](https://fosstr.com/blog/tags/time/) — 1 içerik
+- [tls](https://fosstr.com/blog/tags/tls/) — 1 içerik
 - [wayland](https://fosstr.com/blog/tags/wayland/) — 1 içerik
 
 ## Contact
