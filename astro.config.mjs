@@ -9,7 +9,25 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
 	site: 'https://fosstr.com',
 	output: 'static',
-	integrations: [mdx(), sitemap()],
+	i18n: {
+		defaultLocale: 'tr',
+		locales: ['tr', 'en'],
+		routing: {
+			prefixDefaultLocale: false,
+		},
+	},
+	integrations: [
+		mdx(),
+		sitemap({
+			i18n: {
+				defaultLocale: 'tr',
+				locales: {
+					tr: 'tr-TR',
+					en: 'en-US',
+				},
+			},
+		}),
+	],
 	vite: {
 		plugins: [tailwindcss()],
 	},

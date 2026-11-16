@@ -2,10 +2,12 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import { buildAlternates } from '../i18n';
 
 const title = 'Gizlilik Politikası | fosstr';
 const description =
 	'fosstr.com gizlilik politikası: Google Analytics, çerezler, reklamlar, veri saklama ve iletişim.';
+const { alternates, xDefault } = buildAlternates('/privacy-policy/', Astro.site);
 const jsonLd = {
 	'@context': 'https://schema.org',
 	'@type': 'WebPage',
@@ -19,7 +21,7 @@ const jsonLd = {
 <!doctype html>
 <html lang="tr">
 	<head>
-		<BaseHead title={title} description={description} jsonLd={jsonLd} />
+		<BaseHead title={title} description={description} jsonLd={jsonLd} lang="tr" ogLocale="tr_TR" alternates={alternates} xDefault={xDefault} />
 	</head>
 	<body class="min-h-screen flex flex-col">
 		<Header />

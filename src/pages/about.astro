@@ -1,11 +1,16 @@
 ---
 import Layout from '../layouts/BlogPost.astro';
+import { buildAlternates } from '../i18n';
+
+const { alternates, xDefault } = buildAlternates('/about/', Astro.site);
 ---
 
 <Layout
 	title="Hakkımda"
 	description="fosstr'un yazarı bymfd hakkında: Go, C++, Python ve JavaScript ile yazılım, siber güvenlik ve sistem programlama çalışmaları."
 	pubDate={new Date('August 08 2021')}
+	alternates={alternates}
+	xDefault={xDefault}
 >
 	<p>
 		Yazılım geliştiricisiyim. Siber güvenlik, sistem programlama ve web

@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../../components/BaseHead.astro';
+import Footer from '../../../components/Footer.astro';
+import Header from '../../../components/Header.astro';
+import PostRow from '../../../components/PostRow.astro';
+import { SITE_TITLE } from '../../../consts';
+import { buildAlternates } from '../../../i18n';
+
+const posts = (await getCollection('blogEn', (post) => post.data.type === 'post')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const title = `Posts | ${SITE_TITLE}`;
+const description = 'Articles on software, cybersecurity, AI and systems programming.';
+const { alternates, xDefault } = buildAlternates('/en/blog/', Astro.site);
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'CollectionPage',
+	name: title,
+	description,
+	inLanguage: 'en',
+	url: new URL('/en/blog/', Astro.site).href,
+};
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} jsonLd={jsonLd} lang="en" ogLocale="en_US" alternates={alternates} xDefault={xDefault} />
+	</head>
+	<body class="min-h-screen flex flex-col">
+		<Header />
+		<main class="flex-1 px-5 md:px-10">
+			<div class="mx-auto max-w-[var(--frame)] border-x border-line">
+				<section class="px-6 py-16 md:px-10 md:py-20">
+					<h1 class="t-display">Posts</h1>
+					<p class="t-lead mt-5 max-w-[58ch] text-muted">{description}</p>
+				</section>
+				<div class="border-t border-line px-6 py-6 md:px-10">
+					{posts.length === 0 ? (
+						<p class="py-8 text-muted">No posts yet.</p>
+					) : (
+						<ul class="divide-y divide-line">
+							{posts.map((post) => (
+								<PostRow href={`/en/blog/${post.id}/`} title={post.data.title} description={post.data.description} date={post.data.pubDate} />
+							))}
+						</ul>
+					)}
+					<div class="mt-6 border-t border-line pt-4">
+						<a href="/en/projects/" class="link-accent">View projects <span aria-hidden="true">→</span></a>
+					</div>
+				</div>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

@@ -1,0 +1,31 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import BlogPost from '../../../layouts/BlogPost.astro';
+import { SITE_URL } from '../../../consts';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blogEn', (post) => post.data.type === 'post');
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: post,
+	}));
+}
+type Props = CollectionEntry<'blogEn'>;
+
+const post = Astro.props;
+const { Content } = await render(post);
+const trHref = `${SITE_URL}/blog/${post.id}/`;
+const enHref = `${SITE_URL}/en/blog/${post.id}/`;
+---
+
+<BlogPost
+	{...post.data}
+	lang="en"
+	alternates={[
+		{ hreflang: 'tr', href: trHref },
+		{ hreflang: 'en', href: enHref },
+	]}
+	xDefault={trHref}
+>
+	<Content />
+</BlogPost>

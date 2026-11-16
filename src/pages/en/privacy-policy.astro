@@ -1,0 +1,93 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { buildAlternates } from '../../i18n';
+
+const title = 'Privacy Policy | fosstr';
+const description = 'fosstr.com privacy policy: Google Analytics, cookies, ads, data retention, and contact.';
+const { alternates, xDefault } = buildAlternates('/en/privacy-policy/', Astro.site);
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'WebPage',
+	name: title,
+	description,
+	inLanguage: 'en',
+	url: new URL('/en/privacy-policy/', Astro.site).href,
+};
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} jsonLd={jsonLd} lang="en" ogLocale="en_US" alternates={alternates} xDefault={xDefault} />
+	</head>
+	<body class="min-h-screen flex flex-col">
+		<Header />
+		<main class="flex-1 px-5 md:px-10">
+			<div class="mx-auto max-w-[var(--frame)] border-x border-line">
+				<article class="px-6 py-12 md:px-10 md:py-16">
+					<h1 class="t-display mb-6">Privacy Policy</h1>
+					<div class="prose max-w-[var(--read)]">
+						<p>
+							This policy explains what data is processed when you visit fosstr.com, why it is processed, and your rights.
+							Last updated: <strong>October 26, 2026</strong>.
+						</p>
+
+						<h2>Data collected</h2>
+						<p>
+							The site is published as static pages; there is no membership, comments, or forms. Cloudflare (hosting/CDN)
+							may process traffic data for security and performance. If you contact me by email, your address and message
+							are stored only to respond.
+						</p>
+
+						<h2>Google Analytics</h2>
+						<p>
+							Google Analytics 4 is used to measure visits (measurement ID: <code>G-VSS9KPGCLD</code>). Google Analytics
+							may process page views, sessions, and device/browser information via cookies and similar identifiers. This data
+							is processed by Google under its privacy policy:
+							<a href="https://policies.google.com/privacy" rel="noopener noreferrer">policies.google.com/privacy</a>.
+							You can block cookies in your browser; some measurements may not work.
+						</p>
+
+						<h2>Advertising</h2>
+						<p>
+							If Google AdSense is enabled on the site, Google and its partners may use cookies to serve and measure ads.
+							Personalization depends on your region and consent. Google ad settings:
+							<a href="https://adssettings.google.com" rel="noopener noreferrer">adssettings.google.com</a>; cookie choices:
+							<a href="https://www.aboutads.info/choices/" rel="noopener noreferrer">aboutads.info/choices</a>.
+						</p>
+
+						<h2>Cookies</h2>
+						<p>
+							The site itself does not set required session cookies. Cloudflare security cookies and cookies from Google
+							Analytics/AdSense may be used for the purposes above. You can delete or block cookies in your browser settings.
+						</p>
+
+						<h2>Retention and sharing</h2>
+						<p>
+							Data is retained as long as necessary for these purposes and is not sold or shared except where required by law.
+							Service providers: Cloudflare (hosting/CDN) and Google (analytics/ads).
+						</p>
+
+						<h2>Your rights</h2>
+						<p>
+							Depending on your jurisdiction (e.g., GDPR/KVKK), you may have rights to access, correct, delete, or object to
+							processing. Contact: <a href="mailto:hello@fosstr.com">hello@fosstr.com</a>.
+						</p>
+
+						<h2>Children</h2>
+						<p>The site is not directed at children under 13 and does not knowingly collect data from them.</p>
+
+						<h2>Changes</h2>
+						<p>When this policy is updated, the date on this page changes. Material changes will be announced on the site.</p>
+
+						<h2>Contact</h2>
+						<p>Email: <a href="mailto:hello@fosstr.com">hello@fosstr.com</a></p>
+					</div>
+				</article>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

@@ -7,6 +7,7 @@ import PostRow from '../components/PostRow.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Section from '../components/Section.astro';
 import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../consts';
+import { buildAlternates } from '../i18n';
 
 const posts = (await getCollection('blog', (post) => post.data.type === 'post'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -17,6 +18,7 @@ const projects = (await getCollection('blog', (post) => post.data.type === 'proj
 	.slice(0, 4);
 const projectCount = (await getCollection('blog', (post) => post.data.type === 'project')).length;
 
+const { alternates, xDefault } = buildAlternates('/', Astro.site);
 const jsonLd = [
 	{
 		'@context': 'https://schema.org',
@@ -39,7 +41,7 @@ const jsonLd = [
 <!doctype html>
 <html lang="tr">
 	<head>
-		<BaseHead title={`${SITE_TITLE} — Türkçe siber güvenlik, yazılım ve açık kaynak notları`} description={SITE_DESCRIPTION} jsonLd={jsonLd} />
+		<BaseHead title={`${SITE_TITLE} — Türkçe siber güvenlik, yazılım ve açık kaynak notları`} description={SITE_DESCRIPTION} jsonLd={jsonLd} alternates={alternates} xDefault={xDefault} />
 	</head>
 	<body class="min-h-screen flex flex-col">
 		<Header />

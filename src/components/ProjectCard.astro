@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import { getLocaleFromPath } from '../i18n';
 
 interface Props {
 	href: string;
@@ -12,6 +13,8 @@ interface Props {
 
 const { href, title, description, heroImage, repo } = Astro.props;
 const repoLabel = repo ? repo.replace(/^https?:\/\/(www\.)?/, '') : undefined;
+const isEn = getLocaleFromPath(Astro.url.pathname) === 'en';
+const altText = isEn ? `${title} preview` : `${title} önizlemesi`;
 ---
 
 <li class="group min-w-0">
@@ -22,7 +25,7 @@ const repoLabel = repo ? repo.replace(/^https?:\/\/(www\.)?/, '') : undefined;
 					width={1200}
 					height={675}
 					src={heroImage}
-					alt={`${title} önizlemesi`}
+					alt={altText}
 					loading="lazy"
 					decoding="async"
 					class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.025]"

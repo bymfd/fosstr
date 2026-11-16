@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/BlogPost.astro';
+import { buildAlternates } from '../../i18n';
+
+const { alternates, xDefault } = buildAlternates('/en/about/', Astro.site);
+---
+
+<Layout
+	title="About"
+	description="About fosstr author bymfd: work in Go, C++, Python and JavaScript on software, cybersecurity and systems programming."
+	pubDate={new Date('August 08 2021')}
+	lang="en"
+	alternates={alternates}
+	xDefault={xDefault}
+>
+	<p>I'm a software developer. I'm interested in cybersecurity, systems programming and the web.</p>
+	<p>I work with Go, C++, Python and JavaScript. I build tools and write about security, programming and technology.</p>
+	<p>Find me on <a href="https://github.com/bymfd">GitHub</a>.</p>
+</Layout>

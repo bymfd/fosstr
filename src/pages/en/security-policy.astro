@@ -1,0 +1,62 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { buildAlternates } from '../../i18n';
+
+const title = 'Security Policy | fosstr';
+const description = 'fosstr vulnerability disclosure and responsible reporting policy: how to report, scope, and response times.';
+const { alternates, xDefault } = buildAlternates('/en/security-policy/', Astro.site);
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'WebPage',
+	name: title,
+	description,
+	inLanguage: 'en',
+	url: new URL('/en/security-policy/', Astro.site).href,
+};
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} jsonLd={jsonLd} lang="en" ogLocale="en_US" alternates={alternates} xDefault={xDefault} />
+	</head>
+	<body class="min-h-screen flex flex-col">
+		<Header />
+		<main class="flex-1 px-5 md:px-10">
+			<div class="mx-auto max-w-[var(--frame)] border-x border-line">
+				<article class="px-6 py-12 md:px-10 md:py-16">
+					<h1 class="t-display mb-6">Security Policy</h1>
+					<div class="prose max-w-[var(--read)]">
+						<p>
+							If you find a security issue on fosstr, please report it to
+							<a href="mailto:security@fosstr.com">security@fosstr.com</a>. I follow a responsible disclosure approach:
+							allow reasonable time to investigate and fix, then disclose publicly.
+						</p>
+						<h2>Scope</h2>
+						<ul>
+							<li>The fosstr.com domain and all pages under it</li>
+							<li>Open-source repositories owned by the site (GitHub: bymfd)</li>
+						</ul>
+						<h2>Out of scope</h2>
+						<ul>
+							<li>Third-party services and dependencies (report to their maintainers)</li>
+							<li>Low-impact findings without demonstrable effect (e.g., missing headers)</li>
+						</ul>
+						<h2>Response time</h2>
+						<p>
+							Initial response within <strong>72 hours</strong>; remediation time depends on severity.
+						</p>
+						<h2>Contact</h2>
+						<p>
+							Email: <a href="mailto:security@fosstr.com">security@fosstr.com</a><br />
+							GitHub: <a href="https://github.com/bymfd" rel="noopener noreferrer">github.com/bymfd</a>
+						</p>
+					</div>
+				</article>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

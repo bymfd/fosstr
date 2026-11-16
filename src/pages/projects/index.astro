@@ -5,6 +5,7 @@ import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import { SITE_TITLE } from '../../consts';
+import { buildAlternates } from '../../i18n';
 
 const projects = (await getCollection('blog', (post) => post.data.type === 'project')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -13,6 +14,7 @@ const projects = (await getCollection('blog', (post) => post.data.type === 'proj
 const title = `Projeler | ${SITE_TITLE}`;
 const description =
 	'Arch Linux otomasyonu, macOS fan kontrolü, Arduino bisiklet şanzımanı ve Python masaüstü araçları: yazılmış ve açık kaynak yayınlanmış projeler.';
+const { alternates, xDefault } = buildAlternates('/projects/', Astro.site);
 const jsonLd = {
 	'@context': 'https://schema.org',
 	'@type': 'CollectionPage',
@@ -26,7 +28,7 @@ const jsonLd = {
 <!doctype html>
 <html lang="tr">
 	<head>
-		<BaseHead title={title} description={description} jsonLd={jsonLd} />
+		<BaseHead title={title} description={description} jsonLd={jsonLd} alternates={alternates} xDefault={xDefault} />
 	</head>
 	<body class="min-h-screen flex flex-col">
 		<Header />

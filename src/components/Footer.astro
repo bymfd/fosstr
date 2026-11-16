@@ -1,6 +1,37 @@
 ---
 import { SITE_AUTHOR, SITE_TITLE } from '../consts';
-const today = new Date();
+import { getLocaleFromPath, localizedPath } from '../i18n';
+
+const locale = getLocaleFromPath(Astro.url.pathname);
+const isEn = locale === 'en';
+const base = (p: string) => localizedPath(p, locale);
+const t = isEn
+	? {
+			tagline: 'Notes and projects on software, cybersecurity and systems programming.',
+			site: 'Site',
+			posts: 'Posts',
+			projects: 'Projects',
+			about: 'About',
+			privacy: 'Privacy',
+			links: 'Links',
+			source: 'Site source',
+			email: 'Email',
+			siteLabel: 'Site',
+			extLabel: 'External links',
+		}
+	: {
+			tagline: 'Yazılım, siber güvenlik ve sistem programlama üzerine Türkçe yazılar ve projeler.',
+			site: 'Site',
+			posts: 'Yazılar',
+			projects: 'Projeler',
+			about: 'Hakkımda',
+			privacy: 'Gizlilik',
+			links: 'Bağlantılar',
+			source: 'Site kaynağı',
+			email: 'E-posta',
+			siteLabel: 'Site',
+			extLabel: 'Dış bağlantılar',
+		};
 ---
 
 <footer class="border-t border-line">
@@ -9,27 +40,25 @@ const today = new Date();
 			<div class="flex flex-col gap-10 sm:flex-row sm:justify-between">
 				<div class="max-w-[32ch]">
 					<p class="text-[0.875rem] font-medium leading-5 text-ink">{SITE_TITLE}</p>
-					<p class="mt-2 text-[0.875rem] leading-5 text-muted">
-						Yazılım, siber güvenlik ve sistem programlama üzerine Türkçe yazılar ve projeler.
-					</p>
+					<p class="mt-2 text-[0.875rem] leading-5 text-muted">{t.tagline}</p>
 				</div>
 				<div class="flex gap-16 sm:gap-24">
-					<nav aria-label="Site">
-						<p class="label">Site</p>
+					<nav aria-label={t.siteLabel}>
+						<p class="label">{t.site}</p>
 						<ul class="mt-3 space-y-2">
-							<li><a href="/blog/" class="text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">Yazılar</a></li>
-							<li><a href="/projects/" class="text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">Projeler</a></li>
-							<li><a href="/about/" class="text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">Hakkımda</a></li>
-							<li><a href="/privacy-policy/" class="text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">Gizlilik</a></li>
+							<li><a href={base('/blog/')} class="text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">{t.posts}</a></li>
+							<li><a href={base('/projects/')} class="text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">{t.projects}</a></li>
+							<li><a href={base('/about/')} class="text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">{t.about}</a></li>
+							<li><a href="/privacy-policy/" class="text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">{t.privacy}</a></li>
 							<li><a href="/rss.xml" class="text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">RSS</a></li>
 						</ul>
 					</nav>
-					<nav aria-label="Dış bağlantılar">
-						<p class="label">Bağlantılar</p>
+					<nav aria-label={t.extLabel}>
+						<p class="label">{t.links}</p>
 						<ul class="mt-3 space-y-2">
 							<li><a href="https://github.com/bymfd" target="_blank" rel="noopener noreferrer" class="link-arrow text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">GitHub</a></li>
-							<li><a href="https://github.com/bymfd/fosstr" target="_blank" rel="noopener noreferrer" class="link-arrow text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">Site kaynağı</a></li>
-							<li><a href="mailto:hello@fosstr.com" class="link-arrow text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">E-posta</a></li>
+							<li><a href="https://github.com/bymfd/fosstr" target="_blank" rel="noopener noreferrer" class="link-arrow text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">{t.source}</a></li>
+							<li><a href="mailto:hello@fosstr.com" class="link-arrow text-[0.875rem] leading-5 text-muted transition-colors duration-150 hover:text-ink">{t.email}</a></li>
 						</ul>
 					</nav>
 				</div>
