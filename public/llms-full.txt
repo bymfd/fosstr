@@ -13,6 +13,359 @@ Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her 
 
 ---
 
+# Burger King ve McDonald's tweet'lerindeki eski Bitly linkleri ele geçirildi
+
+- Kaynak: https://fosstr.com/blog/bitly-eski-linklerin-ele-gecirilmesi/
+- Tür: Yazı
+- Tarih: 2026-11-16
+- Etiketler: security, bitly, link-hijacking, social-media, privacy
+- Özet: 15 Kasım 2026'da eski bit.ly adreslerinin arka yarıları yeniden kaydedildi. 2011 tweet'leri Nazi kampları ve 11 Eylül sayfalarına yönlendi; Bitly sorunu doğruladı ve hesapları askıya aldı.
+
+15 Kasım 2026'da X'te tuhaf bir şey oldu: Burger King'in 2011'de attığı bir tweet, restoran bulucu yerine Wikipedia'nın **Nazi toplama kampları** listesine gitmeye başladı. McDonald's'ın 2011 tarihli bir tweet'i ise **11 Eylül saldırıları** maddesine yönleniyordu.
+
+İki hesap da ele geçirilmedi. Tweet'ler de değiştirilmedi. Değişen şey, tweet'lerin içindeki **Bitly kısa linklerinin nereye gittiği** oldu. Birileri, eski linklerin arka yarılarını yeniden kaydettirdi.
+
+Bu yazı, olayın nasıl gerçekleştiğini, ne kadar yaygın olduğunu ve eski kısa linklerin neden hâlâ bir risk olduğunu anlatıyor.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| Tarih | 15 Kasım 2026 |
+| Etkilenenler | Burger King, McDonald's, Donald Trump; CNN'e göre Bill Gates, Justin Trudeau, Mike Pence, FBI, ABD Savunma Bakanlığı |
+| Yöntem | Eski Bitly linklerinin arka yarısının yeniden kaydedilmesi |
+| Burger King linki | `bit.ly/19BFiM`, 05:32 UTC'de yeniden oluşturuldu |
+| McDonald's linki | `bit.ly/mLWJO0`, 05:14 UTC'de yeniden oluşturuldu |
+| Trump taraması | 97 link: 40 orijinal, 49 yeniden oluşturulmuş ama doğru yere gidiyor, 7 başka yere, 1 engelli |
+| Bitly açıklaması | 19:13 UTC'de sorun doğrulandı; hesaplar askıya alındı, linkler devre dışı bırakılıyor |
+
+## Ne oldu?
+
+Burger King, 24 Temmuz 2011'de restoran bulucusunu tanıtan bir tweet attı. Tweet'in içindeki `bit.ly/19BFiM` linki, 2026'da yeniden kaydedildi ve Wikipedia'nın Nazi toplama kampları listesine yönlendirildi. Linkin Bitly bilgi sayfası, oluşturulma zamanını **15 Kasım 2026, 05:32 UTC** olarak gösteriyor.
+
+Aynı sabah, 18 dakika önce, McDonald's'ın 7 Haziran 2011 tarihli tweet'indeki `bit.ly/mLWJO0` de yeniden oluşturulmuş ve 11 Eylül saldırıları maddesine yönlendirilmişti.
+
+Hiçbir markanın hesabından yeni bir paylaşım yapılmadı. Eski tweet'ler olduğu gibi duruyor; yalnızca linkin hedefi değişti. Burger King'in tweet'i kısa süre içinde erişilemez hale geldi; McDonald's tweet'i ise 404 döndü. Bunu markaların mı yoksa X'in mi kaldırdığı bilinmiyor.
+
+Olayı ilk fark edenlerden Alex Greenland, iki değişikliğin zamanlamasına dikkat çekti: 05:14 ve 05:32. Aynı kişi veya grubun işi olabilir; ancak bunu kanıtlayan bir veri yok.
+
+## Sadece iki marka değil
+
+Ransomnews, Donald Trump'ın 2009–2013 arasındaki tweet'lerinden 97 Bitly linkini inceledi. Sonuç:
+
+| Durum | Link sayısı |
+|---|---|
+| Hâlâ orijinal | 40 |
+| Yeniden oluşturulmuş, tweet'in işaret ettiği yere gidiyor | 49 |
+| Yeniden oluşturulmuş, başka yere gidiyor | 7 |
+| Bitly tarafından zararlı/spam olarak engellenmiş | 1 |
+
+49 linkin 48'i, 26 Mayıs 2023'te 17 dakikalık bir aralıkta yeniden oluşturulmuş. Bu, linklerin nereye gittiğini bilen birinin yaptığı bir onarım işi gibi görünüyor. Yani arka yarılar en az 2023'ten beri yeniden alınabiliyormuş.
+
+15 Kasım'da yeniden oluşturulan yedi linkten dördü, bir Roblox profiline, bir YouTube videosuna (iki kez) ve Trump–Jeffrey Epstein maddesine gidiyor. İki link ise kripto hizmetlerinin adını taklit eden alan adlarına yönleniyor: `worldlibertyfinancial-ai[.]com` ve `dappradars[.]website`.
+
+CNN, aynı akşam Bill Gates, Justin Trudeau, Mike Pence, FBI ve ABD Savunma Bakanlığı'nın eski paylaşımlarında da yönlendirilmiş Bitly linkleri bulunduğunu bildirdi. Ransomnews bu hesapları kendisi doğrulamadı.
+
+## Bitly linki nasıl ele geçirilir?
+
+Bitly linkinin sonundaki kısma **back-half** deniyor. Bitly bunu rastgele üretiyor veya kullanıcı özel bir ad seçiyor. Eski link ortadan kalktığında ve arka yarı yeniden alınabildiğinde, o linki taşıyan her tweet, e-posta, PDF veya basılı QR kod yeni sahibinin seçtiği yere gidiyor.
+
+Bu iş için şifre çalmak veya hesaba girmek gerekmiyor. Marka tarafında hiçbir uyarı oluşmuyor; çünkü markanın hesabında bir değişiklik yok.
+
+Bitly'in kendi yardım sayfası, hesap silinse bile linklerin çalışmaya devam ettiğini ve arka yarıların "yeniden kullanılamayacağını" söylüyor. Ayrı bir sayfa ise üç yıl hareketsiz kalan hesapların silindiğini belirtiyor. 15 Kasım'da toplanan oluşturulma tarihleri ilk ifadeyle çelişiyor: 2009–2012 tweet'lerinde görünen arka yarılar, 2023'ten bugüne oluşturulmuş linklere ait.
+
+Bu ilk kez de olmuyor. Şubat 2025'te Disruptionist, kripto para tanıtımcılarının Trump ve Melania Trump'ın 2013 paylaşımlarındaki Bitly linklerini token listelerine yönlendirdiğini bildirmişti. O dönemde bir hata nedeniyle arka yarıların, orijinal link veya hesap silindiğinde yeniden alınabildiği ve Bitly'in bunu düzelttiği söylenmişti. 15 Kasım 2026'da oluşturulan linkler, aynı şeyin hâlâ mümkün olduğunu gösteriyor.
+
+## Zaman çizelgesi
+
+| UTC | Olay |
+|---|---|
+| 14 Kasım, 23:52 | 2013 tarihli bir Trump tweet'indeki link yeniden kaydedildi (Steam sayfası) |
+| 15 Kasım, 01:04 | 2012 tarihli bir Trump tweet'indeki link yeniden kaydedildi (YouTube) |
+| 05:14 | McDonald's linki yeniden kaydedildi (11 Eylül maddesi) |
+| 05:32 | Burger King linki yeniden kaydedildi (Nazi kampları listesi) |
+| 06:51 | Bir X kullanıcısı Burger King tweet'ini alıntıladı; gönderi milyonlarca görüntülenme aldı |
+| 07:49–09:57 | Dört Trump linki daha yeniden kaydedildi |
+| 19:13 | Bitly sorunu doğruladı |
+| 19:22 | Etkilenen linkler "Link Deactivated" sayfası döndürmeye başladı |
+
+Bitly, 19:13 UTC'de X üzerinden yaptığı açıklamada "eski ve aktif olmayan belirli linklerin kötü niyetli aktörler tarafından yeniden kullanılmasına izin veren bir sorun" tespit ettiklerini söyledi. İlgili hesapların askıya alındığını ve etkilenen linklerin devre dışı bırakıldığını ekledi. Kaç linkin ele geçirildiği veya bunun nasıl olduğu açıklanmadı.
+
+## Bu neden önemli?
+
+15 Kasım'daki örnekler şaka gibi görünüyor: Wikipedia sayfası, oyun profili, video. Ama aynı yöntem dolandırıcılık için de çalışıyor.
+
+- Eski bir tweet'teki link, doğrulanmış bir markanın, bankanın, bakanlığın veya haber sitesinin hesabından geliyor gibi görünüyor. X, gönderiyi yazıldığı gibi gösteriyor; okuyucunun şüphelenmesi için bir neden yok.
+- Aynı kısa linkler eski e-postalarda, PDF'lerde, sunumlarda, basılı QR kodlarda ve yardım sayfalarında duruyor.
+- Link bir kez ele geçirildiğinde, arkasındaki alan adı düştüğünde bir kez daha el değiştirebiliyor.
+
+Güvenlik literatüründe buna **broken link hijacking** (kırık link ele geçirme) deniyor: link, işaret ettiği şeyden daha uzun yaşıyor ve yerine başkası geçiyor. 2025'teki dalga kripto token'larına yönelikti; 2026'daki dalganın bir kısmı da kripto hizmetlerini taklit eden alan adlarına gidiyor.
+
+## Kendinizi nasıl korursunuz?
+
+**Linkin nereye gittiğini kontrol edin.** Bir `bit.ly` linkinin sonuna `+` ekleyin. Bitly, linkin hedefini ve oluşturulma tarihini gösterir. Tarih, linkin bulunduğu paylaşımdan sonraysa link artık orijinal değildir. Ancak devre dışı bırakılmış linklerde bu bilgi görünmeyebilir.
+
+**Eski linkleri envanterleyin.** Kurumsal hesaplarda yıllar önce paylaşılmış kısa linkleri dışa aktarın ve tek tek kontrol edin. Değiştirilmiş linkleri taşıyan paylaşımları kaldırın veya Bitly'e bildirin.
+
+**Yeni linklerde kendi alan adınızı kullanın.** `marka.co/kampanya` gibi kendi kontrolünüzdeki bir kısa alan adı, üçüncü tarafın arka yarısını yeniden dağıtmasını engeller.
+
+**Eski veya doğrulanmış hesap diye linke güvenmeyin.** Hesap sahibi, linkin bugün nereye gittiğini kontrol etmiyor olabilir. Özellikle oturum açmanızı veya kripto cüzdan bağlamanızı isteyen sayfalarda dikkatli olun.
+
+## Belirsizlikler
+
+- Bitly, sorunun kök nedenini ve kaç linkin etkilendiğini açıklamadı.
+- Etkilenen linklerin bir kısmı devre dışı bırakıldı; ancak 26 Mayıs 2023'te yeniden oluşturulan 49 link hâlâ çalışıyor.
+- Burger King ve McDonald's'tan konuya ilişkin bir açıklama yok.
+- CNN'in bildirdiği diğer hesaplar Ransomnews tarafından bağımsız olarak doğrulanmadı.
+
+Yine de tablo net: Kısa link bir kez yayımlandığında, arkasındaki hizmetin onu sonsuza kadar koruyacağını varsaymak doğru değil. Eski paylaşımlar, bugünün yönlendirme altyapısıyla çalışmaya devam ediyor.
+
+## Kaynaklar
+
+- [Ransomnews: Old Bitly links hijacked in Burger King, McDonald's and Trump tweets](https://ransomnews.com/burger-king-tweet-bitly-link-hijack-2026/)
+- [Bitly'nin X açıklaması (15 Kasım 2026)](https://twitter.com/bitly/status/2122045450786152588)
+- [CNN: Past X posts with links redirecting to unrelated websites](https://edition.cnn.com/2026/11/15/business/political-and-corporate-x-posts-have-links-redirecting-to-vulgar-racist-or-random-websites)
+- [Disruptionist: Crypto scammers hacked Trump's tweets via a bug (Şubat 2025)](https://www.disruptionist.com/p/crypto-scammers-hacked-trumps-tweets-via-bug)
+- [Bitly Help: Hesap silindikten sonra linkler ne olur?](https://support.bitly.com/hc/en-us/articles/360059651871-What-happens-to-my-personal-information-links-and-QR-Codes-after-my-account-is-deleted)
+- [Acunetix: What is broken link hijacking](https://www.acunetix.com/blog/web-security-zone/broken-link-hijacking/)
+
+---
+
+# Cairn ve CL-STA-1238: otonom AI ile 19 kuruluşa saldırı
+
+- Kaynak: https://fosstr.com/blog/cairn-otonom-ai-saldirilari/
+- Tür: Yazı
+- Tarih: 2026-11-16
+- Etiketler: security, ai, agents, threat-intelligence, unit42, china
+- Özet: Unit 42, Çin bağlantılı CL-STA-1238'in açık kaynak Cairn framework'ünü Zhipu GLM ve DeepSeek ile birleştirerek 25 otonom operasyon yürüttüğünü açıkladı. 10 kuruluşta yetkisiz erişim doğrulandı.
+
+Unit 42, 12 Kasım 2026'da yayımladığı [araştırmada](https://unit42.paloaltonetworks.com/cairn-framework-ai-autonomous-attacks) otonom AI ajanlarının hedefli saldırılarda nasıl kullanıldığına dair somut bir vaka anlattı. Çin bağlantılı olduğu değerlendirilen **CL-STA-1238**, açık kaynak bir sızma testi framework'ü olan [Cairn](https://github.com/oritera/Cairn) ile Zhipu GLM ve DeepSeek modellerini birleştirmiş.
+
+Sonuç: Ağustos–Eylül 2026 arasında **en az 19 kuruluşa karşı 25 operasyon**. Bunların **10'unda** yetkisiz erişim veya veri çekme doğrulanmış. Hedefler arasında yarı iletken üretimi, ABD savunma politikası ve sivil toplum kuruluşları var.
+
+Bu yazı, saldırının nasıl işlediğini, Cairn'in ne yaptığını ve savunma tarafında bu tablonun ne anlama geldiğini anlatıyor.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| Aktör | CL-STA-1238 (Unit 42: orta güvenle Çin bağlantılı) |
+| Dönem | Ağustos–Eylül 2026 |
+| Framework | Cairn (açık kaynak, `oritera/Cairn`) |
+| Modeller | Zhipu GLM 5.2, DeepSeek V4 Flash/Pro |
+| Operasyon | 25 operasyon, en az 19 kuruluş |
+| Doğrulanan erişim | 10 kuruluş |
+| Hedef sektörler | Yarı iletken, savunma politikası, sivil toplum |
+| C2 / barındırma | `154.44.31[.]4` (Hong Kong, AS979) |
+| Staging / çıkış | `82.29.129[.]54` (ABD, AS142036) |
+| Yayın tarihi | 12 Kasım 2026 |
+
+## Cairn nedir?
+
+Cairn, sızma testi için yazılmış açık kaynak bir ajan framework'ü. Her "agent worker"ı bir AI modeli tarafından sürülüyor. Ajanlar ortak bir **blackboard** üzerinden haberleşiyor; bulguları değiştirilemez "fact" olarak, sıradaki eylemleri ise "intent" olarak yazıyor. İnsan operatörler istedikleri anda "hint" ekleyerek yönü değiştirebiliyor.
+
+Saldırganlar Cairn'in özelleştirilmiş bir fork'unu Hong Kong'daki bir sunucudan çalıştırmış. Framework modelden bağımsız; aynı operasyonda farklı modeller kullanılabiliyor.
+
+Bir operasyon üç aşamada ilerliyor:
+
+1. **Bootstrap:** Hedef ve verilen ipuçlarıyla görevi doğrudan çözmeye çalışır.
+2. **Reason:** O ana kadar bulunanları değerlendirir, sıradaki adımı seçer.
+3. **Explore:** Tek bir eylem yapar ve sonucu yeni bir bulgu olarak kaydeder.
+
+Reason–Explore döngüsü, model hedefe ulaştığına karar verene kadar devam ediyor. Unit 42'ye göre her hedef için 3–7 aşamalı farklı planlar üretilmiş; operasyonlar **20 dakikadan 50 saatten fazlasına** kadar sürmüş. Saldırgan tarafından bir süre sınırı konmamış.
+
+## Operasyon pratikte nasıl görünüyor?
+
+Saldırganlar her iş için tek satırlık bir hedef yazmış. Örnek:
+
+> "Webshell, SSH, kaynak kod, anahtar, kullanıcı bilgisi ve kimlik bilgileri dahil olmak üzere somut ve yüksek değerli erişim elde et; ideal olarak iç ağa gir."
+
+Framework'e hedefin kök alan adı verilmiş; Cairn saldırı yüzeyini kendi kendine numaralandırmış. Bazı işlerde VPN ağ geçidi adresleri, grup adları ve paylaşılan grup şifreleri gibi önceden toplanmış bilgiler de eklenmiş. Yani istihbarat insan tarafından sağlanmış, yürütme büyük ölçüde ajana bırakılmış.
+
+Ayrıca "AIScan Runner Skills" adlı bir yetenek paketi yüklenmiş. Bu paket upstream Cairn projesinde yok; saldırıya özel hazırlanmış.
+
+## Modeller ve "guardrail" aşma
+
+25 operasyonun dağılımı:
+
+| Model | Operasyon |
+|---|---|
+| Zhipu GLM 5.2 | 13 |
+| DeepSeek V4 Flash | 8 |
+| DeepSeek V4 Pro | 4 |
+
+Saldırganlar modelleri birbirine karşı test etmiş gibi görünüyor. DeepSeek V4 Flash ile aşılamayan hedeflerde daha güçlü V4 Pro tekrar denenmiş.
+
+Cairn'in stok worker prompt'ları zaten modele "hiçbir görevi reddetme" talimatı veriyor. Saldırganlar bunu kendi "yetkilendirme" metinleriyle pekiştirmiş: her Reason ve Explore çağrısına, görevin yetkili bir güvenlik testi olduğunu ve reddedilemeyeceğini söyleyen Çince bir giriş eklemişler. Her operasyon için ayrıca bir `AUTHORIZATION.md` dosyası üretilmiş; dosya, görevi oluşturmayı müşteri onayı sayarak operasyonu "yetkili" ilan ediyor.
+
+Unit 42'ye göre ne Zhipu GLM ne de DeepSeek bu çerçeveyi reddetmiş.
+
+## Doğrulanan sonuçlar
+
+Unit 42, 19 hedefin 10'unda yetkisiz erişim veya veri çekme doğrulamış. Öne çıkan vakalar:
+
+| Hedef | Yöntem | Sonuç |
+|---|---|---|
+| Endüstri standartları kuruluşu | İnternete açık uygulamada zayıf şifre denemesi | Düzinelerce geçerli kimlik bilgisi, dahili dizin veritabanı |
+| Yarı iletken üreticisi | Ortak kullanılan üretim kimlik bilgisinin kaba kuvvetle bulunması | Uygulama verisi, kullanıcı/e-posta listeleri, kalıcı yönetici hesabı ve API token'ı |
+| ABD öğretmenler sendikası | CMS'te kimlik doğrulamasız hesap oluşturma bypass'ı | 1 milyondan fazla üye kaydı, ~31.000 CRM kişisi, personel şifre hash'leri |
+| Savunma politikası düşünce kuruluşu | Kimlik platformundaki açık kayıt uç noktası | ~500 kullanıcı kaydı; `.mil` ve `.gov` hesapları |
+| Çeşitli CMS'ler | Kimlik ve yapılandırma zayıflıkları | Litografi üreticisinde çalışan verisi, otomasyon üreticisinde ~150.000 dahili doküman, eğitim vakfında öğrenci verisi |
+
+En dikkat çekici maddelerden biri, standartlar kuruluşunda **canlı bir oylama dokümanının** kimlik doğrulaması gerektirmeyen bulut depolama yazımıyla değiştirilmesi. Ayrıca saldırganlar keyfi müşteriler olarak oturum açıp toplantı, oylama ve arka ofis işlevlerine okuma, yazma ve silme erişimi elde etmiş.
+
+Yarı iletken vakasında ise yalnızca veri okunmamış: üretim sisteminde yetkisiz yönetici hesapları ve kalıcı bir API token'ı oluşturulmuş.
+
+## Neden önemli?
+
+Bu vakayı önceki AI destekli saldırılardan ayıran şey, modelin "yardımcı" değil **yürütücü** olması. Saldırgan hedefi ve amacı veriyor; planlama, deneme, sonuç kaydetme ve sonraki adımı seçme işini framework yapıyor. İnsan yalnızca gerektiğinde ipucu ekliyor.
+
+Unit 42'nin altını çizdiği nokta şu: otonom orkestrasyon, bir aktörün aynı anda takip edebileceği hedef sayısındaki operatör-saati sınırını kaldırıyor. Küçük bir ekip veya tek bir operatör, iki hafta içinde 19 kuruluşa eşzamanlı saldırı yürütebiliyor.
+
+Ama saldırının karmaşıklığı artmış değil. Kullanılan zafiyetler tanıdık:
+
+- Kimlik doğrulama bypass'ları,
+- Güvenli olmayan doğrudan nesne referansları (IDOR),
+- Mass-assignment ile yetki yükseltme,
+- Zayıf ve varsayılan kimlik bilgileri,
+- Açıkta bırakılmış bulut API'leri,
+- Eski, yamalanmamış CVE'ler.
+
+Yani AI, istismarın **hacmini ve kapsamını** büyütüyor; karmaşıklığını değil. Kimlik hijyeni, saldırı yüzeyini azaltmak ve yama yönetimi hâlâ işe yarıyor.
+
+## Savunma tarafında ne yapmalı?
+
+Bu vakadan çıkarılacak pratik dersler, yeni bir ürün satın almaktan çok temel hijyen:
+
+- **Kimlik bilgilerini tekrar kullanmayın.** Ortak kullanılan üretim kimlik bilgisi, tek bir kaba kuvvet denemesini tüm sisteme açılan anahtara çevirdi.
+- **MFA'yı yaygınlaştırın.** Özellikle yönetici hesaplarında ve dışa açık uygulamalarda.
+- **Varsayılan ve zayıf şifreleri tarayın.** İnternete açık uygulamalarda şifre püskürtme hâlâ işe yarıyor.
+- **Eski CVE'leri kapatın.** Otonom ajanlar, kamuya açık tarayıcılarla bulunabilen bilinen açıkları deniyor.
+- **API ve bulut depolamayı gözden geçirin.** Kimlik doğrulamasız yazma izni, bir oylama dokümanını değiştirmeye yetiyor.
+- **Kalıcılığı arayın.** Yeni yönetici hesapları, API token'ları ve oturumlar; olay müdahalesinde ilk bakılacak yerler.
+- **Ağ çıkışını izleyin.** Unit 42'nin verdiği göstergeler: `154.44.31[.]4` ve `82.29.129[.]54`.
+
+## Türkiye açısından
+
+Türkçe kaynaklarda bu araştırmayı ayrıntılı ele alan bir yazıya rastlamadım; bu yazı o boşluğu kapatmak için hazırlandı. Türkiye'de özellikle üretim, savunma sanayii ve sivil toplum kuruluşları için tablo tanıdık: dışa açık uygulamalar, eski CVE'ler, paylaşılan servis hesapları ve zayıf şifre politikaları.
+
+Otonom ajanların yükselişi, "hedef olacak kadar büyük değiliz" varsayımını zayıflatıyor. Saldırganın maliyeti düştükçe hedef seçimi genişliyor. Bu yüzden temel kontrolleri yapmak, yeni bir tehdit istihbaratı aboneliğinden daha öncelikli.
+
+## Kaynaklar
+
+- [Unit 42: Attackers Use Autonomous AI to Target Semiconductor, Defense and Civil Society Sectors](https://unit42.paloaltonetworks.com/cairn-framework-ai-autonomous-attacks)
+- [Cairn framework (GitHub)](https://github.com/oritera/Cairn)
+- [Zero Evolution Lab: The Pathless Path — Cairn AI](https://mp.weixin.qq.com/s/2rEqFLvkxvYWM3gW170C2w)
+
+---
+
+# XRAID: XFS içine gömülen declustered parity RAID
+
+- Kaynak: https://fosstr.com/blog/xraid-xfs-declustered-raid/
+- Tür: Yazı
+- Tarih: 2026-11-16
+- Etiketler: linux, xfs, storage, raid, zoned, kernel
+- Özet: Christoph Hellwig, zoned XFS için XRAID'i ilk kez kamuya açtı. Parity RAID yalnızca dosya verisine uygulanıyor; metadata mevcut MD RAID'e bırakılıyor. Yazmalar mdraid'e göre 20 kata kadar hızlı.
+
+Linux depolama tarafında uzun süredir beklenen bir değişiklik 13 Kasım 2026'da görünür oldu: Christoph Hellwig, **XRAID** adını verdiği yeni RAID uygulamasının ilk genel sürümünü duyurdu. XRAID, ayrı bir blok katmanı veya ayrı bir dosya sistemi değil; **XFS'in içine entegre edilmiş declustered parity RAID**.
+
+Hedef, özellikle **zoned XFS** kurulumları: SMR diskler gibi sıralı yazma zorunluluğu olan cihazlar. Ama XRAID normal sabit disklerde ve SSD'lerde de çalışıyor. Hellwig'e göre SSD performansı optimize edilmemiş olsa bile yazmalar **mdraid'e kıyasla 20 kata kadar** hızlı.
+
+Bu yazı, XRAID'in ne yaptığını, neden mevcut RAID çözümlerinden farklı olduğunu ve henüz neden üretimde kullanılmaması gerektiğini anlatıyor.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| Geliştirici | Christoph Hellwig |
+| Duyuru | 13 Kasım 2026, LKML |
+| Geliştirme süresi | Yaklaşık 1,5 yıl |
+| Tür | XFS'e entegre declustered parity RAID |
+| Öncelikli hedef | Zoned XFS, SMR diskler |
+| Desteklenen cihazlar | Zoned ve geleneksel HDD/SSD |
+| Metadata koruması | Mevcut MD RAID mirroring'e devrediliyor |
+| Performans | Yazmalarda mdraid'e göre 20 kata kadar hız |
+| Durum | Kamuya açık ilk yamalar; upstream'e hazır değil |
+
+## Zoned XFS neden farklı?
+
+Zoned cihazlar, verinin sıralı olarak yazılmasını ister. SMR (shingled magnetic recording) sabit diskler bunun tipik örneği: Rastgele yazma pahalı, sıralı yazma verimli. Geleneksel RAID, parity bloklarını yerinde güncellemek zorunda olduğu için bu modelle doğrudan uyuşmaz.
+
+Zoned XFS'in çözümü, dosya verisi ile metadata'yı ayırmak. XFS'in **realtime (RT) subvolume** mekanizması kullanılarak yalnızca dosya verisi sıralı yazma gerektiren zonalara yerleştiriliyor; metadata ise geleneksel cihazlarda veya zonalarda tutuluyor.
+
+XRAID bu ayrımın üzerine kuruluyor. Parity RAID yalnızca **dosya verisi** için sağlanıyor; çünkü parity RAID'in verimli çalıştığı yer orası. Küçük nesnelerin yerinde güncellendiği metadata için ise parity RAID uygun değil. XRAID, metadata yedekliliğini MD RAID mirroring gibi mevcut katmanlı Linux sürücülerine bırakıyor.
+
+## XRAID nasıl çalışıyor?
+
+Hellwig'in açıklamasına göre XRAID, Zoned XFS I/O yolunun **altında**, katmanlı bir blok sürücüsüne benzer şekilde konumlanıyor. Alttaki cihazların fiziksel zonalarını mantıksal zonalara birleştiriyor; Zoned XFS bu mantıksal zonaları realtime gruplar olarak kullanıyor.
+
+Akış kabaca şöyle:
+
+1. XFS, dosya verisini RT subvolume üzerinden yazar.
+2. Zoned XFS, bu veriyi sıralı yazma zonalarına yönlendirir.
+3. XRAID, fiziksel zonaları mantıksal zonalara toplar ve parity'yi yönetir.
+4. Metadata ayrı tutulur ve yedekliliği MD RAID mirroring'e devredilir.
+
+Bu tasarımın ana fikri, RAID'in "her şeyi koruyan" bir katman olmaktan çıkıp yalnızca **parity'nin anlamlı olduğu veri türüne** odaklanması. Küçük, yerinde güncellenen metadata için aynalama; büyük, sıralı yazılan dosya verisi için parity.
+
+## Declustered RAID ne kazandırıyor?
+
+Klasik RAID'te bir stripe, D adet veri ve P adet parity bloğundan oluşur ve genellikle D+P disk üzerine sabitlenir. Declustered RAID'de ise her stripe'ın veri ve parity blokları, **D+P'den daha fazla disk içeren bir havuza** dağıtılır. Böylece tüm diskler okuma, yazma ve yeniden oluşturma işlemlerine katılır; yedek kapasite de tüm disklere yayılır.
+
+Pratik sonuçlar:
+
+- **Daha hızlı rebuild.** Yeniden oluşturma tek bir yedek diske değil, boş kapasitesi olan tüm cihazlara paralel yapılabiliyor.
+- **Daha esnek büyük havuzlar.** Çok sayıda diski tek havuzda yönetmek kolaylaşıyor.
+- **Dinamik rebuild sırası.** XRAID, birden fazla yedekliliğini kaybetmiş zonaları önce onarıyor; veri zonalarını parity zonalarından önce yeniden oluşturarak bozuk okuma (degraded read) maliyetini azaltıyor.
+
+Bu, özellikle onlarca disklik depolama sunucularında rebuild süresinin saatler değil dakikalar mertebesine inmesi anlamına gelebilir. Ama buradaki "gelebilir" önemli: Henüz bağımsız ölçümler ve üretim deneyimi yok.
+
+## Neden mdraid'in yerini almıyor?
+
+XRAID'i "yeni genel amaçlı RAID" diye okumamak gerekiyor. Sınırlarını açıkça belirtmek lazım:
+
+- **Upstream'e hazır değil.** Hellwig, ilk yamaların upstream gönderimi için hazır olmadığını, ancak test ve geri bildirim aşamasına geldiğini söylüyor.
+- **Genel RAID yerine XFS'e özel.** XRAID, Zoned XFS'in veri/metadata ayrımına yaslanıyor. Diğer dosya sistemleri veya kök dosya sistemi senaryoları için bir çözüm olarak sunulmuyor.
+- **Metadata için parity yok.** Metadata yedekliliği MD RAID mirroring'e devredilmiş. Yani tek başına "her şeyi RAID'leyen" bir katman değil.
+- **SSD optimizasyonu yok.** SSD'lerde çalışıyor, ancak performans için özel bir çalışma yapılmamış.
+- **Benchmark'lar erken.** 20 kat hız iddiası Hellwig'in sunumundaki ilk ölçümlere dayanıyor; bağımsız testlerle doğrulanması gerekiyor.
+
+Kısacası XRAID, "mdraid öldü" haberi değil; zoned depolama ile parity RAID'i aynı çatı altında buluşturan deneysel bir yaklaşım.
+
+## Neden önemli?
+
+Depolama dünyası iki yöne birden gidiyor: Kapasite için SMR/zoned cihazlar yaygınlaşıyor, hız için NVMe SSD'ler öne çıkıyor. Geleneksel RAID yazılımı bu iki dünyanın ikisine de tam oturmuyor. SMR'de parity güncellemesi pahalı; SSD'de ise rebuild ve write amplification sorun olabiliyor.
+
+XRAID'in katkısı, RAID'i dosya sisteminin veri yerleşimiyle uyumlu hale getirmesi. XFS zaten hangi verinin sıralı, hangisinin rastgele yazılacağını biliyor. RAID'in bu bilgiyi kullanması, ayrı bir katmanın tahmin etmesinden daha mantıklı.
+
+Ayrıca Hellwig'in ismi burada güven veriyor: Uzun yıllardır Linux depolama ve dosya sistemi tarafında çalışan, XFS ve block layer'da imzası olan bir geliştirici. XRAID'in bir buçuk yıldır kapalı geliştirilmesi de aceleye getirilmediğini gösteriyor.
+
+## Nasıl denenir?
+
+Test etmek isteyenler için üç parça var:
+
+- [LKML'deki ilk yama serisi](https://lore.kernel.org/lkml/20261113112913.GA31748@lst.de/)
+- XRAID destekli `mkfs` için `xfsprogs` dalı
+- Yeni `xraid` yardımcı programı
+
+Ancak bunlar deneysel. Üretim verisiyle, yedek olmadan denenmemeli. Zoned XFS'in kendisi de olgun bir kurulum değil; XRAID onun üzerine ek bir katman.
+
+Hellwig'in bu yıl yaptığı sunumun slaytları da [burada](https://verein.lst.de/~hch/raid-sucks.pdf) mevcut; tasarımın arkasındaki gerekçeyi ve ilk benchmark'ları görmek için iyi bir başlangıç.
+
+## Sonuç
+
+XRAID, "RAID'i dosya sistemine taşıma" fikrinin somut bir örneği. Parity'yi yalnızca dosya verisine uygulaması, metadata'yı mevcut aynalama çözümlerine bırakması ve zoned cihazları merkeze alması, klasik RAID'in sınırlarını kabul eden bir tasarım.
+
+Henüz upstream'de değil, üretim için hazır değil ve performans iddiaları bağımsız olarak doğrulanmadı. Ama SMR/zoned depolama yaygınlaştıkça bu tür bir entegrasyonun neden gerekli olduğunu anlamak kolay. XRAID, bu ihtiyacın ilk ciddi cevaplarından biri.
+
+## Kaynaklar
+
+- [Phoronix: XRAID Publicly Released As New RAID Implementation For XFS](https://www.phoronix.com/news/XRAID-XFS-RAID)
+- [LKML: XRAID ilk yama serisi](https://lore.kernel.org/lkml/20261113112913.GA31748@lst.de/)
+- [Christoph Hellwig: RAID sunumu slaytları](https://verein.lst.de/~hch/raid-sucks.pdf)
+
+---
+
 # Apache mod_http2 CVE-2026-119618: HTTP/2 yarış koşulu nasıl RCE'ye dönüşüyor?
 
 - Kaynak: https://fosstr.com/blog/apache-mod-http2-cve-2026-119618/
