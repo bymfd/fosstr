@@ -1,0 +1,38 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "fosstr",
+    "identifier": "did:web:fosstr.com",
+    "documentationUrl": "https://fosstr.com/about/"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:fosstr.com:knowledge:llms-txt",
+      "displayName": "fosstr içerik indeksi (llms.txt)",
+      "type": "text/plain",
+      "url": "https://fosstr.com/llms.txt",
+      "description": "Yazıların, projelerin ve etiketlerin AI istemcileri için hazırlanmış kısa indeksi."
+    },
+    {
+      "identifier": "urn:air:fosstr.com:knowledge:llms-full",
+      "displayName": "fosstr tam metin arşivi (llms-full.txt)",
+      "type": "text/plain",
+      "url": "https://fosstr.com/llms-full.txt",
+      "description": "Tüm blog yazılarının ve proje açıklamalarının tek dosyada tam metni."
+    },
+    {
+      "identifier": "urn:air:fosstr.com:feed:rss",
+      "displayName": "fosstr RSS akışı",
+      "type": "application/rss+xml",
+      "url": "https://fosstr.com/rss.xml",
+      "description": "Yeni yazıların başlık, açıklama ve bağlantılarını içeren RSS akışı."
+    },
+    {
+      "identifier": "urn:air:fosstr.com:index:sitemap",
+      "displayName": "fosstr site haritası",
+      "type": "application/xml",
+      "url": "https://fosstr.com/sitemap-index.xml",
+      "description": "Sitedeki tüm sayfaların arama motorları ve istemciler için indeksi."
+    }
+  ]
+}

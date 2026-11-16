@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://fosstr.com/sitemap-index.xml
+Agentmap: https://fosstr.com/.well-known/ai-catalog.json
