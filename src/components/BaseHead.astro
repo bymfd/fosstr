@@ -90,6 +90,118 @@ const ogImageAlt = image ? title : SITE_TITLE;
 		crossorigin="anonymous"></script>
 )}
 
+<script is:inline>
+	(() => {
+		const modelContext = document.modelContext;
+		if (!modelContext || typeof modelContext.registerTool !== 'function') return;
+
+		let postsPromise;
+		const loadPosts = () => {
+			if (!postsPromise) {
+				postsPromise = fetch('/llms.txt')
+					.then((response) => {
+						if (!response.ok) throw new Error('llms.txt alınamadı');
+						return response.text();
+					})
+					.then((text) => {
+						const posts = text.split(/^## Yazılar$/m)[1]?.split(/^## /m)[0] || '';
+						return posts
+							.split('\n')
+							.map((line) => line.match(/^- \[([^\]]+)\]\((https?:\/\/[^)]+)\) — (.*)$/))
+							.filter(Boolean)
+							.map((match) => ({
+								title: match[1],
+								url: match[2],
+								description: match[3],
+							}));
+					});
+			}
+			return postsPromise;
+		};
+
+		const format = (posts) =>
+			posts
+				.map((post, index) => `${index + 1}. ${post.title}\n   ${post.url}\n   ${post.description}`)
+				.join('\n\n');
+
+		const clamp = (value, min, max, fallback) =>
+			Math.max(min, Math.min(max, Number.isFinite(Number(value)) ? Number(value) : fallback));
+
+		Promise.resolve()
+			.then(() =>
+				modelContext.registerTool({
+					name: 'search_fosstr',
+					description:
+						'fosstr.com üzerindeki Türkçe yazılarda başlık ve açıklama üzerinden arama yapar; başlık, URL ve kısa açıklama döndürür.',
+					inputSchema: {
+						type: 'object',
+						properties: {
+							query: {
+								type: 'string',
+								minLength: 1,
+								description: 'Aranacak kelime veya kelimeler; örn. "linux kernel" veya "CVE".',
+							},
+							limit: {
+								type: 'integer',
+								minimum: 1,
+								maximum: 10,
+								default: 5,
+								description: 'Döndürülecek en fazla sonuç sayısı.',
+							},
+						},
+						required: ['query'],
+						additionalProperties: false,
+					},
+					annotations: {
+						readOnlyHint: true,
+						untrustedContentHint: false,
+						consequentialHint: false,
+					},
+					execute: async ({ query, limit = 5 }) => {
+						const posts = await loadPosts();
+						const terms = query.toLocaleLowerCase('tr').split(/\s+/).filter(Boolean);
+						const hits = posts
+							.filter((post) => {
+								const haystack = `${post.title} ${post.description} ${post.url}`.toLocaleLowerCase('tr');
+								return terms.every((term) => haystack.includes(term));
+							})
+							.slice(0, clamp(limit, 1, 10, 5));
+						return hits.length ? format(hits) : `"${query}" için sonuç bulunamadı.`;
+					},
+				}),
+			)
+			.then(() =>
+				modelContext.registerTool({
+					name: 'latest_fosstr_posts',
+					description: 'fosstr.com üzerindeki en yeni Türkçe yazıları listeler.',
+					inputSchema: {
+						type: 'object',
+						properties: {
+							limit: {
+								type: 'integer',
+								minimum: 1,
+								maximum: 20,
+								default: 5,
+								description: 'Döndürülecek yazı sayısı.',
+							},
+						},
+						additionalProperties: false,
+					},
+					annotations: {
+						readOnlyHint: true,
+						untrustedContentHint: false,
+						consequentialHint: false,
+					},
+					execute: async ({ limit = 5 }) => {
+						const posts = await loadPosts();
+						return format(posts.slice(0, clamp(limit, 1, 20, 5)));
+					},
+				}),
+			)
+			.catch((error) => console.warn('WebMCP araçları kaydedilemedi:', error));
+	})();
+</script>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-VSS9KPGCLD"></script>
 <script>
