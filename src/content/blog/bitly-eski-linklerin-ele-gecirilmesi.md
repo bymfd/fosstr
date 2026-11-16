@@ -2,7 +2,7 @@
 title: 'Burger King ve McDonald''s tweet''lerindeki eski Bitly linkleri ele geçirildi'
 description: '15 Kasım 2026''da eski bit.ly adreslerinin arka yarıları yeniden kaydedildi. 2011 tweet''leri Nazi kampları ve 11 Eylül sayfalarına yönlendi; Bitly sorunu doğruladı ve hesapları askıya aldı.'
 pubDate: '2026-11-16'
-heroImage: ../../assets/blog-placeholder-5.jpg
+heroImage: ../../assets/bitly-hero.jpg
 tags: ['security', 'bitly', 'link-hijacking', 'social-media', 'privacy']
 ---
 

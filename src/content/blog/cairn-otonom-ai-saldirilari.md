@@ -2,7 +2,7 @@
 title: 'Cairn ve CL-STA-1238: otonom AI ile 19 kuruluşa saldırı'
 description: 'Unit 42, Çin bağlantılı CL-STA-1238''in açık kaynak Cairn framework''ünü Zhipu GLM ve DeepSeek ile birleştirerek 25 otonom operasyon yürüttüğünü açıkladı. 10 kuruluşta yetkisiz erişim doğrulandı.'
 pubDate: '2026-11-16'
-heroImage: ../../assets/blog-placeholder-1.jpg
+heroImage: ../../assets/cairn-hero.jpg
 tags: ['security', 'ai', 'agents', 'threat-intelligence', 'unit42', 'china']
 ---
 

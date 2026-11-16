@@ -2,7 +2,7 @@
 title: 'XRAID: XFS içine gömülen declustered parity RAID'
 description: 'Christoph Hellwig, zoned XFS için XRAID''i ilk kez kamuya açtı. Parity RAID yalnızca dosya verisine uygulanıyor; metadata mevcut MD RAID''e bırakılıyor. Yazmalar mdraid''e göre 20 kata kadar hızlı.'
 pubDate: '2026-11-16'
-heroImage: ../../assets/blog-placeholder-3.jpg
+heroImage: ../../assets/xraid-hero.jpg
 tags: ['linux', 'xfs', 'storage', 'raid', 'zoned', 'kernel']
 ---
 
