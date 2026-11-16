@@ -1,6 +1,6 @@
 ---
-title: 'velesbit: Otomatik Vitesli Bisiklet Sistemi'
-description: 'Arduino tabanlı, kablolu vites sistemlerine uyumlu otomatik şanzıman projesi'
+title: 'velesbit: Tırmanışta vites değiştirmeyi unutan otomatik şanzıman'
+description: 'Arduino tabanlı otomatik bisiklet şanzımanı. Hız ve RPM verilerine göre vitesleri kendisi değiştiren, trafikte vites unutulmasını önleyen proje.'
 pubDate: '2026-09-10'
 heroImage: ../../assets/blog-placeholder-2.jpg
 tags: ['arduino', 'bisiklet', 'mekatronik', 'diy']

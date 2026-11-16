@@ -1,6 +1,6 @@
 ---
-title: 'tree.py: Masaüstüne Özelleştirilebilir Noel Ağacı'
-description: 'Python ile yazılmış, masaüstünde gösterilebilen interaktif Noel ağacı'
+title: 'tree.py: Masaüstüne özelleştirilebilir Noel ağacı'
+description: 'Python ile masaüstünde gösterilen interaktif Noel ağacını senin renk, süs ve boyut tercihlerinle özelleştir - herkes aynı ağacı görünmüyor.'
 pubDate: '2026-09-10'
 heroImage: ../../assets/blog-placeholder-4.jpg
 tags: ['python', 'noel', 'masaüstü', 'eglence']

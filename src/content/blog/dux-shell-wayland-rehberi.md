@@ -1,6 +1,6 @@
 ---
-title: 'Dux Shell: Waybar, Rofi ve swaylock''u tek pakette değiştiren Wayland kabuğu'
-description: 'Wayland masaüstünü parça parça kurmaktan sıkılanlar için Dux Shell rehberi: niri, Hyprland ve Sway ile kurulum, v2.1 yenilikleri, güçlü ve zayıf tarafları.'
+title: 'Dux Shell: Parçalanmış Wayland kurulumunu tek pakette topla'
+description: 'Wayland panel, menü, kilit ekranı ve bildirim yerineştirmesi parça parça mühendislik mi? Dux Shell, niri, Hyprland ve Swayi tek pakette kurmayı sağlayan arşitektür.'
 pubDate: '2026-11-09'
 heroImage: ../../assets/blog-placeholder-4.jpg
 tags: ['linux', 'wayland', 'arch', 'desktop', 'open-source']

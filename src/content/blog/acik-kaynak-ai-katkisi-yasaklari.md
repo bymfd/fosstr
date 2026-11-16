@@ -1,6 +1,6 @@
 ---
-title: '22 açık kaynak proje neden AI katkısı kabul etmiyor?'
-description: 'immich''ten QEMU''ya, Zig''den Gentoo''ya kadar 22 proje AI üretimi katkıları yasaklıyor. Politikaların ortak noktaları, gerekçeleri ve katkıcılar için pratik sonuçları.'
+title: 'AI katkısı kabul etmeyen 22 açık kaynak proje: sebep ve sonuçlar'
+description: 'immich''ten QEMU''ya, Zig''den Gentoo''ya 22 proje AI üretimi katkıları yasaklıyor. Politikaların ortak noktaları, gerekçeleri ve katkıcılar için pratik sonuçlar.'
 pubDate: '2026-11-11'
 heroImage: ../../assets/blog-placeholder-4.jpg
 tags: ['open-source', 'ai', 'llm', 'github', 'community', 'ethics']

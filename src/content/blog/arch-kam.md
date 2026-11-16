@@ -1,6 +1,6 @@
 ---
-title: 'arch-kam: Arch Linux İçin Şamanik Bash Ritüelleri'
-description: 'Hibernate, pil ömrü, bootloader, teşhis ve temizlik işlerini tek menüde toplayan "şamanik" bash araç seti'
+title: 'arch-kam: Arch Linux''ta hibernate, bootloader ve temizlik işlerini tek komutla yap'
+description: 'Her seferinde swap, grub, mkinitcpio, TLP kurmak zorunda mısın? arch-kam, tekrarlayan Arch işlerini şamanik bir menüde toplayan bash script seti.'
 pubDate: '2026-09-10'
 updatedDate: '2026-10-26'
 heroImage: ../../assets/blog-placeholder-5.jpg

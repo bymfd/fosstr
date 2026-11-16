@@ -259,13 +259,13 @@ Otonom ajanların yükselişi, "hedef olacak kadar büyük değiliz" varsayımı
 
 ---
 
-# XRAID: XFS içine gömülen declustered parity RAID
+# XRAID: ZFS gibi declustered parity RAID XFS içinde
 
 - Kaynak: https://fosstr.com/blog/xraid-xfs-declustered-raid/
 - Tür: Yazı
 - Tarih: 2026-11-16
 - Etiketler: linux, xfs, storage, raid, zoned, kernel
-- Özet: Christoph Hellwig, zoned XFS için XRAID'i ilk kez kamuya açtı. Parity RAID yalnızca dosya verisine uygulanıyor; metadata mevcut MD RAID'e bırakılıyor. Yazmalar mdraid'e göre 20 kata kadar hızlı.
+- Özet: Christoph Hellwig, zoned XFS için XRAID'i ilk kez kamuya açtı. Parity RAID yalnızca dosya verisine uygulanıyor; metadata MD RAID'e bırakılıyor. Yazmalar mdraid'e göre 20 kata kadar hızlı.
 
 Linux depolama tarafında uzun süredir beklenen bir değişiklik 13 Kasım 2026'da görünür oldu: Christoph Hellwig, **XRAID** adını verdiği yeni RAID uygulamasının ilk genel sürümünü duyurdu. XRAID, ayrı bir blok katmanı veya ayrı bir dosya sistemi değil; **XFS'in içine entegre edilmiş declustered parity RAID**.
 
@@ -728,13 +728,13 @@ Yine de yön doğru. Saat, her güvenlik kararının ölçüldüğü girdi; onu 
 
 ---
 
-# 22 açık kaynak proje neden AI katkısı kabul etmiyor?
+# AI katkısı kabul etmeyen 22 açık kaynak proje: sebep ve sonuçlar
 
 - Kaynak: https://fosstr.com/blog/acik-kaynak-ai-katkisi-yasaklari/
 - Tür: Yazı
 - Tarih: 2026-11-11
 - Etiketler: open-source, ai, llm, github, community, ethics
-- Özet: immich'ten QEMU'ya, Zig'den Gentoo'ya kadar 22 proje AI üretimi katkıları yasaklıyor. Politikaların ortak noktaları, gerekçeleri ve katkıcılar için pratik sonuçları.
+- Özet: immich'ten QEMU'ya, Zig'den Gentoo'ya 22 proje AI üretimi katkıları yasaklıyor. Politikaların ortak noktaları, gerekçeleri ve katkıcılar için pratik sonuçlar.
 
 Açık kaynak dünyasında 2026'nın en tartışmalı konularından biri, AI ile üretilmiş katkıların kabul edilip edilmeyeceği. Bazı projeler "AI desteği serbest, sorumluluk katkıcıda" derken, bazıları kapıyı tamamen kapatıyor.
 
@@ -833,13 +833,13 @@ Liste 22 projeyle sınırlı değil; siteye yeni projeler ekleniyor ve mevcut po
 
 ---
 
-# GPUStack CVE-2026-102895: 9.8'lik kimlik doğrulama atlatması nasıl çalışıyor?
+# GPUStack CVE-2026-102895: 127.0.0.1 güven güveni uzaktan RCE'ye dönüşüyor
 
 - Kaynak: https://fosstr.com/blog/gpustack-cve-2026-102895/
 - Tür: Yazı
 - Tarih: 2026-11-11
 - Etiketler: security, gpustack, cve, ai, kubernetes, self-hosted
-- Özet: GPUStack'te 127.0.0.1'e güvenen kimlik doğrulama mantığı, uzaktan yönetici erişimine yol açtı. CVE-2026-102895'in teknik detayları, CISA KEV süreci ve yükseltme rehberi.
+- Özet: GPUStack'te 127.0.0.1'e güvenen kimlik doğrulama atlatması CVSS 9.8: uzaktan yönetici erişimi nasıl sağlanıyor, CISA KEV'e neden girdi ve yükseltme rehberi.
 
 GPUStack, birden fazla sunucudaki GPU'ları tek bir havuz gibi yönetmek ve üzerinde model servis etmek için kullanılan açık kaynak bir platform. Özellikle kendi donanımında LLM çalıştıran ekipler için pratik: GPU düğümlerini ekliyorsunuz, model indirip dağıtıyorsunuz, API üzerinden erişiyorsunuz.
 
@@ -1154,13 +1154,13 @@ Türkiye'de DisplayLink yuva kullanan Linux kullanıcıları için bu, doğrudan
 
 ---
 
-# Dux Shell: Waybar, Rofi ve swaylock'u tek pakette değiştiren Wayland kabuğu
+# Dux Shell: Parçalanmış Wayland kurulumunu tek pakette topla
 
 - Kaynak: https://fosstr.com/blog/dux-shell-wayland-rehberi/
 - Tür: Yazı
 - Tarih: 2026-11-09
 - Etiketler: linux, wayland, arch, desktop, open-source
-- Özet: Wayland masaüstünü parça parça kurmaktan sıkılanlar için Dux Shell rehberi: niri, Hyprland ve Sway ile kurulum, v2.1 yenilikleri, güçlü ve zayıf tarafları.
+- Özet: Wayland panel, menü, kilit ekranı ve bildirim yerineştirmesi parça parça mühendislik mi? Dux Shell, niri, Hyprland ve Swayi tek pakette kurmayı sağlayan arşitektür.
 
 Linux masaüstü uzun zamandır "parçalardan masaüstü kurma" sanatı. Wayland'e geçince bu parçalar daha da çoğalıyor: panel için Waybar, uygulama menüsü için Rofi veya Fuzzel, bildirimler için Mako, kilit ekranı için swaylock, boşta kalma için swayidle, renk teması için ayrı bir araç, duvar kağıdı için bir başkası. Hepsi çalışır, ama hiçbiri diğerinden haberdar değildir.
 
@@ -1339,13 +1339,13 @@ Ama hızlı değişen, genç bir proje. Mevcut çalışan masaüstünüzü silme
 
 ---
 
-# llama-modchip: 284B DeepSeek'i 64 GB RAM'de çalıştırma iddiası
+# llama-modchip: GPU olmadan 284B modeli 64 GB RAM'de çalıştır
 
 - Kaynak: https://fosstr.com/blog/llama-modchip-284b-64gb/
 - Tür: Yazı
 - Tarih: 2026-11-09
 - Etiketler: llm, local-ai, deepseek, cpu, quantization, linux
-- Özet: 284B parametreli DeepSeek-V4-Flash'i GPU olmadan 64 GB RAM'de çalıştırdığını iddia eden llama-modchip'i inceliyoruz: 1.71 bpw quantizasyon, 9-14 tok/s hız ve henüz doğrulanmamış taraflar.
+- Özet: DeepSeek-V4-Flash 284B modeli 64 GB DDR5'e sığmıyor mu? llama-modchip 1.71 bpw quantizasyonla 56 GB'a indiriyor: 9-14 tok/s, swap yok.
 
 8 Kasım 2026'da Hacker News'te [412 puan alan bir başlık](https://news.ycombinator.com/item?id=50411961) vardı: **"Llama-modchip: 284B DeepSeek on 64GB RAM, no GPU."** Bir yanda 284 milyar parametreli bir model, diğer yanda ekran kartı olmayan, sadece 64 GB DDR5 belleğe sahip bir dizüstü işlemcisi. Normalde bu denklemin sonucu "OOM" olur. Proje, olmadığını söylüyor.
 
@@ -2839,7 +2839,7 @@ Berlin, McKesson ve JFrog olayları gösteriyor ki **temel hijyen hala en büyü
 
 ---
 
-# arch-kam: Arch Linux İçin Şamanik Bash Ritüelleri
+# arch-kam: Arch Linux'ta hibernate, bootloader ve temizlik işlerini tek komutla yap
 
 - Kaynak: https://fosstr.com/projects/arch-kam/
 - Tür: Proje
@@ -2847,7 +2847,7 @@ Berlin, McKesson ve JFrog olayları gösteriyor ki **temel hijyen hala en büyü
 - Güncelleme: 2026-10-26
 - Etiketler: linux, arch, bash, automation
 - Depo: https://github.com/bymfd/arch-kam
-- Özet: Hibernate, pil ömrü, bootloader, teşhis ve temizlik işlerini tek menüde toplayan "şamanik" bash araç seti
+- Özet: Her seferinde swap, grub, mkinitcpio, TLP kurmak zorunda mısın? arch-kam, tekrarlayan Arch işlerini şamanik bir menüde toplayan bash script seti.
 
 Arch Linux kullanan herkes bilir: her şey elle yapılır, her şeyi sen kurarsın. Bu güzel ama bazen tekrarlayan işler can sıkıyor. `arch-kam` tam olarak bu noktada devreye giriyor.
 
@@ -2956,14 +2956,14 @@ Menü yerine doğrudan bir ritüel çalıştırmak için `sudo ./arch-kam.sh <ri
 
 ---
 
-# fcm: macOS İçin Fan Kontrol Menü Uygulaması
+# fcm: MacBook fan hızını menü çubuğundan kontrol et
 
 - Kaynak: https://fosstr.com/projects/fcm/
 - Tür: Proje
 - Tarih: 2026-09-10
 - Etiketler: macos, swift, smc, fan-control, menu-bar
 - Depo: https://github.com/bymfd/fcm
-- Özet: Intel ve Apple Silicon Maclerde fan hızını kontrol eden, menü çubuğunda çalışan hafif bir uygulama
+- Özet: MacBook aşırı ısıyor, fan hiç açılmıyor mu? fcm, Intel ve Apple Silicon Maclerde fan hızını menü çubuğundan ayarlamanızı sağlayan hafif bir macOS uygulaması.
 
 MacBook'unuz aşırı ısınıyor, fan hiç mi hiç açılmıyor ve aniden kapanıyor? macOS fan yönetimi bazen gerçekten kötü çalışıyor. `fcm` tam bu sorunu çözmek için var.
 
@@ -3018,14 +3018,14 @@ SMC'ye doğrudan yazıyorsun. Eğer donanımın bozulursa, garantin düşerse, g
 
 ---
 
-# tree.py: Masaüstüne Özelleştirilebilir Noel Ağacı
+# tree.py: Masaüstüne özelleştirilebilir Noel ağacı
 
 - Kaynak: https://fosstr.com/projects/tree-py/
 - Tür: Proje
 - Tarih: 2026-09-10
 - Etiketler: python, noel, masaüstü, eglence
 - Depo: https://github.com/bymfd/tree.py
-- Özet: Python ile yazılmış, masaüstünde gösterilebilen interaktif Noel ağacı
+- Özet: Python ile masaüstünde gösterilen interaktif Noel ağacını senin renk, süs ve boyut tercihlerinle özelleştir - herkes aynı ağacı görünmüyor.
 
 Noel zamanı geldi ve masaüstüne biraz renk mi istiyorsun? `tree.py` ile Python'da kodladığın ama tamamen özelleştirebileceğin bir Noel ağacı.
 
@@ -3060,14 +3060,14 @@ Ağacın rengini, boyutunu, süslerini değiştirebilirsin. Kod basit ve okunabi
 
 ---
 
-# velesbit: Otomatik Vitesli Bisiklet Sistemi
+# velesbit: Tırmanışta vites değiştirmeyi unutan otomatik şanzıman
 
 - Kaynak: https://fosstr.com/projects/velesbit/
 - Tür: Proje
 - Tarih: 2026-09-10
 - Etiketler: arduino, bisiklet, mekatronik, diy
 - Depo: https://github.com/bymfd/velesbit
-- Özet: Arduino tabanlı, kablolu vites sistemlerine uyumlu otomatik şanzıman projesi
+- Özet: Arduino tabanlı otomatik bisiklet şanzımanı. Hız ve RPM verilerine göre vitesleri kendisi değiştiren, trafikte vites unutulmasını önleyen proje.
 
 Bisiklet süren biliyorsun: tırmanmada vites değiştirmek, inişte fren, virajda denge... Peki ya bisikletin bunu kendisi yapsa?
 
@@ -3106,12 +3106,12 @@ Hackaday.io'da da paylaşılan proje, açık kaynak topluluktan ilham almak içi
 
 ---
 
-# Hoş Geldiniz
+# fosstr: yazılım, siber güvenlik ve sistem programlama üzerine derinlemesine yazılar
 
 - Kaynak: https://fosstr.com/blog/welcome/
 - Tür: Yazı
 - Tarih: 2026-09-09
-- Özet: Astro ve Cloudflare Pages ile yeni blogum
+- Özet: Teknik analizler, güvenlik açıklıkları, çekirdek geliştirme ve AI aracı deneyimleri: her yazı sorun ve çözüm odaklı, klişesiz içerik.
 
 Bu benim yeni blogum. Yazılım, güvenlik ve teknoloji hakkında yazılar yazacağım.
 

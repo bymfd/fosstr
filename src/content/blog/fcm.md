@@ -1,6 +1,6 @@
 ---
-title: 'fcm: macOS İçin Fan Kontrol Menü Uygulaması'
-description: 'Intel ve Apple Silicon Maclerde fan hızını kontrol eden, menü çubuğunda çalışan hafif bir uygulama'
+title: 'fcm: MacBook fan hızını menü çubuğundan kontrol et'
+description: 'MacBook aşırı ısıyor, fan hiç açılmıyor mu? fcm, Intel ve Apple Silicon Maclerde fan hızını menü çubuğundan ayarlamanızı sağlayan hafif bir macOS uygulaması.'
 pubDate: '2026-09-10'
 heroImage: ../../assets/blog-placeholder-3.jpg
 tags: ['macos', 'swift', 'smc', 'fan-control', 'menu-bar']
