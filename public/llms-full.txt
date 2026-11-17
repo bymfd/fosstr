@@ -13,6 +13,82 @@ Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her 
 
 ---
 
+# NoisyTCP (CVE-2026-99288): 11 yıllık Linux TCP açığı uzaktan sunucu çökertiyor
+
+- Kaynak: https://fosstr.com/blog/noisytcp-cve-2026-99288/
+- Tür: Yazı
+- Tarih: 2026-11-17
+- Etiketler: security, linux, kernel, tcp, cve, dos
+- Özet: Kilitlenmeyen TCP arama yoluyla kimlik doğrulamasız kernel panic: CVE-2026-99288 nasıl çalışıyor, hangi çekirdekler etkileniyor ve geçici çözümler neler?
+
+15 Kasım 2026'da araştırmacı Hyunwoo Kim (v4bel), linux-distros embargo süresi dolduktan sonra [oss-security listesinde](https://www.openwall.com/lists/oss-security/2026/11/15/2) **NoisyTCP** adlı bir Linux çekirdek açığını duyurdu: **CVE-2026-99288**. Özeti: kimlik doğrulaması gerektirmeyen, uzaktan tetiklenebilen bir yarış durumu (race condition); başarılı olduğunda çekirdek panic oluyor ve tüm sunucu çöküyor. Saldırganın tek ihtiyacı, TCP dinleyicisine paket gönderebilmek. Varsayılan ayarlarla çalışan Nginx, Apache veya SSH yeterli.
+
+Açık Ekim 2015'teki bir commit ile girmiş, 3 Kasım 2026'da düzeltilmiş. Yani yaklaşık **11 yıl** boyunca neredeyse tüm Linux dağıtımlarında durmuş. Bu yazıda teknik mekanizmayı, etki koşullarını ve yama öncesi alınabilecek önlemleri anlatıyorum.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-99288 (NoisyTCP) |
+| Etki | Kimlik doğrulamasız uzaktan denial of service (kernel panic) |
+| Red Hat derecesi | Important, CVSS 3.1 7.5 |
+| Zayıflık sınıfı | CWE-362, CWE-476 (ayrıca zor tetiklenen bir UAF yolu var) |
+| Giriş | `079096f103fa` (3 Ekim 2015, Linux 4.4) |
+| Düzeltme | `4e2b3ef19e0e` (3 Kasım 2026) |
+| Düzeltilen kararlı sürümler | 6.12.117, 6.18.63, 7.3.4 |
+| Aktif istismar | 17 Kasım 2026 itibarıyla doğrulanmış değil; CISA KEV'de yok |
+
+## Açık nasıl çalışıyor?
+
+Bir TCP paketi geldiğinde çekirdek, paketin hangi sokete ait olduğunu bir karma tablo (ehash) üzerinden bulur. Bu arama hız için **kilitlenmeden** (lockless) yapılır: eşleşen girdiyi bulur, referans alır, sonra adres ve portların hâlâ uyduğunu tekrar kontrol eder.
+
+Sorun tam bu ikinci kontrolün eksikliğinde. İlgili soket önbellekleri `SLAB_TYPESAFE_BY_RCU` kullanıyor; yani bir RCU okuyucusu eski adresi tutarken bellek yeniden kullanılabiliyor. Bellek, aynı adres ve port çiftine sahip yeni bir *request socket* olarak yeniden ayrılırsa, arama bu yeni nesneye referans alıp onu döndürüyor — üstelik nesne henüz karma tabloya eklenmemişken.
+
+Kim'in gösterdiği yol SYN cookie'leri kullanıyor: bir alıcı bağlam eski request socket'e referans tutarken, diğer bir bağlam aynı slab adresinde yeni bir SYN cookie request'i ayırıyor. İkinci kontrol adres/port eşleştiği için geçiyor. Ama yeni request socket'in `rsk_listener` alanı **NULL**; TCP alım yolu bu işaretçiyi kullandığında çekirdek NULL pointer dereference yapıyor ve panic oluyor.
+
+Yarışın tetiklenmesi için aynı bağlantı çiftini iki ayrı alıcı bağlamın eşzamanlı işlemesi gerekiyor. Kim, IPv4 parçaları (fragment) ile normal TCP paketlerinin receive hash değerleri arasındaki farkı kullanarak bunu sağlamış. Pratikte bu, **iki veya daha fazla RX queue** ya da RPS'in paketleri birden fazla CPU'ya dağıtması anlamına geliyor; yani çoğu bulut VM ve sunucu bu koşulu karşılıyor.
+
+Kim'in ölçümlerinde varsayılan ayarlı Nginx, Apache ve OpenSSH çalışan QEMU/KVM konuklarında çökme **5 saniye ile 2 dakika** arasında gerçekleşmiş. Sessiz, 8 RX kuyruklu bare-metal bir Nginx sunucusunda ise yarışı yakalamak yaklaşık **14 saat** sürmüş. Sanallaştırma, vCPU preemptions kaynaklı zamanlama değişkenliği nedeniyle yarışı pratik hale getiriyor.
+
+## Etki sınırı: DoS, RCE değil
+
+Red Hat açığı Important (CVSS 3.1 7.5) olarak değerlendiriyor ve istismarın keyfi kod çalıştırmaya veya veri değiştirmeye izin vermediğini belirtiyor. Kim'in yayınladığı yazıda daha zor tetiklenen bir use-after-free yolu tarif ediliyor; ancak "RCE" için "henüz değil" diyor. Kim PoC kodu yayınlamadı; yazı ve detaylar [GitHub deposunda](https://github.com/V4bel/NoisyTCP). 17 Kasım itibarıyla saha istismarına dair doğrulanmış bir kanıt yok ve açık CISA KEV listesinde değil.
+
+Konteynerler sizi korumuyor: çekirdek panic olursa host üzerindeki tüm iş yükleri çöküyor. Bu yüzden yoğun, çok kuyruklu veya sanal makine üzerinde çalışan sunucular öncelikli.
+
+## Zaman çizelgesi
+
+| Tarih | Olay |
+|---|---|
+| 3 Ekim 2015 | Hatalı commit (`079096f103fa`) çekirdeğe giriyor |
+| 29 Ekim 2026 | Kim düzeltme yamasını ağ geliştiricilerine gönderiyor |
+| 3 Kasım 2026 | `4e2b3ef19e0e` mainline'a birleştiriliyor |
+| 10 Kasım 2026 | Linux CNA, CVE-2026-99288'yi yayınlıyor |
+| 15 Kasım 2026 | linux-distros embargo bitiyor, NoisyTCP raporu yayınlanıyor |
+
+## Neler yapılmalı?
+
+**Kalıcı çözüm:** Düzeltmeyi içeren bir çekirdeğe geçip **yeniden başlatın**. Yukarı akışta düzeltme 6.12.117, 6.18.63 ve 7.3.4 kararlı sürümlerinde; 7.4-rc2'de de var. Dağıtım paketleri farklı ilerliyor: Debian 12 (bookworm) ve Debian 13 (trixie) yamalı çekirdekleri yayınladı; RHEL 8/9/10 ve AlmaLinux'ta durum yayın sırasında değişkendi. Sürüm numarasına değil, dağıtımınızın güvenlik duyurusuna ve çalışan çekirdeğinize (`uname -r`) bakın — yüklü paket, yeniden başlatana kadar sizi korumaz.
+
+**Yama hemen mümkün değilse** Kim ve Red Hat iki geçici önlem öneriyor:
+
+```bash
+# 1) SYN cookie'leri kapatın (SYN flood korumasını zayıflatır)
+sudo sysctl -w net.ipv4.tcp_syncookies=0
+```
+
+Bu ayar network namespace başına olduğu için ayrı namespace kullanan her konteynerde ayrıca uygulanmalı. İkinci seçenek, internete açık arayüzü **tek RX queue**'ya indirmek ve RPS/RFS'i kapatmak; yarış için gereken eşzamanlılığı ortadan kaldırır ama ağ performansını etkiler. İkisi de yamanın yerine geçmez.
+
+**Tespit tarafında** klasik IOC'ler (kötü dosya hash'leri, payload URL'leri) işe yaramıyor; istismar tamamen ağ trafiğiyle gerçekleşiyor. `tcp_v4_rcv` ile ilişkili kernel panic'ler, NULL pointer dereference kayıtları, açıklanamayan yeniden başlatmalar ve çökmeden hemen önceki TCP/fragment/SYN trafiği anomalilerini korele edin.
+
+## Daha geniş ders
+
+Bu açık, "uzun süredir duran kod güvenlidir" varsayımını bir kez daha çürütüyor. 2015'te yazılan ve yıllarca milyonlarca makinede çalışan bir arama fonksiyonu, ancak 2026'da bir araştırmacının RCU ve slab yeniden kullanımı arasındaki etkileşimi soruşturmasıyla ortaya çıktı. Kilitlenmeyen veri yapıları performans kazandırır; doğrulama adımlarının nesnenin kimliğini değil, durumunu da kontrol etmesi gerekir. Yamanın başlığı da tam olarak bunu söylüyor: *"inet: reject unhashed sockets during established lookups"*.
+
+Kaynaklar: [Hyunwoo Kim'in oss-security raporu](https://www.openwall.com/lists/oss-security/2026/11/15/2), [NVD kaydı](https://nvd.nist.gov/vuln/detail/cve-2026-99288), [yama commit'i](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4e2b3ef19e0e04adca38442f07dd6bc93c712bf1), [AlmaLinux duyurusu](https://almalinux.org/blog/2026-11-16-noisytcp-cve-2026-99288/).
+
+---
+
 # Burger King ve McDonald's tweet'lerindeki eski Bitly linkleri ele geçirildi
 
 - Kaynak: https://fosstr.com/blog/bitly-eski-linklerin-ele-gecirilmesi/

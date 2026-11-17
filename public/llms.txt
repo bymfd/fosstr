@@ -17,6 +17,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Yazılar
 
+- [NoisyTCP (CVE-2026-99288): 11 yıllık Linux TCP açığı uzaktan sunucu çökertiyor](https://fosstr.com/blog/noisytcp-cve-2026-99288/) — Kilitlenmeyen TCP arama yoluyla kimlik doğrulamasız kernel panic: CVE-2026-99288 nasıl çalışıyor, hangi çekirdekler etkileniyor ve geçici çözümler neler?
 - [Burger King ve McDonald's tweet'lerindeki eski Bitly linkleri ele geçirildi](https://fosstr.com/blog/bitly-eski-linklerin-ele-gecirilmesi/) — 15 Kasım 2026'da eski bit.ly adreslerinin arka yarıları yeniden kaydedildi. 2011 tweet'leri Nazi kampları ve 11 Eylül sayfalarına yönlendi; Bitly sorunu doğruladı ve hesapları askıya aldı.
 - [Cairn ve CL-STA-1238: otonom AI ile 19 kuruluşa saldırı](https://fosstr.com/blog/cairn-otonom-ai-saldirilari/) — Unit 42, Çin bağlantılı CL-STA-1238'in açık kaynak Cairn framework'ünü Zhipu GLM ve DeepSeek ile birleştirerek 25 otonom operasyon yürüttüğünü açıkladı. 10 kuruluşta yetkisiz erişim doğrulandı.
 - [XRAID: ZFS gibi declustered parity RAID XFS içinde](https://fosstr.com/blog/xraid-xfs-declustered-raid/) — Christoph Hellwig, zoned XFS için XRAID'i ilk kez kamuya açtı. Parity RAID yalnızca dosya verisine uygulanıyor; metadata MD RAID'e bırakılıyor. Yazmalar mdraid'e göre 20 kata kadar hızlı.
@@ -46,18 +47,18 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Tags
 
-- [security](https://fosstr.com/blog/tags/security/) — 11 içerik
+- [security](https://fosstr.com/blog/tags/security/) — 12 içerik
 - [open-source](https://fosstr.com/blog/tags/open-source/) — 10 içerik
-- [linux](https://fosstr.com/blog/tags/linux/) — 7 içerik
+- [linux](https://fosstr.com/blog/tags/linux/) — 8 içerik
 - [ai](https://fosstr.com/blog/tags/ai/) — 5 içerik
-- [kernel](https://fosstr.com/blog/tags/kernel/) — 3 içerik
+- [kernel](https://fosstr.com/blog/tags/kernel/) — 4 içerik
+- [cve](https://fosstr.com/blog/tags/cve/) — 3 içerik
 - [llm](https://fosstr.com/blog/tags/llm/) — 3 içerik
 - [tech-industry](https://fosstr.com/blog/tags/tech-industry/) — 3 içerik
 - [teknoloji-haberleri](https://fosstr.com/blog/tags/teknoloji-haberleri/) — 3 içerik
 - [agents](https://fosstr.com/blog/tags/agents/) — 2 içerik
 - [ai-models](https://fosstr.com/blog/tags/ai-models/) — 2 içerik
 - [arch](https://fosstr.com/blog/tags/arch/) — 2 içerik
-- [cve](https://fosstr.com/blog/tags/cve/) — 2 içerik
 - [kubernetes](https://fosstr.com/blog/tags/kubernetes/) — 2 içerik
 - [ai-agents](https://fosstr.com/blog/tags/ai-agents/) — 1 içerik
 - [anthropic](https://fosstr.com/blog/tags/anthropic/) — 1 içerik
@@ -80,6 +81,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [displaylink](https://fosstr.com/blog/tags/displaylink/) — 1 içerik
 - [diy](https://fosstr.com/blog/tags/diy/) — 1 içerik
 - [donanim](https://fosstr.com/blog/tags/donanim/) — 1 içerik
+- [dos](https://fosstr.com/blog/tags/dos/) — 1 içerik
 - [eglence](https://fosstr.com/blog/tags/eglence/) — 1 içerik
 - [ethics](https://fosstr.com/blog/tags/ethics/) — 1 içerik
 - [fan-control](https://fosstr.com/blog/tags/fan-control/) — 1 içerik
@@ -119,6 +121,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [social-media](https://fosstr.com/blog/tags/social-media/) — 1 içerik
 - [storage](https://fosstr.com/blog/tags/storage/) — 1 içerik
 - [swift](https://fosstr.com/blog/tags/swift/) — 1 içerik
+- [tcp](https://fosstr.com/blog/tags/tcp/) — 1 içerik
 - [threat-intelligence](https://fosstr.com/blog/tags/threat-intelligence/) — 1 içerik
 - [time](https://fosstr.com/blog/tags/time/) — 1 içerik
 - [tls](https://fosstr.com/blog/tags/tls/) — 1 içerik
