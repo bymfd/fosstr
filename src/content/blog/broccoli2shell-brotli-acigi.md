@@ -22,6 +22,8 @@ Düzeltme, çağıran tarafa sert bir format hatası döndürüyor: `BROTLI_DECO
 
 Bu açığı bu kadar ciddi yapan şey, tetiklenmesi için **kimlik doğrulaması gerekmemesi**. Saldırganın kontrolündeki bir Brotli akışını çözen herhangi bir yol yeterli: bir HTTP yanıtı, bir istek gövdesi, bir arşiv veya bir kuyruk mesajı.
 
+![Brotli decoder tampon taşması akışı](/diagrams/brotli-buffer.svg)
+
 ## 2. Saldırı yüzeyi: URL fetch eden her servis
 
 Brotli, HTTP'de `Content-Encoding: br` olarak standart. Bu yüzden risk, doğrudan `brotliDecompress()` çağıran kodla sınırlı değil.

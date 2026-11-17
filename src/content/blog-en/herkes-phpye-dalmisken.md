@@ -15,6 +15,8 @@ But in the same window, other layers caught fire: a JavaScript runtime, a Python
 
 Two critical CVEs in core PHP paths (memory/error handling) drove emergency updates. If you run PHP, patching supported branches was the priority; EOL branches required mitigations/backports where available.
 
+![php2shell two engine-level exploit paths](/diagrams/php2shell-cves.svg)
+
 ## 2. Node.js: 10 CVEs the same day
 
 Runtime and dependency updates reminded teams that “not PHP” doesn’t mean “not urgent.”

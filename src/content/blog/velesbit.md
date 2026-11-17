@@ -2,7 +2,7 @@
 title: 'velesbit: Tırmanışta vites değiştirmeyi unutan otomatik şanzıman'
 description: 'Arduino tabanlı otomatik bisiklet şanzımanı. Hız ve RPM verilerine göre vitesleri kendisi değiştiren, trafikte vites unutulmasını önleyen proje.'
 pubDate: '2026-09-10'
-heroImage: ../../assets/blog-placeholder-2.jpg
+heroImage: ../../assets/velesbit-flow-hero.jpg
 tags: ['arduino', 'bisiklet', 'mekatronik', 'diy']
 type: project
 repo: 'https://github.com/bymfd/velesbit'
@@ -22,6 +22,8 @@ Bisiklet süren biliyorsun: tırmanmada vites değiştirmek, inişte fren, viraj
 
 - **Alpha 3:** 2x16 LCD ekran, buton kontrolü
 - **Alpha 6:** 0.96" OLED ekran, daha kompakt tasarım
+
+![Velesbit sensörlerden vites değişimine veri akışı](/diagrams/velesbit-flow.svg)
 
 ## Nasıl Çalışır?
 

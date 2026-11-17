@@ -2,7 +2,7 @@
 title: 'Dux Shell: unify a fragmented Wayland setup into one package'
 description: 'Tired of assembling panel, launcher, lock screen, and notifications piece by piece on Wayland? A Dux Shell guide: setup with niri, Hyprland, and Sway, v2.1 highlights, pros and cons.'
 pubDate: '2026-11-09'
-heroImage: ../../assets/blog-placeholder-4.jpg
+heroImage: ../../assets/dux-stack-hero.jpg
 tags: ['linux', 'wayland', 'arch', 'desktop', 'open-source']
 translationOf: 'dux-shell-wayland-rehberi'
 ---
@@ -19,6 +19,8 @@ Technically it consists of two parts:
 
 - A QML interface built with **Quickshell**
 - A **Go** backend (`dms`)
+
+![Dux Shell layers above the Wayland compositor](/diagrams/dux-stack.svg)
 
 ## Who is it for?
 

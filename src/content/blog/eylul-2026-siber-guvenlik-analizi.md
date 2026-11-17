@@ -2,7 +2,7 @@
 title: 'Eylül 2026 Siber Güvenlik Analizi: FBI Hacklendi, AI Agentları Saldırdı, 284M Hasta Kaydı Sızdı'
 description: '2026 yılının ilk ayında yaşanan en kritik siber güvenlik olayları, AI saldırıları, casusluk kampanyaları ve veri ihlalleri detaylı analiz.'
 pubDate: '2026-09-12'
-heroImage: ../../assets/blog-placeholder-5.jpg
+heroImage: ../../assets/digest-grid-hero.jpg
 tags: ['cybersecurity', 'ai-agents', 'ransomware', 'data-breach', 'fbi', 'shinyhunters', 'qilin', 'anthropic', 'openai']
 ---
 

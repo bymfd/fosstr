@@ -2,7 +2,7 @@
 title: 'Hacker News Digest (Sep 20 – Oct 20, 2026): model flood, passkeys debate, and Deno’s end'
 description: 'Monthly HN roundup: Opus 5.5, GPT-6, Gemini 4 Argon and Mistral Large 4 price wars; passkeys arguments; Cloudflare acquires Deno; and the Pentagon’s AI admission—23 stories summarized.'
 pubDate: '2026-10-20'
-heroImage: ../../assets/blog-placeholder-2.jpg
+heroImage: ../../assets/digest-grid-hero.jpg
 tags: ['hacker-news', 'bulten', 'ai-models', 'llm', 'security', 'open-source', 'tech-industry']
 translationOf: 'hn-bulteni-ekim-2026'
 ---

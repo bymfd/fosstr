@@ -2,7 +2,7 @@
 title: 'AI katkısı kabul etmeyen 22 açık kaynak proje: sebep ve sonuçlar'
 description: 'immich''ten QEMU''ya, Zig''den Gentoo''ya 22 proje AI üretimi katkıları yasaklıyor. Politikaların ortak noktaları, gerekçeleri ve katkıcılar için pratik sonuçlar.'
 pubDate: '2026-11-11'
-heroImage: ../../assets/blog-placeholder-4.jpg
+heroImage: ../../assets/ai-contrib-hero.jpg
 tags: ['open-source', 'ai', 'llm', 'github', 'community', 'ethics']
 ---
 
@@ -11,6 +11,8 @@ Açık kaynak dünyasında 2026'nın en tartışmalı konularından biri, AI ile
 [Open Source Says No](https://osssaysno.com/) adlı site, bu politikaları tek yerde topluyor. 11 Kasım 2026 itibarıyla sitede **22 proje** "Banned" kategorisinde listeleniyor; yani üretken AI ile oluşturulmuş katkıları kabul etmiyor. Site, politikaları kendi yorumuyla değil, projelerin resmî metinlerinden alıntılayarak ve doğrulama tarihiyle birlikte yayınlıyor.
 
 Bu yazı, listenin öne çıkan örneklerini, yasakların ortak gerekçelerini ve bir katkıcı olarak ne yapmanız gerektiğini anlatıyor.
+
+![AI katkı politikalarının karar akışı](/diagrams/ai-contrib.svg)
 
 ## Liste nasıl oluşuyor?
 

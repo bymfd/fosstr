@@ -22,6 +22,8 @@ This post explains how it happened, how widespread it was, and why old short lin
 | Root cause | Re-registration/takeover of short-link back-halves |
 | Fix/response | Bitly confirmed and suspended accounts involved |
 
+![Old short link, new destination](/diagrams/bitly-hijack.svg)
+
 ## How short-link hijacking works
 
 Shorteners map a short path (back-half) to a destination URL. If a service ever allowed back-halves to become available again—or if an attacker can claim/abuse them—then any historical content embedding that short link (tweets, blogs, emails, QR codes) can silently start pointing somewhere else. The original publisher loses control without any change on their side.

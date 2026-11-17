@@ -2,7 +2,7 @@
 title: 'llama-modchip: GPU olmadan 284B modeli 64 GB RAM''de çalıştır'
 description: 'DeepSeek-V4-Flash 284B modeli 64 GB DDR5''e sığmıyor mu? llama-modchip 1.71 bpw quantizasyonla 56 GB''a indiriyor: 9-14 tok/s, swap yok.'
 pubDate: '2026-11-09'
-heroImage: ../../assets/blog-placeholder-3.jpg
+heroImage: ../../assets/modchip-memory-hero.jpg
 tags: ['llm', 'local-ai', 'deepseek', 'cpu', 'quantization', 'linux']
 ---
 
@@ -19,6 +19,8 @@ Projenin vitrin modeli **DeepSeek-V4-Flash**. Modelin toplam 284,33 milyar param
 Standart `UD-IQ1_S` quantizasyonu bu modeli **76,87 GiB** (82,5 GB) boyutuna getiriyor. Bu, 64 GB'lık bir Linux makinede kullanılabilir belleğin üstünde. llama-modchip ise aynı modeli **56,56 GiB** (60,73 GB) boyutuna indiriyor. Projenin verdiği sayılara göre 256K bağlam penceresiyle çalışırken süreç belleği **57,61-58,9 GiB** arasında kalıyor ve takas (swap) kullanmıyor.
 
 Yani olay "model küçüldü" değil; **model, 64 GB'lık makinenin sınırına sığdırıldı.** Aradaki fark 20,31 GiB, yaklaşık %26,4'lük bir küçülme.
+
+![284B modelin 64 GB RAM'e sığdırılması](/diagrams/modchip-memory.svg)
 
 ## Nasıl sığıyor?
 

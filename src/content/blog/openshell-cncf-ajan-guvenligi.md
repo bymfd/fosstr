@@ -2,7 +2,7 @@
 title: 'OpenShell: NVIDIA''nın ajan kum havuzu CNCF''ye geçti'
 description: 'NVIDIA, otonom AI ajanlarını politika ile sınırlayan OpenShell''i CNCF Sandbox''a bağışladı. Çekirdek seviyesinde izolasyon, Cedar politikaları ve kurulum rehberi.'
 pubDate: '2026-11-11'
-heroImage: ../../assets/blog-placeholder-5.jpg
+heroImage: ../../assets/openshell-policy-hero.jpg
 tags: ['ai', 'agents', 'cncf', 'kubernetes', 'security', 'nvidia', 'open-source']
 ---
 
@@ -57,6 +57,8 @@ npx skills add NVIDIA/OpenShell
 ```
 
 SDK'lar da var: Python (`uv add openshell`), TypeScript (`@nvidia/openshell-sdk`), Go ve Rust. SDK'lar uygulamanızı bir OpenShell ağ geçidine bağlıyor; CLI'yı kurmuyor.
+
+![OpenShell politika kontrollü ajan çalışma zamanı mimarisi](/diagrams/openshell-policy.svg)
 
 ## Mimari
 

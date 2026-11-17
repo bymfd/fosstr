@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="500" viewBox="0 0 1000 500" role="img" aria-label="Clean-room driver meets patent letters">
+<defs>
+<pattern id="g" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M25 0H0V25" fill="none" stroke="#17171f" stroke-width="1"/></pattern>
+<marker id="a-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#6e81e4"/></marker><marker id="a-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4ade80"/></marker><marker id="a-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#f0b429"/></marker><marker id="a-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#ff6b6b"/></marker>
+</defs>
+<rect width="1000" height="500" fill="#08080b"/><rect width="1000" height="500" fill="url(#g)"/>
+<text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">DISPLAYLINK DL3</text>
+<text x="28" y="72" fill="#fafafa" font-size="26" font-family="monospace">Clean-room driver meets patent letters</text>
+<line x1="230" y1="223" x2="295" y2="223" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<line x1="510" y1="223" x2="575" y2="223" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<line x1="770" y1="223" x2="835" y2="223" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<line x1="402.5" y1="271" x2="402.5" y2="330" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<rect x="340.5" y="276.5" width="124" height="22" rx="4" fill="#08080b" stroke="#6e81e4" stroke-opacity="0.5"/>
+<text x="402.5" y="291.5" fill="#6e81e4" font-size="15" text-anchor="middle" font-family="monospace">legal risk</text>
+<rect x="25" y="175" width="205" height="96" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
+<rect x="25" y="175" width="5" height="96" rx="2" fill="#6e81e4"/>
+<text x="41" y="205" fill="#fafafa" font-size="19" font-family="monospace">USB-C dock</text>
+<text x="41" y="227" fill="#aaa39f" font-size="15" font-family="monospace">DisplayLink DL3</text>
+<rect x="295" y="175" width="215" height="96" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
+<rect x="295" y="175" width="5" height="96" rx="2" fill="#6e81e4"/>
+<text x="311" y="205" fill="#fafafa" font-size="19" font-family="monospace">Vino driver</text>
+<text x="311" y="227" fill="#aaa39f" font-size="15" font-family="monospace">clean-room Rust DRM</text>
+<rect x="575" y="175" width="195" height="96" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
+<rect x="575" y="175" width="5" height="96" rx="2" fill="#4ade80"/>
+<text x="591" y="205" fill="#fafafa" font-size="19" font-family="monospace">Kernel DRM / KMS</text>
+<text x="591" y="227" fill="#aaa39f" font-size="15" font-family="monospace">in-tree display</text>
+<rect x="835" y="175" width="140" height="96" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
+<rect x="835" y="175" width="5" height="96" rx="2" fill="#4ade80"/>
+<text x="851" y="205" fill="#fafafa" font-size="19" font-family="monospace">External displays</text>
+<text x="851" y="227" fill="#aaa39f" font-size="15" font-family="monospace">no userspace daemon</text>
+<rect x="295" y="330" width="215" height="88" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
+<rect x="295" y="330" width="5" height="88" rx="2" fill="#ff6b6b"/>
+<text x="311" y="360" fill="#fafafa" font-size="19" font-family="monospace">Patent letters</text>
+<text x="311" y="382" fill="#aaa39f" font-size="15" font-family="monospace">repository taken down</text>
+<text x="28" y="470" fill="#aaa39f" font-size="15" font-family="monospace">Clean-room avoids copyright issues, but patent exposure remains</text>
+</svg>

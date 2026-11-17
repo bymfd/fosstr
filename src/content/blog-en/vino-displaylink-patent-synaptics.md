@@ -2,7 +2,7 @@
 title: 'Vino: how Synaptics patent letters shut down an open-source DisplayLink driver'
 description: 'The Rust-based open-source Vino driver for DisplayLink DL3 was taken down from GitHub after Synaptics patent letters. Timeline, legal debate, and implications for Linux users.'
 pubDate: '2026-11-11'
-heroImage: ../../assets/blog-placeholder-1.jpg
+heroImage: ../../assets/vino-driver-hero.jpg
 tags: ['linux', 'displaylink', 'patent', 'rust', 'kernel', 'open-source']
 translationOf: 'vino-displaylink-patent-synaptics'
 ---
@@ -18,6 +18,8 @@ Announced via Phoronix (June 17, 2026), Vino targeted **DisplayLink DL3** docks 
 Key points:
 - **Clean room:** claimed independent implementation based on observed behavior, not copied source.
 - **AI assistance:** parts written with help from Claude Code/Opus 4.8—relevant to public narrative, not central to patent/licensing questions.
+
+![Vino driver and patent timeline](/diagrams/vino-driver.svg)
 
 ## What happened
 

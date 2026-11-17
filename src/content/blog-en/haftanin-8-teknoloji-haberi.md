@@ -2,7 +2,7 @@
 title: 'From the OpenCode leak to Muse Spark Open: 8 big tech stories of the week'
 description: 'Week of Oct 15–20: OpenCode API key leak, Meta’s 816B open-weight Muse Spark Open, DeepSeek’s open-source inference engine DeepInfer, Citizen Lab’s AdFection report, Linux 7.3, Timestral, and Mercor’s benchmark map.'
 pubDate: '2026-10-20'
-heroImage: ../../assets/blog-placeholder-5.jpg
+heroImage: ../../assets/digest-grid-hero.jpg
 tags: ['teknoloji-haberleri', 'ai-models', 'security', 'open-source', 'tech-industry']
 translationOf: 'haftanin-8-teknoloji-haberi'
 ---

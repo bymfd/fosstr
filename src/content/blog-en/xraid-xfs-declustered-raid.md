@@ -23,6 +23,8 @@ This post explains what XRAID does, how it differs from existing RAID approaches
 | Data vs metadata | Parity for file data; metadata on existing MD RAID |
 | Status | Early/public preview; not production-ready |
 
+![XRAID declustered parity data and metadata split](/diagrams/xraid-layout.svg)
+
 ## Why declustered parity?
 
 Traditional parity RAID rebuilds can be slow and disruptive. Declustered layouts spread parity/rebuild work to reduce bottlenecks and improve recovery behavior under certain workloads—at the cost of complexity.

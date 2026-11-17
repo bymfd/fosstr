@@ -18,6 +18,8 @@ Bu kısım önemli: jailbreak **untethered**. Yani cihazı her açtığınızda 
 
 Ama Calif'in kendi anlatımına göre ortada indirilecek bir araç yok. Şirketin güvenlik araştırmacılarından Stefan Esser, Heise'e [şunları söyledi](https://www.heise.de/en/news/Calif-io-jailbreak-How-the-untethered-tool-cracks-iOS-27-0-1-11492321.html): son kullanıcılar için bir jailbreak aracı yayımlamayı planlamıyorlar; açıkların bir kısmı Apple'a bildirildi, bir kısmı da bildirilecek. Bir proof of concept yayımlanabilir. Yani "iPhone Duo jailbreak indir" arayan biri, büyük ihtimalle sahte veya zararlı bir şey bulacak.
 
+![iPhone Duo jailbreak zinciri ve Crackgate ayrımı](/diagrams/iphone-mie.svg)
+
 ## MIE'nin anlamı ne?
 
 Calif'in gösterimi, Apple'ın son dönemde en çok güvendiği savunmalardan birini de hedef alıyor: **Memory Integrity Enforcement (MIE)**. Apple, MIE'yi ARM'in Enhanced Memory Tagging Extension (EMTE) üzerine kuruyor ve bellek bozulması hatalarının sömürülmesini zorlaştırmayı vaat ediyor. Heise'e göre Calif, bu korumayı da atlatan bir zincir gösterdi.

@@ -2,7 +2,7 @@
 title: 'llama-modchip: run a 284B model on 64 GB RAM without a GPU'
 description: 'DeepSeek-V4-Flash 284B won’t fit in 64 GB DDR5? llama-modchip claims 1.71 bpw quantization down to ~56 GB: ~9–14 tok/s, no swap.'
 pubDate: '2026-11-09'
-heroImage: ../../assets/blog-placeholder-3.jpg
+heroImage: ../../assets/modchip-memory-hero.jpg
 tags: ['llm', 'local-ai', 'deepseek', 'cpu', 'quantization', 'linux']
 translationOf: 'llama-modchip-284b-64gb'
 ---
@@ -18,6 +18,8 @@ The claim is intriguing—and unverified. All numbers come from the project’s 
 The showcase model is **DeepSeek-V4-Flash**: ~284.33B total parameters, ~13.17B active per token, 43 MLA layers and 256 routed experts.
 
 Standard `UD-IQ1_S` quantization reportedly puts the model at **~76.87 GiB**—above usable RAM on a 64 GB Linux machine. llama-modchip claims **~56.56 GiB** for the same model, with process memory around **57.6–58.9 GiB** at 256K context and no swap.
+
+![Fitting a 284B model into 64 GB RAM](/diagrams/modchip-memory.svg)
 
 ## Caveats
 

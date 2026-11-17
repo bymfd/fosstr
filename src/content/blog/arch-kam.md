@@ -3,7 +3,7 @@ title: 'arch-kam: Arch Linux''ta hibernate, bootloader ve temizlik işlerini tek
 description: 'Her seferinde swap, grub, mkinitcpio, TLP kurmak zorunda mısın? arch-kam, tekrarlayan Arch işlerini şamanik bir menüde toplayan bash script seti.'
 pubDate: '2026-09-10'
 updatedDate: '2026-10-26'
-heroImage: ../../assets/blog-placeholder-5.jpg
+heroImage: ../../assets/arch-kam-menu-hero.jpg
 tags: ['linux', 'arch', 'bash', 'automation']
 type: project
 repo: 'https://github.com/bymfd/arch-kam'
@@ -18,6 +18,8 @@ Yıllar boyunca Arch Linux kurdum, sildim, tekrar kurdum. Her seferinde aynı ad
 ## Nedir?
 
 `arch-kam`, Arch tabanlı dağıtımlar için yazılmış bir dizi bash script. "Kam" kelimesi eski Türkçede "şaman" anlamına geliyor — ve proje de tam olarak şamanlık yapıyor: sistemi "iyileştirir", "kötü ruhları kovar" ve "kozmik dengeyi" sağlar.
+
+![arch-kam menü seçeneklerinin şeması](/diagrams/arch-kam-menu.svg)
 
 ## Ritüeller
 

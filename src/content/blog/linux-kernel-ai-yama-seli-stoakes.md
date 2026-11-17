@@ -2,7 +2,7 @@
 title: 'Linux çekirdeğinde AI yama seli: Lorenzo Stoakes bazı review görevlerini bıraktı'
 description: 'Linux bellek yönetimi uzmanı Lorenzo Stoakes, AI üretimi yama akını nedeniyle core, reclaim, Rust, THP ve misc incelemelerinden çekildi. Bu, çekirdek geliştirme modelinin darboğazını gösteriyor.'
 pubDate: '2026-11-12'
-heroImage: ../../assets/blog-placeholder-4.jpg
+heroImage: ../../assets/kernel-review-hero.jpg
 tags: ['linux', 'kernel', 'ai', 'open-source', 'maintainers']
 ---
 
@@ -33,6 +33,8 @@ LKML'deki duyuruda, review listelerinden kendisini çıkardığı yama serisinde
 > "Çekirdekteki mevcut AI üretimi yama hacmi göz önüne alındığında, ne yazık ki maintainer olduğum alanlar dışında genel olarak review yapabilecek bant genişliğine sahip değilim."
 
 Stoakes, ayrılmanın nedenini "gelen kutusunu biraz daha yönetilebilir hale getirme isteği" olarak açıklıyor. Elindeki yama serilerini tamamlayacağını ve zaman zaman katkı vermeye devam edeceğini söylüyor. Yani çekirdekten tamamen ayrılmıyor; review yükünü azaltıyor.
+
+![AI destekli yamaların çekirdek inceleme hunisi](/diagrams/kernel-review.svg)
 
 ## AI yama seli ne demek?
 

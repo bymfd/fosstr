@@ -26,6 +26,8 @@ This post explains how the campaign worked, what Cairn does, and what it means f
 
 Cairn is an offensive security automation framework: it can help chain recon, exploitation steps, and post-exploitation actions. Paired with capable LLMs, parts of an intrusion workflow can be planned and executed with less human-in-the-loop time—especially for repeatable tasks.
 
+![Cairn agentic intrusion chain](/diagrams/cairn-chain.svg)
+
 ## Defender takeaways
 
 - **Assume faster iteration:** AI-assisted operators can try more paths quickly; detection must focus on behaviors (lateral movement, credential abuse, anomalous data flows), not just known signatures.

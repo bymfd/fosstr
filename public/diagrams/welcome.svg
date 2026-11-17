@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="500" viewBox="0 0 1000 500" role="img" aria-label="What lives on this site">
+<defs>
+<pattern id="g" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M25 0H0V25" fill="none" stroke="#17171f" stroke-width="1"/></pattern>
+<marker id="a-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#6e81e4"/></marker><marker id="a-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4ade80"/></marker><marker id="a-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#f0b429"/></marker><marker id="a-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#ff6b6b"/></marker>
+</defs>
+<rect width="1000" height="500" fill="#08080b"/><rect width="1000" height="500" fill="url(#g)"/>
+<text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">FOSSTR.COM</text>
+<text x="28" y="72" fill="#fafafa" font-size="26" font-family="monospace">What lives on this site</text>
+<line x1="235" y1="187.5" x2="300" y2="187.5" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<line x1="235" y1="247.5" x2="300" y2="247.5" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<line x1="235" y1="280" x2="300" y2="340" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<line x1="795" y1="265" x2="855" y2="265" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<rect x="25" y="180" width="210" height="100" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
+<rect x="25" y="180" width="5" height="100" rx="2" fill="#6e81e4"/>
+<text x="41" y="210" fill="#fafafa" font-size="19" font-family="monospace">fosstr</text>
+<text x="41" y="232" fill="#aaa39f" font-size="15" font-family="monospace">software, security, systems</text>
+<rect x="300" y="100" width="200" height="90" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
+<rect x="300" y="100" width="5" height="90" rx="2" fill="#4ade80"/>
+<text x="316" y="130" fill="#fafafa" font-size="19" font-family="monospace">Blog posts</text>
+<text x="316" y="152" fill="#aaa39f" font-size="15" font-family="monospace">analysis + field notes</text>
+<rect x="300" y="220" width="200" height="90" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
+<rect x="300" y="220" width="5" height="90" rx="2" fill="#4ade80"/>
+<text x="316" y="250" fill="#fafafa" font-size="19" font-family="monospace">Projects</text>
+<text x="316" y="272" fill="#aaa39f" font-size="15" font-family="monospace">open-source tools</text>
+<rect x="300" y="340" width="200" height="90" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
+<rect x="300" y="340" width="5" height="90" rx="2" fill="#6e81e4"/>
+<text x="316" y="370" fill="#fafafa" font-size="19" font-family="monospace">English edition</text>
+<text x="316" y="392" fill="#aaa39f" font-size="15" font-family="monospace">/en/, paired hreflang</text>
+<rect x="575" y="220" width="220" height="90" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
+<rect x="575" y="220" width="5" height="90" rx="2" fill="#f0b429"/>
+<text x="591" y="250" fill="#fafafa" font-size="19" font-family="monospace">RSS + llms.txt</text>
+<text x="591" y="272" fill="#aaa39f" font-size="15" font-family="monospace">feeds for humans and agents</text>
+<rect x="855" y="220" width="120" height="90" rx="8" fill="#101017" stroke="#2b2523" stroke-width="1"/>
+<rect x="855" y="220" width="5" height="90" rx="2" fill="#2b2523"/>
+<text x="871" y="250" fill="#fafafa" font-size="19" font-family="monospace">TR is default</text>
+<text x="871" y="272" fill="#aaa39f" font-size="15" font-family="monospace">x-default -&gt; Turkish</text>
+<text x="28" y="470" fill="#aaa39f" font-size="15" font-family="monospace">Static site on Cloudflare Pages | No tracking beyond analytics</text>
+</svg>

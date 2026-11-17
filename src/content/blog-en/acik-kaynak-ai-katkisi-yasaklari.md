@@ -2,7 +2,7 @@
 title: '22 open-source projects that reject AI contributions: reasons and consequences'
 description: 'From immich to QEMU, Zig to Gentoo, 22 projects ban AI-generated contributions. Common themes in their policies, motivations, and practical implications for contributors.'
 pubDate: '2026-11-11'
-heroImage: ../../assets/blog-placeholder-4.jpg
+heroImage: ../../assets/ai-contrib-hero.jpg
 tags: ['open-source', 'ai', 'llm', 'github', 'community', 'ethics']
 translationOf: 'acik-kaynak-ai-katkisi-yasaklari'
 ---
@@ -12,6 +12,8 @@ One of the most contentious topics in open source in 2026 is whether AI-generate
 The site [Open Source Says No](https://osssaysno.com/) collects these policies in one place. As of November 11, 2026, it lists **22 projects** in the “Banned” category—meaning they do not accept contributions created with generative AI. The site publishes policies based on official project texts (with verification dates), not interpretations.
 
 This post covers notable examples from the list, the common reasons behind the bans, and what you should do as a contributor.
+
+![AI contribution policy decision flow](/diagrams/ai-contrib.svg)
 
 ## How the list is built
 

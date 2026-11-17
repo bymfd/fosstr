@@ -2,7 +2,7 @@
 title: 'AI patch flood in the Linux kernel: Lorenzo Stoakes steps back from some review roles'
 description: 'Linux MM expert Lorenzo Stoakes stepped down from core/reclaim/Rust/THP/misc review duties amid an influx of AI-generated patches—highlighting a bottleneck in the kernel’s development model.'
 pubDate: '2026-11-12'
-heroImage: ../../assets/blog-placeholder-4.jpg
+heroImage: ../../assets/kernel-review-hero.jpg
 tags: ['linux', 'kernel', 'ai', 'open-source', 'maintainers']
 translationOf: 'linux-kernel-ai-yama-seli-stoakes'
 ---
@@ -20,6 +20,8 @@ This is not a “developer got tired” story. It’s a concrete signal of a sca
 | Person | Lorenzo Stoakes (Arm) |
 | Contribution | Linux kernel since 2014; memory management / `mm/` subsystems |
 | Change | Reduced review scope due to patch/review load dynamics |
+
+![AI-assisted patches entering the kernel review funnel](/diagrams/kernel-review.svg)
 
 ## Why review is the bottleneck
 

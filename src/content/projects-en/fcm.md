@@ -2,7 +2,7 @@
 title: 'fcm: control MacBook fan speed from the menu bar'
 description: 'MacBook overheating or fans not kicking in? fcm is a lightweight macOS menu bar app to control fan speed on Intel and Apple Silicon Macs.'
 pubDate: '2026-09-10'
-heroImage: ../../assets/blog-placeholder-3.jpg
+heroImage: ../../assets/fcm-flow-hero.jpg
 tags: ['macos', 'swift', 'smc', 'fan-control', 'menu-bar']
 type: project
 repo: 'https://github.com/bymfd/fcm'
@@ -16,6 +16,8 @@ MacBook overheating, fans never spin up, and it shuts down out of nowhere? macOS
 I had a 2019 i9 MacBook Pro. Compiling software melted it. Fans would scream at 6000 RPM — or not spin at all. One day it shut down during a video render and I lost SSD data. That was the moment I decided macOS fan control wasn't good enough for me.
 
 I tried other apps (smcFanControl, Macs Fan Control). Good tools, but either too complex or not a clean menu bar fit. I wanted simple, safe, one-time password entry, and a minimal menu bar UI.
+
+![fcm menu bar to SMC fan control flow](/diagrams/fcm-flow.svg)
 
 ## Features
 

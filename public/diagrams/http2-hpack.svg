@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="500" viewBox="0 0 1000 500" role="img" aria-label="Apache mod_http2: shared HPACK state">
+<defs>
+<pattern id="g" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M25 0H0V25" fill="none" stroke="#17171f" stroke-width="1"/></pattern>
+<marker id="a-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#6e81e4"/></marker><marker id="a-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4ade80"/></marker><marker id="a-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#f0b429"/></marker><marker id="a-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#ff6b6b"/></marker>
+</defs>
+<rect width="1000" height="500" fill="#08080b"/><rect width="1000" height="500" fill="url(#g)"/>
+<text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">CVE-2026-119618</text>
+<text x="28" y="72" fill="#fafafa" font-size="26" font-family="monospace">Apache mod_http2: shared HPACK state</text>
+<line x1="235" y1="234" x2="310" y2="234" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<line x1="235" y1="304" x2="310" y2="304" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<line x1="530" y1="270" x2="610" y2="270" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<rect x="541" y="246" width="58" height="22" rx="4" fill="#08080b" stroke="#6e81e4" stroke-opacity="0.5"/>
+<text x="570" y="261" fill="#6e81e4" font-size="15" text-anchor="middle" font-family="monospace">race</text>
+<line x1="810" y1="270" x2="865" y2="270" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<rect x="25" y="150" width="210" height="96" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
+<rect x="25" y="150" width="5" height="96" rx="2" fill="#6e81e4"/>
+<text x="41" y="180" fill="#fafafa" font-size="19" font-family="monospace">HTTP/2 stream A</text>
+<text x="41" y="202" fill="#aaa39f" font-size="15" font-family="monospace">HPACK header block</text>
+<rect x="25" y="290" width="210" height="96" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
+<rect x="25" y="290" width="5" height="96" rx="2" fill="#6e81e4"/>
+<text x="41" y="320" fill="#fafafa" font-size="19" font-family="monospace">HTTP/2 stream B</text>
+<text x="41" y="342" fill="#aaa39f" font-size="15" font-family="monospace">HPACK header block</text>
+<rect x="310" y="220" width="220" height="100" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
+<rect x="310" y="220" width="5" height="100" rx="2" fill="#f0b429"/>
+<text x="326" y="250" fill="#fafafa" font-size="19" font-family="monospace">Shared header table</text>
+<text x="326" y="272" fill="#aaa39f" font-size="15" font-family="monospace">missing synchronization</text>
+<rect x="610" y="220" width="200" height="100" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
+<rect x="610" y="220" width="5" height="100" rx="2" fill="#ff6b6b"/>
+<text x="626" y="250" fill="#fafafa" font-size="19" font-family="monospace">Heap corruption</text>
+<text x="626" y="272" fill="#aaa39f" font-size="15" font-family="monospace">attacker-controlled timing</text>
+<rect x="865" y="220" width="110" height="100" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
+<rect x="865" y="220" width="5" height="100" rx="2" fill="#ff6b6b"/>
+<text x="881" y="250" fill="#fafafa" font-size="19" font-family="monospace">Potential RCE</text>
+<text x="881" y="272" fill="#aaa39f" font-size="15" font-family="monospace">unauthenticated</text>
+<text x="28" y="470" fill="#aaa39f" font-size="15" font-family="monospace">Affected: 2.4.55-2.4.70 with HTTP/2 enabled | Fixed: 2.4.71</text>
+</svg>

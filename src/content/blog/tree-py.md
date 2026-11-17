@@ -2,7 +2,7 @@
 title: 'tree.py: Masaüstüne özelleştirilebilir Noel ağacı'
 description: 'Python ile masaüstünde gösterilen interaktif Noel ağacını senin renk, süs ve boyut tercihlerinle özelleştir - herkes aynı ağacı görünmüyor.'
 pubDate: '2026-09-10'
-heroImage: ../../assets/blog-placeholder-4.jpg
+heroImage: ../../assets/tree-py-hero.jpg
 tags: ['python', 'noel', 'masaüstü', 'eglence']
 type: project
 repo: 'https://github.com/bymfd/tree.py'
@@ -13,6 +13,8 @@ Noel zamanı geldi ve masaüstüne biraz renk mi istiyorsun? `tree.py` ile Pytho
 ## Neden İhtiyaç Duydum?
 
 2023 aralığında ofiste "Noel ağacı alalım" dediler. Ben de "almayın, ben kodlarım" dedim. Ciddiye alınınca da biraz utandım ama sonunda terminalde parlayan bir ağac çıktı. Ama asıl sebep şu: herkesin masasında aynı yapay ağaçlar, aynı LED'ler... Ben istedim ki ağacın rengi, boyutu, süsleri — hepsi benim kodumda olsun. Bir de şey ekledim: "arkadaşlarım da kendi ağacını yazsın" diye açık kaynak yaptım.
+
+![tree.py yapılandırma ve render akışı](/diagrams/tree-py.svg)
 
 ## Ne Yapıyor?
 

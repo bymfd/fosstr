@@ -2,7 +2,7 @@
 title: 'OpenCode Sızıntısından Muse Spark Open''a: Haftanın 8 Büyük Teknoloji Haberi'
 description: '15–20 Ekim haftası: OpenCode API anahtar sızıntısı, Meta''nın 816B açık ağırlıklı Muse Spark Open''ı, DeepSeek''in açık kaynak inference motoru DeepInfer, Citizen Lab''in AdFection raporu, Linux 7.3, Timestral ve Mercor''un benchmark haritası.'
 pubDate: '2026-10-20'
-heroImage: ../../assets/blog-placeholder-5.jpg
+heroImage: ../../assets/digest-grid-hero.jpg
 tags: ['teknoloji-haberleri', 'ai-models', 'security', 'open-source', 'tech-industry']
 ---
 

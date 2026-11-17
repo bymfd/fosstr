@@ -51,6 +51,8 @@ Ransomnews, Donald Trump'ın 2009–2013 arasındaki tweet'lerinden 97 Bitly lin
 
 CNN, aynı akşam Bill Gates, Justin Trudeau, Mike Pence, FBI ve ABD Savunma Bakanlığı'nın eski paylaşımlarında da yönlendirilmiş Bitly linkleri bulunduğunu bildirdi. Ransomnews bu hesapları kendisi doğrulamadı.
 
+![Bitly kısa bağlantı ele geçirme akışı](/diagrams/bitly-hijack.svg)
+
 ## Bitly linki nasıl ele geçirilir?
 
 Bitly linkinin sonundaki kısma **back-half** deniyor. Bitly bunu rastgele üretiyor veya kullanıcı özel bir ad seçiyor. Eski link ortadan kalktığında ve arka yarı yeniden alınabildiğinde, o linki taşıyan her tweet, e-posta, PDF veya basılı QR kod yeni sahibinin seçtiği yere gidiyor.

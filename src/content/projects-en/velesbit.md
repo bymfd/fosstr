@@ -2,7 +2,7 @@
 title: 'velesbit: an automatic bicycle transmission that shifts for you'
 description: 'Arduino-based automatic bicycle gearbox. Reads speed and cadence and shifts gears on its own — so you don’t forget to shift on climbs or in traffic.'
 pubDate: '2026-09-10'
-heroImage: ../../assets/blog-placeholder-2.jpg
+heroImage: ../../assets/velesbit-flow-hero.jpg
 tags: ['arduino', 'bicycle', 'mechatronics', 'diy']
 type: project
 repo: 'https://github.com/bymfd/velesbit'
@@ -23,6 +23,8 @@ Commuting by bike in Istanbul, I climbed from Kadıköy to Fenerbahçe every day
 
 - **Alpha 3:** 2x16 LCD, button controls
 - **Alpha 6:** 0.96" OLED, more compact design
+
+![velesbit sensor to gear-shift flow](/diagrams/velesbit-flow.svg)
 
 ## How it works
 

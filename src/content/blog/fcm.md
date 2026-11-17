@@ -2,7 +2,7 @@
 title: 'fcm: MacBook fan hızını menü çubuğundan kontrol et'
 description: 'MacBook aşırı ısıyor, fan hiç açılmıyor mu? fcm, Intel ve Apple Silicon Maclerde fan hızını menü çubuğundan ayarlamanızı sağlayan hafif bir macOS uygulaması.'
 pubDate: '2026-09-10'
-heroImage: ../../assets/blog-placeholder-3.jpg
+heroImage: ../../assets/fcm-flow-hero.jpg
 tags: ['macos', 'swift', 'smc', 'fan-control', 'menu-bar']
 type: project
 repo: 'https://github.com/bymfd/fcm'
@@ -42,6 +42,8 @@ Başka uygulamalar denedim — smcFanControl, Macs Fan Control. Hepsi iyi ama ya
 ./scripts/fcm.sh auto     # Otomatik
 ./scripts/fcm.sh set 3000 # 3000 RPM
 ```
+
+![FCM menü çubuğundan SMC fan kontrolüne veri akışı](/diagrams/fcm-flow.svg)
 
 ## Teknik Detaylar
 

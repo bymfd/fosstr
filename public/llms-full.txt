@@ -38,6 +38,8 @@ Açık Ekim 2015'teki bir commit ile girmiş, 3 Kasım 2026'da düzeltilmiş. Ya
 | Düzeltilen kararlı sürümler | 6.12.117, 6.18.63, 7.3.4 |
 | Aktif istismar | 17 Kasım 2026 itibarıyla doğrulanmış değil; CISA KEV'de yok |
 
+![NoisyTCP kilitlenmesiz ehash yarış durumunun şeması](/diagrams/noisytcp-race.svg)
+
 ## Açık nasıl çalışıyor?
 
 Bir TCP paketi geldiğinde çekirdek, paketin hangi sokete ait olduğunu bir karma tablo (ehash) üzerinden bulur. Bu arama hız için **kilitlenmeden** (lockless) yapılır: eşleşen girdiyi bulur, referans alır, sonra adres ve portların hâlâ uyduğunu tekrar kontrol eder.
@@ -141,6 +143,8 @@ Ransomnews, Donald Trump'ın 2009–2013 arasındaki tweet'lerinden 97 Bitly lin
 15 Kasım'da yeniden oluşturulan yedi linkten dördü, bir Roblox profiline, bir YouTube videosuna (iki kez) ve Trump–Jeffrey Epstein maddesine gidiyor. İki link ise kripto hizmetlerinin adını taklit eden alan adlarına yönleniyor: `worldlibertyfinancial-ai[.]com` ve `dappradars[.]website`.
 
 CNN, aynı akşam Bill Gates, Justin Trudeau, Mike Pence, FBI ve ABD Savunma Bakanlığı'nın eski paylaşımlarında da yönlendirilmiş Bitly linkleri bulunduğunu bildirdi. Ransomnews bu hesapları kendisi doğrulamadı.
+
+![Bitly kısa bağlantı ele geçirme akışı](/diagrams/bitly-hijack.svg)
 
 ## Bitly linki nasıl ele geçirilir?
 
@@ -249,6 +253,8 @@ Bir operasyon üç aşamada ilerliyor:
 3. **Explore:** Tek bir eylem yapar ve sonucu yeni bir bulgu olarak kaydeder.
 
 Reason–Explore döngüsü, model hedefe ulaştığına karar verene kadar devam ediyor. Unit 42'ye göre her hedef için 3–7 aşamalı farklı planlar üretilmiş; operasyonlar **20 dakikadan 50 saatten fazlasına** kadar sürmüş. Saldırgan tarafından bir süre sınırı konmamış.
+
+![Cairn otonom saldırı zincirinin şeması](/diagrams/cairn-chain.svg)
 
 ## Operasyon pratikte nasıl görünüyor?
 
@@ -371,6 +377,8 @@ Zoned XFS'in çözümü, dosya verisi ile metadata'yı ayırmak. XFS'in **realti
 
 XRAID bu ayrımın üzerine kuruluyor. Parity RAID yalnızca **dosya verisi** için sağlanıyor; çünkü parity RAID'in verimli çalıştığı yer orası. Küçük nesnelerin yerinde güncellendiği metadata için ise parity RAID uygun değil. XRAID, metadata yedekliliğini MD RAID mirroring gibi mevcut katmanlı Linux sürücülerine bırakıyor.
 
+![XRAID declustered parity veri ve metadata ayrımı](/diagrams/xraid-layout.svg)
+
 ## XRAID nasıl çalışıyor?
 
 Hellwig'in açıklamasına göre XRAID, Zoned XFS I/O yolunun **altında**, katmanlı bir blok sürücüsüne benzer şekilde konumlanıyor. Alttaki cihazların fiziksel zonalarını mantıksal zonalara birleştiriyor; Zoned XFS bu mantıksal zonaları realtime gruplar olarak kullanıyor.
@@ -470,6 +478,8 @@ Bu yazı, açığın teknik mekanizmasını, hangi kurulumların gerçekten risk
 | Bildirim | Anthropic OSS Scanner (26 Ekim), Google Cloud VR (3 Kasım) |
 | CISA KEV | Hayır (12 Kasım 2026 itibarıyla) |
 | Aktif istismar | Doğrulanmış rapor yok; kamuya açık laboratuvar PoC'leri var |
+
+![Apache mod_http2 paylaşılan başlık tablosu yarış durumunun şeması](/diagrams/http2-hpack.svg)
 
 ## Açık nasıl çalışıyor?
 
@@ -626,6 +636,8 @@ LKML'deki duyuruda, review listelerinden kendisini çıkardığı yama serisinde
 
 Stoakes, ayrılmanın nedenini "gelen kutusunu biraz daha yönetilebilir hale getirme isteği" olarak açıklıyor. Elindeki yama serilerini tamamlayacağını ve zaman zaman katkı vermeye devam edeceğini söylüyor. Yani çekirdekten tamamen ayrılmıyor; review yükünü azaltıyor.
 
+![AI destekli yamaların çekirdek inceleme hunisi](/diagrams/kernel-review.svg)
+
 ## AI yama seli ne demek?
 
 "AI slop" ifadesi, büyük dil modelinin ürettiği, yüzeysel olarak makul görünen ama bakımı zor veya gereksiz yamalar için kullanılıyor. Bu yamalar derleniyor, bazen testleri geçiyor, hatta mantıklı bir hata düzeltmesi gibi görünüyor. Asıl maliyet, **anlamlı bir katkı ile gürültüyü ayırma** aşamasında ortaya çıkıyor.
@@ -722,6 +734,8 @@ Ve kontrol döngüseldir: X.509 süre doğrulaması yapmak için zaten doğru sa
 
 Bu, sertifikalar 398 gün geçerliyken katlanılabilirdi. CA/Browser Forum'un SC-081v3 takvimiyle yeni sertifikaların azami geçerliliği Mart 2026'da 200 güne, Mart 2027'de 100 güne, Mart 2029'da 47 güne iniyor. 47 günde manuel sertifika yönetimi ölçekte sürdürülemez; yenileme ayda bir, genellikle ACME ile ve gözetimsiz çalışır. Saati kaymış bir host'ta otomatik yenileme döngüsü bilet açmaz; ya yeniden imzalar ya da kimsenin izlemediği bir takvimde başarısız olur.
 
+![Network Time Security anahtar değişimi ve doğrulanmış zaman akışı](/diagrams/nts-flow.svg)
+
 ## NTS nasıl çalışıyor?
 
 NTS, kimlik doğrulamayı iki aşamaya ayırıyor. Bu ayrım, protokolü dağıtılabilir kılan şey.
@@ -817,6 +831,8 @@ Açık kaynak dünyasında 2026'nın en tartışmalı konularından biri, AI ile
 [Open Source Says No](https://osssaysno.com/) adlı site, bu politikaları tek yerde topluyor. 11 Kasım 2026 itibarıyla sitede **22 proje** "Banned" kategorisinde listeleniyor; yani üretken AI ile oluşturulmuş katkıları kabul etmiyor. Site, politikaları kendi yorumuyla değil, projelerin resmî metinlerinden alıntılayarak ve doğrulama tarihiyle birlikte yayınlıyor.
 
 Bu yazı, listenin öne çıkan örneklerini, yasakların ortak gerekçelerini ve bir katkıcı olarak ne yapmanız gerektiğini anlatıyor.
+
+![AI katkı politikalarının karar akışı](/diagrams/ai-contrib.svg)
 
 ## Liste nasıl oluşuyor?
 
@@ -933,6 +949,8 @@ GPUStack, birden fazla sunucudaki GPU'ları tek bir havuz gibi yönetmek ve üze
 | Düzeltme | 2.2.0 (tek başına), 2.2.2 (önerilen) |
 | CISA KEV | 9 Kasım 2026 eklendi |
 | Federal son tarih | 12 Kasım 2026 |
+
+![GPUStack kimlik doğrulama atlatma akışı](/diagrams/gpustack-bypass.svg)
 
 ## Açık nasıl çalışıyor?
 
@@ -1074,6 +1092,8 @@ npx skills add NVIDIA/OpenShell
 
 SDK'lar da var: Python (`uv add openshell`), TypeScript (`@nvidia/openshell-sdk`), Go ve Rust. SDK'lar uygulamanızı bir OpenShell ağ geçidine bağlıyor; CLI'yı kurmuyor.
 
+![OpenShell politika kontrollü ajan çalışma zamanı mimarisi](/diagrams/openshell-policy.svg)
+
 ## Mimari
 
 OpenShell üç parçadan oluşuyor:
@@ -1153,6 +1173,8 @@ DisplayLink, USB üzerinden harici ekran bağlamanın en yaygın yollarından bi
 - **AI desteği**: Sürücünün bir kısmı Claude Code ve Opus 4.8 modeliyle yazıldı. Bu, lisans veya patent tartışmasının merkezinde değil; ama projenin kamuoyunda "AI ile yazılmış sürücü" olarak anılmasına yol açtı.
 
 Haziran ayındaki ilk sunumda sürücü henüz tam değildi. Lothian cihaz kurulumunu ve iletişimi doğrulamış, ancak şifreli kontrol kanalındaki yanıtları çözememişti; yani gerçek bir görüntü çıkışı test edilmemişti. Yine de hedef netti: Synaptics'in ağaç dışı sürücüsü ve kapalı daemon'una bağımlılığı kaldırmak ve ileride ana çekirdeğe girebilecek bir alternatif üretmek.
+
+![Vino sürücüsü ve patent sürecinin şeması](/diagrams/vino-driver.svg)
 
 ## Kronoloji
 
@@ -1270,6 +1292,8 @@ Dux Shell tek bir uygulama değil, bir suite:
 | **Dux Installer** | Kurulum ve yönetim aracı |
 
 Kabaca Waybar + Rofi + Mako + swaylock + swayidle + polkit + duvar kağıdı aracının yerini dolduruyor.
+
+![Dux Shell'in Wayland katmanlarıyla ilişkisi](/diagrams/dux-stack.svg)
 
 ## Hangi kompozitörlerle çalışıyor?
 
@@ -1437,6 +1461,8 @@ Standart `UD-IQ1_S` quantizasyonu bu modeli **76,87 GiB** (82,5 GB) boyutuna get
 
 Yani olay "model küçüldü" değil; **model, 64 GB'lık makinenin sınırına sığdırıldı.** Aradaki fark 20,31 GiB, yaklaşık %26,4'lük bir küçülme.
 
+![284B modelin 64 GB RAM'e sığdırılması](/diagrams/modchip-memory.svg)
+
 ## Nasıl sığıyor?
 
 İki temel teknik var.
@@ -1539,6 +1565,8 @@ Saldırganın hazırladığı akış, gerçekleşmesi imkânsız bir blok geçi�
 Düzeltme, çağıran tarafa sert bir format hatası döndürüyor: `BROTLI_DECODER_ERROR_FORMAT_BLOCK_SWITCH` (**−17**). Hata sınıfı **CWE-252** (kontrol edilmeyen dönüş değeri) ve **CWE-787** (sınır dışı yazma). Üst kaynaktaki düzeltme `google/brotli` commit'leri `0ed4268`, `50a9b70`, `b418fa8` ve `da98063`.
 
 Bu açığı bu kadar ciddi yapan şey, tetiklenmesi için **kimlik doğrulaması gerekmemesi**. Saldırganın kontrolündeki bir Brotli akışını çözen herhangi bir yol yeterli: bir HTTP yanıtı, bir istek gövdesi, bir arşiv veya bir kuyruk mesajı.
+
+![Brotli decoder tampon taşması akışı](/diagrams/brotli-buffer.svg)
 
 ## 2. Saldırı yüzeyi: URL fetch eden her servis
 
@@ -1695,6 +1723,8 @@ Bu kısım önemli: jailbreak **untethered**. Yani cihazı her açtığınızda 
 
 Ama Calif'in kendi anlatımına göre ortada indirilecek bir araç yok. Şirketin güvenlik araştırmacılarından Stefan Esser, Heise'e [şunları söyledi](https://www.heise.de/en/news/Calif-io-jailbreak-How-the-untethered-tool-cracks-iOS-27-0-1-11492321.html): son kullanıcılar için bir jailbreak aracı yayımlamayı planlamıyorlar; açıkların bir kısmı Apple'a bildirildi, bir kısmı da bildirilecek. Bir proof of concept yayımlanabilir. Yani "iPhone Duo jailbreak indir" arayan biri, büyük ihtimalle sahte veya zararlı bir şey bulacak.
 
+![iPhone Duo jailbreak zinciri ve Crackgate ayrımı](/diagrams/iphone-mie.svg)
+
 ## MIE'nin anlamı ne?
 
 Calif'in gösterimi, Apple'ın son dönemde en çok güvendiği savunmalardan birini de hedef alıyor: **Memory Integrity Enforcement (MIE)**. Apple, MIE'yi ARM'in Enhanced Memory Tagging Extension (EMTE) üzerine kuruyor ve bellek bozulması hatalarının sömürülmesini zorlaştırmayı vaat ediyor. Heise'e göre Calif, bu korumayı da atlatan bir zincir gösterdi.
@@ -1796,6 +1826,8 @@ Burada asıl tartışma başlıyor ve yazının en değerli kısmı burada. [Eli
 PHP'nin kendi güvenlik ekibi benzer bir şey söyledi: sızıntıdan sonra beliren PoC'ları incelediklerini, ancak *"sürüm ve ifşaat anında işlevsel bir exploit tespit etmediklerini"* belirttiler. Bir başka araştırmacı ise [daha da ileri gitti](https://news.ycombinator.com/item?id=50176077) ([184 puan, 63 yorum](https://news.ycombinator.com/item?id=50176077)): iddia edilen zincirin ölü olduğunu, gerçek sorunun yalnızca **prefork** SAPI'da erişilebilen ve kod çalıştırmayan bir bellek güvenliği hatası (CVSS 5.3) olduğunu öne sürdü.
 
 Buradaki tartışma "yamalayalım mı" sorusunu değiştirmiyor. Ama "tek curl komutuyla root" beklentisi gerçekçi değil. En gerçekçi risk profili şu: önce **başka isteklerin verisini okuyan bir bellek sızıntısı** (parolalar, oturum token'ları, API anahtarları — Heartbleed'in yaptığı gibi), sonra da ağır heap mühendisliği gerektiren kod çalıştırma. Aynı gün "üçüncü bir kritik PHP CVE" söylentisi de dolaştı ([66 puan, 16 yorum](https://news.ycombinator.com/item?id=50185814)), ancak tartışma bunun motor seviyesinde bir RCE olmadığı, uygulama/betik seviyesinde bir bellek hatası olduğu yönünde sonuçlandı.
+
+![php2shell'in iki motor seviyesi açık yolu](/diagrams/php2shell-cves.svg)
 
 ## 2. Node.js: aynı gün, on CVE
 
@@ -2935,6 +2967,8 @@ Yıllar boyunca Arch Linux kurdum, sildim, tekrar kurdum. Her seferinde aynı ad
 
 `arch-kam`, Arch tabanlı dağıtımlar için yazılmış bir dizi bash script. "Kam" kelimesi eski Türkçede "şaman" anlamına geliyor — ve proje de tam olarak şamanlık yapıyor: sistemi "iyileştirir", "kötü ruhları kovar" ve "kozmik dengeyi" sağlar.
 
+![arch-kam menü seçeneklerinin şeması](/diagrams/arch-kam-menu.svg)
+
 ## Ritüeller
 
 ### Menü: `arch-kam.sh`
@@ -3076,6 +3110,8 @@ Başka uygulamalar denedim — smcFanControl, Macs Fan Control. Hepsi iyi ama ya
 ./scripts/fcm.sh set 3000 # 3000 RPM
 ```
 
+![FCM menü çubuğundan SMC fan kontrolüne veri akışı](/diagrams/fcm-flow.svg)
+
 ## Teknik Detaylar
 
 - Uygulama normal kullanıcı olarak çalışır, SMC'yi okur
@@ -3108,6 +3144,8 @@ Noel zamanı geldi ve masaüstüne biraz renk mi istiyorsun? `tree.py` ile Pytho
 ## Neden İhtiyaç Duydum?
 
 2023 aralığında ofiste "Noel ağacı alalım" dediler. Ben de "almayın, ben kodlarım" dedim. Ciddiye alınınca da biraz utandım ama sonunda terminalde parlayan bir ağac çıktı. Ama asıl sebep şu: herkesin masasında aynı yapay ağaçlar, aynı LED'ler... Ben istedim ki ağacın rengi, boyutu, süsleri — hepsi benim kodumda olsun. Bir de şey ekledim: "arkadaşlarım da kendi ağacını yazsın" diye açık kaynak yaptım.
+
+![tree.py yapılandırma ve render akışı](/diagrams/tree-py.svg)
 
 ## Ne Yapıyor?
 
@@ -3159,6 +3197,8 @@ Bisiklet süren biliyorsun: tırmanmada vites değiştirmek, inişte fren, viraj
 
 - **Alpha 3:** 2x16 LCD ekran, buton kontrolü
 - **Alpha 6:** 0.96" OLED ekran, daha kompakt tasarım
+
+![Velesbit sensörlerden vites değişimine veri akışı](/diagrams/velesbit-flow.svg)
 
 ## Nasıl Çalışır?
 

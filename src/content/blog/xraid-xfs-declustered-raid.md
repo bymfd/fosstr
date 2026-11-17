@@ -34,6 +34,8 @@ Zoned XFS'in çözümü, dosya verisi ile metadata'yı ayırmak. XFS'in **realti
 
 XRAID bu ayrımın üzerine kuruluyor. Parity RAID yalnızca **dosya verisi** için sağlanıyor; çünkü parity RAID'in verimli çalıştığı yer orası. Küçük nesnelerin yerinde güncellendiği metadata için ise parity RAID uygun değil. XRAID, metadata yedekliliğini MD RAID mirroring gibi mevcut katmanlı Linux sürücülerine bırakıyor.
 
+![XRAID declustered parity veri ve metadata ayrımı](/diagrams/xraid-layout.svg)
+
 ## XRAID nasıl çalışıyor?
 
 Hellwig'in açıklamasına göre XRAID, Zoned XFS I/O yolunun **altında**, katmanlı bir blok sürücüsüne benzer şekilde konumlanıyor. Alttaki cihazların fiziksel zonalarını mantıksal zonalara birleştiriyor; Zoned XFS bu mantıksal zonaları realtime gruplar olarak kullanıyor.

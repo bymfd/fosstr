@@ -2,7 +2,7 @@
 title: 'OpenShell: NVIDIA’s agent sandbox moves to the CNCF'
 description: 'NVIDIA donated OpenShell—policy-constrained runtime for autonomous AI agents—to the CNCF Sandbox. Kernel-level isolation, Cedar policies, and setup overview.'
 pubDate: '2026-11-11'
-heroImage: ../../assets/blog-placeholder-5.jpg
+heroImage: ../../assets/openshell-policy-hero.jpg
 tags: ['ai', 'agents', 'cncf', 'kubernetes', 'security', 'nvidia', 'open-source']
 translationOf: 'openshell-cncf-ajan-guvenligi'
 ---
@@ -16,6 +16,8 @@ On November 10, 2026 at KubeCon + CloudNativeCon North America, NVIDIA announced
 [OpenShell](https://github.com/NVIDIA/OpenShell) is infrastructure for running autonomous AI agents in a secure, policy-controlled runtime. It doesn’t change the agent; it controls the environment around it.
 
 Core idea: the agent shouldn’t directly access the filesystem, network, or credentials. Instead it runs in an isolated sandbox where file access, syscalls, and network connections pass through policy checks. The agent never sees real secrets; OpenShell injects credentials only into approved requests to approved endpoints.
+
+![OpenShell policy-gated agent runtime](/diagrams/openshell-policy.svg)
 
 ## Defense layers
 

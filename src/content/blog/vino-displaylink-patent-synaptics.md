@@ -2,7 +2,7 @@
 title: 'Vino: Synaptics patent mektupları DisplayLink''in açık kaynak sürücüsünü nasıl kapattı'
 description: 'DisplayLink DL3 için Rust ile yazılan açık kaynak Vino sürücüsü, Synaptics''in patent mektuplarının ardından GitHub''dan kalktı. Olayın kronolojisi, hukuki tartışma ve Linux kullanıcıları için sonuçları.'
 pubDate: '2026-11-11'
-heroImage: ../../assets/blog-placeholder-1.jpg
+heroImage: ../../assets/vino-driver-hero.jpg
 tags: ['linux', 'displaylink', 'patent', 'rust', 'kernel', 'open-source']
 ---
 
@@ -20,6 +20,8 @@ DisplayLink, USB üzerinden harici ekran bağlamanın en yaygın yollarından bi
 - **AI desteği**: Sürücünün bir kısmı Claude Code ve Opus 4.8 modeliyle yazıldı. Bu, lisans veya patent tartışmasının merkezinde değil; ama projenin kamuoyunda "AI ile yazılmış sürücü" olarak anılmasına yol açtı.
 
 Haziran ayındaki ilk sunumda sürücü henüz tam değildi. Lothian cihaz kurulumunu ve iletişimi doğrulamış, ancak şifreli kontrol kanalındaki yanıtları çözememişti; yani gerçek bir görüntü çıkışı test edilmemişti. Yine de hedef netti: Synaptics'in ağaç dışı sürücüsü ve kapalı daemon'una bağımlılığı kaldırmak ve ileride ana çekirdeğe girebilecek bir alternatif üretmek.
+
+![Vino sürücüsü ve patent sürecinin şeması](/diagrams/vino-driver.svg)
 
 ## Kronoloji
 

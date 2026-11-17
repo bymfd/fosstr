@@ -2,7 +2,7 @@
 title: 'September 2026 Cybersecurity Analysis: FBI hacked, AI agents attacked, 284M patient records leaked'
 description: 'A detailed analysis of the most critical cybersecurity events of the month: AI-driven attacks, espionage campaigns, and major data breaches.'
 pubDate: '2026-09-12'
-heroImage: ../../assets/blog-placeholder-5.jpg
+heroImage: ../../assets/digest-grid-hero.jpg
 tags: ['cybersecurity', 'ai-agents', 'ransomware', 'data-breach', 'fbi', 'shinyhunters', 'qilin', 'anthropic', 'openai']
 translationOf: 'eylul-2026-siber-guvenlik-analizi'
 ---

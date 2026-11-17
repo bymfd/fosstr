@@ -17,6 +17,8 @@ Videos showed UI effects and customization consistent with jailbreak-level acces
 
 Importantly, there was no public end-user jailbreak tool released. Researchers indicated some issues were reported to Apple and others might be; a PoC could appear, but “download jailbreak” searches are likely to find scams or malware.
 
+![iPhone Duo jailbreak chain and Crackgate split](/diagrams/iphone-mie.svg)
+
 ## The hardware side
 
 Hinge and display durability on first-gen foldables is a known concern. Reports and teardowns (e.g., iFixit analysis) matter for buyers—but they’re orthogonal to software exploitability.

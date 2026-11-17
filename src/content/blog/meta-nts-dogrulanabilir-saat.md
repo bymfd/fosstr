@@ -2,7 +2,7 @@
 title: 'NTP 40 yıldır imzasızdı: Meta nts.meta.com ile saati doğrulanabilir yaptı'
 description: 'Meta, genel saat servisine RFC 8915 NTS desteği ekledi. Saat paketleri artık kimlik doğrulanabiliyor; sunucular durum tutmuyor. Ancak gecikme saldırıları ve mobil istemciler hâlâ açık.'
 pubDate: '2026-11-12'
-heroImage: ../../assets/blog-placeholder-1.jpg
+heroImage: ../../assets/nts-flow-hero.jpg
 tags: ['security', 'ntp', 'nts', 'meta', 'time', 'tls', 'open-source']
 ---
 
@@ -35,6 +35,8 @@ NTP'nin imzasız olması uzun süre "kabul edilebilir" görüldü; çünkü saat
 Ve kontrol döngüseldir: X.509 süre doğrulaması yapmak için zaten doğru saate ihtiyacınız var. İki yaygın geçici çözüm de kötü. Birincisi, saat ayarlanana kadar sertifika doğrulamasını kapatmak; cihazı en savunmasız olduğu anda korumasız bırakır. İkincisi, her iki tarafa da tolerans payı koymak; herkes karşısındakinin ne kadar yanlış olduğunu tahmin etmeye çalışır.
 
 Bu, sertifikalar 398 gün geçerliyken katlanılabilirdi. CA/Browser Forum'un SC-081v3 takvimiyle yeni sertifikaların azami geçerliliği Mart 2026'da 200 güne, Mart 2027'de 100 güne, Mart 2029'da 47 güne iniyor. 47 günde manuel sertifika yönetimi ölçekte sürdürülemez; yenileme ayda bir, genellikle ACME ile ve gözetimsiz çalışır. Saati kaymış bir host'ta otomatik yenileme döngüsü bilet açmaz; ya yeniden imzalar ya da kimsenin izlemediği bir takvimde başarısız olur.
+
+![Network Time Security anahtar değişimi ve doğrulanmış zaman akışı](/diagrams/nts-flow.svg)
 
 ## NTS nasıl çalışıyor?
 

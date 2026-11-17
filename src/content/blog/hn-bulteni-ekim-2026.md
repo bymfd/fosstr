@@ -2,7 +2,7 @@
 title: 'Hacker News Bülteni (20 Eylül – 20 Ekim 2026): Model Seli, Passkeys Savaşı ve Deno''nun Sonu'
 description: 'Ayın Hacker News taraması: Opus 5.5, GPT-6, Gemini 4 Argon ve Mistral Large 4 fiyat savaşından passkeys tartışmasına, Cloudflare–Deno satın almasından Pentagon''un AI itirafına 23 haberin ayrıntılı özeti.'
 pubDate: '2026-10-20'
-heroImage: ../../assets/blog-placeholder-2.jpg
+heroImage: ../../assets/digest-grid-hero.jpg
 tags: ['hacker-news', 'bulten', 'ai-models', 'llm', 'security', 'open-source', 'tech-industry']
 ---
 

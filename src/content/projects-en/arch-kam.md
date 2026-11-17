@@ -3,7 +3,7 @@ title: 'arch-kam: run hibernate, bootloader and cleanup tasks on Arch Linux with
 description: 'Tired of repeating swap, GRUB, mkinitcpio and TLP setup? arch-kam bundles recurring Arch maintenance tasks into a single, menu-driven bash toolkit.'
 pubDate: '2026-09-10'
 updatedDate: '2026-10-26'
-heroImage: ../../assets/blog-placeholder-5.jpg
+heroImage: ../../assets/arch-kam-menu-hero.jpg
 tags: ['linux', 'arch', 'bash', 'automation']
 type: project
 repo: 'https://github.com/bymfd/arch-kam'
@@ -19,6 +19,8 @@ Over the years I installed, wiped and reinstalled Arch many times. Every time th
 ## What it is
 
 `arch-kam` is a set of bash scripts for Arch-based distributions. "Kam" means "shaman" in old Turkic — and the project leans into that: it "heals" the system, "banishes bad spirits", and restores balance.
+
+![arch-kam menu options](/diagrams/arch-kam-menu.svg)
 
 ## Rituals
 

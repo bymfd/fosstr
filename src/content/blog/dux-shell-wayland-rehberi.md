@@ -2,7 +2,7 @@
 title: 'Dux Shell: Parçalanmış Wayland kurulumunu tek pakette topla'
 description: 'Wayland panel, menü, kilit ekranı ve bildirim yerineştirmesi parça parça mühendislik mi? Dux Shell, niri, Hyprland ve Swayi tek pakette kurmayı sağlayan arşitektür.'
 pubDate: '2026-11-09'
-heroImage: ../../assets/blog-placeholder-4.jpg
+heroImage: ../../assets/dux-stack-hero.jpg
 tags: ['linux', 'wayland', 'arch', 'desktop', 'open-source']
 ---
 
@@ -38,6 +38,8 @@ Dux Shell tek bir uygulama değil, bir suite:
 | **Dux Installer** | Kurulum ve yönetim aracı |
 
 Kabaca Waybar + Rofi + Mako + swaylock + swayidle + polkit + duvar kağıdı aracının yerini dolduruyor.
+
+![Dux Shell'in Wayland katmanlarıyla ilişkisi](/diagrams/dux-stack.svg)
 
 ## Hangi kompozitörlerle çalışıyor?
 

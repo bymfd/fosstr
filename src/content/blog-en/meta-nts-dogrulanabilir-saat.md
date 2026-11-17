@@ -2,7 +2,7 @@
 title: 'NTP was unsigned for 40 years: Meta makes time verifiable with nts.meta.com'
 description: 'Meta added RFC 8915 NTS support to its public time service. Time packets can now be authenticated; servers are stateless. Delay attacks and mobile clients remain open challenges.'
 pubDate: '2026-11-12'
-heroImage: ../../assets/blog-placeholder-1.jpg
+heroImage: ../../assets/nts-flow-hero.jpg
 tags: ['security', 'ntp', 'nts', 'meta', 'time', 'tls', 'open-source']
 translationOf: 'meta-nts-dogrulanabilir-saat'
 ---
@@ -19,6 +19,8 @@ In October 2026 Meta announced a step to close this gap on its public time servi
 | Protocol | NTS / RFC 8915 |
 | Key exchange | TLS 1.3, TCP/4460, ALPN `ntske/1` |
 | Time traffic | NTPv4, UDP/123 + NTS extension fields |
+
+![Network Time Security key exchange and verified time flow](/diagrams/nts-flow.svg)
 
 ## What NTS provides
 

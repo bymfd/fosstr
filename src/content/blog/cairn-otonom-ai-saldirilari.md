@@ -41,6 +41,8 @@ Bir operasyon üç aşamada ilerliyor:
 
 Reason–Explore döngüsü, model hedefe ulaştığına karar verene kadar devam ediyor. Unit 42'ye göre her hedef için 3–7 aşamalı farklı planlar üretilmiş; operasyonlar **20 dakikadan 50 saatten fazlasına** kadar sürmüş. Saldırgan tarafından bir süre sınırı konmamış.
 
+![Cairn otonom saldırı zincirinin şeması](/diagrams/cairn-chain.svg)
+
 ## Operasyon pratikte nasıl görünüyor?
 
 Saldırganlar her iş için tek satırlık bir hedef yazmış. Örnek:

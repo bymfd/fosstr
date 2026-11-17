@@ -19,6 +19,8 @@ A Brotli stream is split into blocks, and the decoder transitions between block 
 
 A crafted stream can request an impossible block transition. The decoder misreads this as “need more input,” keeps appending attacker bytes into an **8-byte internal buffer**, and overruns it. The overflow corrupts adjacent decoder state, opening paths to memory disclosure, crashes, or code execution depending on context.
 
+![Brotli decoder buffer overflow flow](/diagrams/brotli-buffer.svg)
+
 ## 2. Why it spread so far
 
 Brotli is embedded or vendored widely (browsers, runtimes, archives, fonts). A single upstream C bug becomes many downstream CVEs/advisories when copies aren’t tracked and updated.

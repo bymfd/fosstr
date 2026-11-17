@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="500" viewBox="0 0 1000 500" role="img" aria-label="Security + AI headlines, one week">
+<defs>
+<pattern id="g" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M25 0H0V25" fill="none" stroke="#17171f" stroke-width="1"/></pattern>
+<marker id="a-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#6e81e4"/></marker><marker id="a-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4ade80"/></marker><marker id="a-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#f0b429"/></marker><marker id="a-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#ff6b6b"/></marker>
+</defs>
+<rect width="1000" height="500" fill="#08080b"/><rect width="1000" height="500" fill="url(#g)"/>
+<text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">WEEKLY ROUNDUP</text>
+<text x="28" y="72" fill="#fafafa" font-size="26" font-family="monospace">Security + AI headlines, one week</text>
+<rect x="30" y="120" width="220" height="84" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
+<rect x="30" y="120" width="5" height="84" rx="2" fill="#6e81e4"/>
+<text x="46" y="150" fill="#fafafa" font-size="19" font-family="monospace">Model launches</text>
+<text x="46" y="172" fill="#aaa39f" font-size="15" font-family="monospace">frontier + price war</text>
+<rect x="270" y="120" width="220" height="84" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
+<rect x="270" y="120" width="5" height="84" rx="2" fill="#ff6b6b"/>
+<text x="286" y="150" fill="#fafafa" font-size="19" font-family="monospace">Agent attacks</text>
+<text x="286" y="172" fill="#aaa39f" font-size="15" font-family="monospace">ARTEX / Cairn</text>
+<rect x="510" y="120" width="220" height="84" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
+<rect x="510" y="120" width="5" height="84" rx="2" fill="#f0b429"/>
+<text x="526" y="150" fill="#fafafa" font-size="19" font-family="monospace">Supply chain</text>
+<text x="526" y="172" fill="#aaa39f" font-size="15" font-family="monospace">packages + pipelines</text>
+<rect x="750" y="120" width="220" height="84" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
+<rect x="750" y="120" width="5" height="84" rx="2" fill="#4ade80"/>
+<text x="766" y="150" fill="#fafafa" font-size="19" font-family="monospace">Kernel + distros</text>
+<text x="766" y="172" fill="#aaa39f" font-size="15" font-family="monospace">new stable releases</text>
+<rect x="30" y="270" width="220" height="84" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
+<rect x="30" y="270" width="5" height="84" rx="2" fill="#ff6b6b"/>
+<text x="46" y="300" fill="#fafafa" font-size="19" font-family="monospace">Breaches</text>
+<text x="46" y="322" fill="#aaa39f" font-size="15" font-family="monospace">credentials + records</text>
+<rect x="270" y="270" width="220" height="84" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
+<rect x="270" y="270" width="5" height="84" rx="2" fill="#f0b429"/>
+<text x="286" y="300" fill="#fafafa" font-size="19" font-family="monospace">Patches</text>
+<text x="286" y="322" fill="#aaa39f" font-size="15" font-family="monospace">CVEs and KEV</text>
+<rect x="510" y="270" width="220" height="84" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
+<rect x="510" y="270" width="5" height="84" rx="2" fill="#6e81e4"/>
+<text x="526" y="300" fill="#fafafa" font-size="19" font-family="monospace">Identity</text>
+<text x="526" y="322" fill="#aaa39f" font-size="15" font-family="monospace">passkeys debate</text>
+<rect x="750" y="270" width="220" height="84" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
+<rect x="750" y="270" width="5" height="84" rx="2" fill="#4ade80"/>
+<text x="766" y="300" fill="#fafafa" font-size="19" font-family="monospace">Platforms</text>
+<text x="766" y="322" fill="#aaa39f" font-size="15" font-family="monospace">runtimes + tooling</text>
+<text x="28" y="470" fill="#aaa39f" font-size="15" font-family="monospace">Weekly digests group many unrelated events - verify each primary source</text>
+</svg>

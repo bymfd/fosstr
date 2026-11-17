@@ -38,6 +38,8 @@ PHP'nin kendi güvenlik ekibi benzer bir şey söyledi: sızıntıdan sonra beli
 
 Buradaki tartışma "yamalayalım mı" sorusunu değiştirmiyor. Ama "tek curl komutuyla root" beklentisi gerçekçi değil. En gerçekçi risk profili şu: önce **başka isteklerin verisini okuyan bir bellek sızıntısı** (parolalar, oturum token'ları, API anahtarları — Heartbleed'in yaptığı gibi), sonra da ağır heap mühendisliği gerektiren kod çalıştırma. Aynı gün "üçüncü bir kritik PHP CVE" söylentisi de dolaştı ([66 puan, 16 yorum](https://news.ycombinator.com/item?id=50185814)), ancak tartışma bunun motor seviyesinde bir RCE olmadığı, uygulama/betik seviyesinde bir bellek hatası olduğu yönünde sonuçlandı.
 
+![php2shell'in iki motor seviyesi açık yolu](/diagrams/php2shell-cves.svg)
+
 ## 2. Node.js: aynı gün, on CVE
 
 PHP yaması 14:00 UTC'de çıkarken Node.js de aynı gün [22.23.4, 24.22.1 ve 26.12.1](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases) sürümlerini yayımladı. Tek duyuruda **on CVE** vardı ve en yükseği "high" idi. [Brotli RCE haberi](https://news.ycombinator.com/item?id=50189292) HN'de **18 puan** alırken, PHP'nin danışma duyurusu 1.524 puandaydı.

@@ -2,7 +2,7 @@
 title: 'fosstr: in-depth writing on software, cybersecurity, and systems programming'
 description: 'Technical analysis, security vulnerabilities, kernel development, and AI tooling experiences: every post focused on problems and solutions, without clichés.'
 pubDate: '2026-09-09'
-heroImage: ../../assets/blog-placeholder-1.jpg
+heroImage: ../../assets/welcome-hero.jpg
 translationOf: 'welcome'
 ---
 
