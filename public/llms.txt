@@ -20,6 +20,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [Apache Roller (CVE-2026-129448): XML-RPC üzerinden kimlik doğrulamasız RCE aktif olarak istismar ediliyor](https://fosstr.com/blog/apache-roller-cve-2026-129448/) — Apache Roller XML-RPC endpoint’inde kimlik doğrulamadan önce deserialize edilen veri uzaktan kod çalıştırıyor: CVE-2026-129448 teknik analizi ve acil önlemler.
 - [cPanel WP Toolkit proxy açığı: kimlik doğrulamasız RCE ve yama sürümleri](https://fosstr.com/blog/cpanel-wptk-proxy-rce/) — cPanel & WHM WP Toolkit proxy açığı: kimlik doğrulamasız uzaktan kod çalıştırma, etkilenen sürümler, yama ve geçici wptk.proxypass önlemi.
 - [nginx2root (CVE-2026-123007): 11 yıllık HTTP/2 akış kontrolü hatası NGINX worker’da kod çalıştırıyor](https://fosstr.com/blog/nginx2root-cve-2026-123007/) — Kimlik doğrulamasız HTTP/2 akış kontrolü taşması NGINX worker belleğini bozuyor: CVE-2026-123007 teknik analizi, etkilenen sürümler, tespit ve geçici önlemler.
+- [Ruby2Shell: Ruby'nin case conversion açığı Rails ve Sinatra'yı vurdu](https://fosstr.com/blog/ruby2shell-cve-2026-132825/) — CVE-2026-132825 / GHSA-34m4-m9fh-gqp5: Ruby'de tek baytlık heap taşması, legacy encoding'lerde upcase yoluyla RCE'ye gidebiliyor. Etkilenen sürümler, yama ve self-hosted etkileri.
 - [NoisyTCP (CVE-2026-99288): 11 yıllık Linux TCP açığı uzaktan sunucu çökertiyor](https://fosstr.com/blog/noisytcp-cve-2026-99288/) — Kilitlenmeyen TCP arama yoluyla kimlik doğrulamasız kernel panic: CVE-2026-99288 nasıl çalışıyor, hangi çekirdekler etkileniyor ve geçici çözümler neler?
 - [Burger King ve McDonald's tweet'lerindeki eski Bitly linkleri ele geçirildi](https://fosstr.com/blog/bitly-eski-linklerin-ele-gecirilmesi/) — 15 Kasım 2026'da eski bit.ly adreslerinin arka yarıları yeniden kaydedildi. 2011 tweet'leri Nazi kampları ve 11 Eylül sayfalarına yönlendi; Bitly sorunu doğruladı ve hesapları askıya aldı.
 - [Cairn ve CL-STA-1238: otonom AI ile 19 kuruluşa saldırı](https://fosstr.com/blog/cairn-otonom-ai-saldirilari/) — Unit 42, Çin bağlantılı CL-STA-1238'in açık kaynak Cairn framework'ünü Zhipu GLM ve DeepSeek ile birleştirerek 25 otonom operasyon yürüttüğünü açıkladı. 10 kuruluşta yetkisiz erişim doğrulandı.
@@ -50,13 +51,13 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Tags
 
-- [security](https://fosstr.com/blog/tags/security/) — 15 içerik
-- [open-source](https://fosstr.com/blog/tags/open-source/) — 12 içerik
+- [security](https://fosstr.com/blog/tags/security/) — 16 içerik
+- [open-source](https://fosstr.com/blog/tags/open-source/) — 13 içerik
 - [linux](https://fosstr.com/blog/tags/linux/) — 8 içerik
+- [cve](https://fosstr.com/blog/tags/cve/) — 6 içerik
 - [ai](https://fosstr.com/blog/tags/ai/) — 5 içerik
-- [cve](https://fosstr.com/blog/tags/cve/) — 5 içerik
+- [rce](https://fosstr.com/blog/tags/rce/) — 5 içerik
 - [kernel](https://fosstr.com/blog/tags/kernel/) — 4 içerik
-- [rce](https://fosstr.com/blog/tags/rce/) — 4 içerik
 - [llm](https://fosstr.com/blog/tags/llm/) — 3 içerik
 - [tech-industry](https://fosstr.com/blog/tags/tech-industry/) — 3 içerik
 - [teknoloji-haberleri](https://fosstr.com/blog/tags/teknoloji-haberleri/) — 3 içerik
@@ -120,7 +121,9 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [qilin](https://fosstr.com/blog/tags/qilin/) — 1 içerik
 - [quantization](https://fosstr.com/blog/tags/quantization/) — 1 içerik
 - [raid](https://fosstr.com/blog/tags/raid/) — 1 içerik
+- [rails](https://fosstr.com/blog/tags/rails/) — 1 içerik
 - [ransomware](https://fosstr.com/blog/tags/ransomware/) — 1 içerik
+- [ruby](https://fosstr.com/blog/tags/ruby/) — 1 içerik
 - [rust](https://fosstr.com/blog/tags/rust/) — 1 içerik
 - [self-hosted](https://fosstr.com/blog/tags/self-hosted/) — 1 içerik
 - [shinyhunters](https://fosstr.com/blog/tags/shinyhunters/) — 1 içerik

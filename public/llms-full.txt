@@ -257,6 +257,130 @@ Kaynaklar: [F5 K000163926](https://my.f5.com/manage/s/article/K000163926), [CVE 
 
 ---
 
+# Ruby2Shell: Ruby'nin case conversion açığı Rails ve Sinatra'yı vurdu
+
+- Kaynak: https://fosstr.com/blog/ruby2shell-cve-2026-132825/
+- Tür: Yazı
+- Tarih: 2026-11-19
+- Etiketler: security, ruby, rails, cve, rce, open-source
+- Özet: CVE-2026-132825 / GHSA-34m4-m9fh-gqp5: Ruby'de tek baytlık heap taşması, legacy encoding'lerde upcase yoluyla RCE'ye gidebiliyor. Etkilenen sürümler, yama ve self-hosted etkileri.
+
+Ruby, 18 Kasım 2026'da Regexp ve String case conversion katmanında yedi güvenlik açığı için duyuru yayınladı. Ertesi gün MITRE ana açığa **CVE-2026-132825** numarasını verdi. Veria Labs olaya **Ruby2Shell** adını koydu ve "stock Rails üzerinde kimlik doğrulamasız RCE" başlığıyla duyurdu. Ruby'nin kendi duyurusu daha temkinli: PoC'lerin **bazı senaryolarda** uzaktan kod çalıştırmayı kanıtladığını söylüyor. İki anlatımı birbirine karıştırmamak gerekiyor.
+
+Bu yazıda doğrulanmış kaynaklardaki bilgiler var: Ruby duyurusu, GHSA kaydı, MITRE CVE kaydı, düzeltme commit'i ve Veria Labs'ın teknik incelemesi.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| Yayın | 18 Kasım 2026, Ruby Security; CVE 19 Kasım 2026 |
+| Ana kimlik | `GHSA-34m4-m9fh-gqp5` / `CVE-2026-132825` |
+| Sınıf | CWE-193 off-by-one; CVE kaydında CWE-122 heap buffer overflow |
+| Hata | Tek baytlık heap taşması |
+| Tetikleyici | Tek baytlık eski encoding'lerde case conversion |
+| Etkilenen | Ruby 3.3.13 ve öncesi, 3.4.0–3.4.12, 4.0.0–4.0.9 |
+| Düzeltilen | Ruby 3.3.14, 3.4.13, 4.0.10 |
+| Durum | Ruby'de PoC var; herkese açık PoC yok; KEV/istismar bildirimi yok |
+
+![Ruby2Shell case conversion taşması şeması](/diagrams/ruby2shell-cve-2026-132825.svg)
+
+## 1. Hata: iki bayt yazan kod, bir bayt yer kontrol ediyor
+
+Ana açık `GHSA-34m4-m9fh-gqp5`, string case conversion sırasında oluşuyor. ISO-8859 ve Windows-125x gibi tek baytlık encoding'lerde `ß` karakteri büyütüldüğünde `SS` olur. Yani girdideki **bir bayt**, çıktıda **iki bayt**a dönüşür.
+
+Düzeltmeden önce `case_map()` döngüsü çıktı tamponunda yalnızca bir baytlık yer olduğunu kontrol ediyordu:
+
+```diff
+-  while (*pp < end && to < to_end) {
++  while (*pp < end && to_end - to > 1) {
+```
+
+Veria Labs'ın analizine göre çıktı tamponu girdi uzunluğu artı 20 bayt olarak ayrılıyor. Her `ß` fazladan bir bayt yazıyor; **21 tane `ß`** tamponun bir bayt dışına yazılması anlamına geliyor. Yazılan bayt `upcase` sırasında `S` (`0x53`), case-fold sırasında `s` (`0x73`). Sonuçta hem taşma hem de sonraki kopyalama adımında sınır dışı okuma oluşuyor.
+
+Düzeltme, aynı döngünün bulunduğu 14 encoding dosyasında kontrolü iki bayta çıkarıyor: ISO-8859-1/2/3/4/9/10/13/14/15/16 ve Windows-1250/1252/1254/1257. Commit ayrıca 1–64 `ß` için `upcase`, `downcase(:fold)`, `swapcase`, `capitalize` ve `casecmp?` testleri ekliyor.
+
+UTF-8 farklı bir kod yolunu kullandığı için bu açıktan etkilenmiyor. Risk, eski encoding'lerdeki kullanıcı girdisinin case conversion'dan geçtiği yollarda.
+
+## 2. Web uygulaması için neden önemli?
+
+Ruby ekibinin duyurusu "bazı senaryolarda RCE" diyor. Veria Labs ise varsayılan yapılandırmada bu yola ulaşıldığını söylüyor:
+
+| Framework | Veria Labs değerlendirmesi |
+|---|---|
+| Rails | Etkilenen sürümde varsayılan olarak açık |
+| Sinatra, classic style | Etkilenen sürümde varsayılan olarak açık |
+| Diğer framework'ler ve düz Rack | Varsayılan olarak açık değil |
+| Uygulama kodu | Eski encoding'li dizgiyi `upcase` gibi bir işleme sokuyorsa açık olabilir |
+
+"Kimlik doğrulamasız" ifadesi burada kritik. Eğer case conversion, kimlik kontrolünden önce çalışan bir endpoint'te tetikleniyorsa saldırgan oturum gerektirmez. Ama bu her Rails uygulaması için evrensel bir garanti değil; uygulamanın hangi girdiyi, hangi encoding'le, nerede dönüştürdüğü belirleyici.
+
+Pratikte en tehlikeli desen, dışarıdan gelen bir alanın `force_encoding` ile eski bir encoding'e sabitlenip ardından `upcase`, `downcase(:fold)`, `swapcase`, `capitalize` veya `casecmp?` ile işlenmesi. Header, form alanı, dosya adı, import edilen veri ve eski protokol mesajları akla gelen ilk yüzeyler.
+
+## 3. Aynı duyurudaki diğer altı açık
+
+Ruby yedi açığı birlikte yayınladı ve hepsi aynı üç sürümde düzeltildi:
+
+| GHSA | Kısa açıklama |
+|---|---|
+| `GHSA-34m4-m9fh-gqp5` | Case conversion'da tek baytlık heap taşması — `CVE-2026-132825` |
+| `GHSA-7x2q-68qv-6p8x` | Regexp derlemesinde double free |
+| `GHSA-87fm-7w84-j2px` | Case conversion'da integer overflow, heap taşmasına yol açıyor |
+| `GHSA-wpqw-5qxg-m68r` | Büyük/küçük harf duyarsız Regexp eşleşmesinde sınır dışı okuma |
+| `GHSA-3p8q-wmhx-vm2w` | Regexp derlemesinde heap taşması |
+| `GHSA-7whj-cfh7-xgm4` | `Regexp#to_s` içinde heap taşması; bilgi sızdırma veya RCE |
+| `GHSA-pvgc-g7gj-pv6h` | Case-insensitive backreference eşleşmesinde sınır dışı okuma |
+
+Yani "Ruby2Shell" tek bir açığın adı olsa da yama paketi aslında yedi ayrı hatayı kapatıyor. Regexp derleyen uygulamalar için özellikle `7x2q`, `3p8q` ve `7whj` ayrıca incelenmeli.
+
+## 4. Self-hosted yazılımlar
+
+Veria Labs, 19 Kasım 2026 itibarıyla aşağıdaki ürünlerin güncel sürümlerinin etkilenen bir Ruby sürümü paketlediğini listeliyor:
+
+| Yazılım | Paketlenen Ruby | Durum |
+|---|---|---|
+| GitLab 19.6.0 | 3.3.13 | Etkilenen |
+| GitHub Enterprise Server 3.22.5 | 4.0.9 | Etkilenen |
+| Mastodon 4.7.5 | 4.0.9 | Etkilenen |
+| OpenProject 17.9.7 | 4.0.9 | Etkilenen |
+| Discourse 2026.10.1 | 3.4.7 | Etkilenen |
+| Chatwoot 4.20.0 | 3.4.4 | Etkilenen |
+
+Bu tablo "ürün açığın kendisi" anlamına gelmiyor; sorun ürünün içinde taşıdığı runtime. Bu yüzden sistem Ruby'sini güncellemek bazen yeterli olmaz: ürün kendi Ruby'sini paketliyorsa satıcının yamalı sürümünü beklemek veya dağıtımı yeniden derlemek gerekir.
+
+## 5. Ne yapmalı?
+
+1. **Runtime sürümünü doğrulayın.**
+
+   ```bash
+   ruby -v
+   ```
+
+2. **Ruby'yi 3.3.14, 3.4.13 veya 4.0.10'a yükseltin.** Ruby 3.3 güvenlik bakımında; 3.2 ve eskisi EOL ve yama almayacak.
+
+3. **Self-hosted ürünlerde satıcı sürümünü takip edin.** Paketlenmiş Ruby kullanan ürünlerde yalnızca ana sistemdeki `ruby` ikilisini güncellemek çözüm olmayabilir.
+
+4. **Süreçleri yeniden başlatın, konteynerleri yeniden derleyin.** Eski runtime bellekten çıkmaz; yalnızca dosya sistemi güncellenmiş olabilir.
+
+5. **Güven sınırındaki encoding'i kontrol edin.** Mümkünse kullanıcı girdisini UTF-8 olarak doğrulayın veya eski encoding'li girdiyi case conversion'dan önce reddedin. Bu, yamanın yerine geçmez; yalnızca açık yüzeyi küçültür.
+
+6. **PoC yayınlanmadan önce yamalayın.** Veria Labs PoC'yi bir hafta sonra yayınlayacağını söyledi. 19 Kasım itibarıyla herkese açık exploit yok; bu bir erteleme nedeni değil, avantaj.
+
+## 6. Skor ve status notları
+
+Ruby duyurusu, açıkların CVE numaralarının yayın zamanında henüz atanmadığını söylüyor. GHSA sayfası hâlâ "No known CVE" diyor; ancak MITRE kaydı **CVE-2026-132825** olarak yayınlandı. Aynı şekilde GHSA açığı **Critical** işaretlerken MITRE CVSS 3.1 kaydı **7.4 HIGH** ve `AV:L/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H` vektörünü kullanıyor. Bu fark, açığın yerel primitive olarak ölçülmesiyle web uygulamasındaki tetikleme yollarının ayrı değerlendirilmesinden kaynaklanıyor.
+
+19 Kasım 2026 itibarıyla CISA KEV kaydı veya vahşi istismar bildirimi yok. Ruby ekibi PoC'lerden haberdar olduğunu açıkça söyledi; yani "exploit yok" demek, "yama acil değil" demek değil.
+
+## Kaynaklar
+
+- [Ruby: Security advisories — multiple vulnerabilities in Regexp and String case conversion](https://www.ruby-lang.org/en/news/2026/11/18/multiple-vulnerabilities-in-regexp-and-string/)
+- [GitHub Advisory: GHSA-34m4-m9fh-gqp5](https://github.com/ruby/ruby/security/advisories/GHSA-34m4-m9fh-gqp5)
+- [MITRE CVE Record: CVE-2026-132825](https://www.cve.org/CVERecord?id=CVE-2026-132825)
+- [Veria Labs: Ruby2Shell](https://verialabs.com/ruby2shell)
+- [Fix commit: ruby/ruby@d582f8f](https://github.com/ruby/ruby/commit/d582f8f13d700d8e39714d3a8f11eb4bd2bc69f0)
+
+---
+
 # NoisyTCP (CVE-2026-99288): 11 yıllık Linux TCP açığı uzaktan sunucu çökertiyor
 
 - Kaynak: https://fosstr.com/blog/noisytcp-cve-2026-99288/
