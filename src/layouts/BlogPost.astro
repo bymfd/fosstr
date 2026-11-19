@@ -1,6 +1,6 @@
 ---
 import { getImage, Image } from 'astro:assets';
-import type { CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import AdSlot from '../components/AdSlot.astro';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
@@ -19,10 +19,22 @@ type Props = CollectionEntry<'blog'>['data'] & {
 
 const { title, description, pubDate, updatedDate, heroImage, tags = [], repo, lang: langProp, alternates: altsProp, xDefault: xDefProp } = Astro.props;
 
+const trTagSlugs = new Set((await getCollection('blog')).flatMap((entry) => entry.data.tags ?? []).map(slugify));
+const enTagSlugs = new Set(
+	[...(await getCollection('blogEn')), ...(await getCollection('projectsEn'))]
+		.flatMap((entry) => entry.data.tags ?? [])
+		.map(slugify),
+);
+
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const pathname = Astro.url.pathname;
 const lang = langProp ?? getLocaleFromPath(pathname);
 const isEn = lang === 'en';
+const tagHref = (tag: string) => {
+	const slug = slugify(tag);
+	if (isEn) return enTagSlugs.has(slug) ? `/en/blog/tags/${slug}/` : undefined;
+	return trTagSlugs.has(slug) ? `/blog/tags/${slug}/` : undefined;
+};
 const base = (p: string) => localizedPath(p, lang);
 const autoAlts = buildAlternates(pathname, Astro.site);
 const alternates = altsProp ?? autoAlts.alternates;
@@ -136,16 +148,20 @@ const updatedLabel = isEn ? 'Updated:' : 'Güncelleme:';
 							)}
 							{tags.length > 0 && (
 								<ul class="flex flex-wrap gap-2">
-									{tags.map((tag) => (
-										<li>
+								{tags.map((tag) => (
+									<li>
+										{tagHref(tag) ? (
 											<a
-												href={`/blog/tags/${slugify(tag)}/`}
+												href={tagHref(tag)}
 												class="inline-block rounded-full border border-line px-3 py-1 text-xs text-muted hover:border-accent hover:text-accent transition-colors"
 											>
 												#{tag}
 											</a>
-										</li>
-									))}
+										) : (
+											<span class="inline-block rounded-full border border-line px-3 py-1 text-xs text-muted">#{tag}</span>
+										)}
+									</li>
+								))}
 								</ul>
 							)}
 						</div>

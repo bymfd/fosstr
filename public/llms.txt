@@ -17,6 +17,9 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Yazılar
 
+- [Apache Roller (CVE-2026-129448): XML-RPC üzerinden kimlik doğrulamasız RCE aktif olarak istismar ediliyor](https://fosstr.com/blog/apache-roller-cve-2026-129448/) — Apache Roller XML-RPC endpoint’inde kimlik doğrulamadan önce deserialize edilen veri uzaktan kod çalıştırıyor: CVE-2026-129448 teknik analizi ve acil önlemler.
+- [cPanel WP Toolkit proxy açığı: kimlik doğrulamasız RCE ve yama sürümleri](https://fosstr.com/blog/cpanel-wptk-proxy-rce/) — cPanel & WHM WP Toolkit proxy açığı: kimlik doğrulamasız uzaktan kod çalıştırma, etkilenen sürümler, yama ve geçici wptk.proxypass önlemi.
+- [nginx2root (CVE-2026-123007): 11 yıllık HTTP/2 akış kontrolü hatası NGINX worker’da kod çalıştırıyor](https://fosstr.com/blog/nginx2root-cve-2026-123007/) — Kimlik doğrulamasız HTTP/2 akış kontrolü taşması NGINX worker belleğini bozuyor: CVE-2026-123007 teknik analizi, etkilenen sürümler, tespit ve geçici önlemler.
 - [NoisyTCP (CVE-2026-99288): 11 yıllık Linux TCP açığı uzaktan sunucu çökertiyor](https://fosstr.com/blog/noisytcp-cve-2026-99288/) — Kilitlenmeyen TCP arama yoluyla kimlik doğrulamasız kernel panic: CVE-2026-99288 nasıl çalışıyor, hangi çekirdekler etkileniyor ve geçici çözümler neler?
 - [Burger King ve McDonald's tweet'lerindeki eski Bitly linkleri ele geçirildi](https://fosstr.com/blog/bitly-eski-linklerin-ele-gecirilmesi/) — 15 Kasım 2026'da eski bit.ly adreslerinin arka yarıları yeniden kaydedildi. 2011 tweet'leri Nazi kampları ve 11 Eylül sayfalarına yönlendi; Bitly sorunu doğruladı ve hesapları askıya aldı.
 - [Cairn ve CL-STA-1238: otonom AI ile 19 kuruluşa saldırı](https://fosstr.com/blog/cairn-otonom-ai-saldirilari/) — Unit 42, Çin bağlantılı CL-STA-1238'in açık kaynak Cairn framework'ünü Zhipu GLM ve DeepSeek ile birleştirerek 25 otonom operasyon yürüttüğünü açıkladı. 10 kuruluşta yetkisiz erişim doğrulandı.
@@ -47,22 +50,24 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Tags
 
-- [security](https://fosstr.com/blog/tags/security/) — 12 içerik
-- [open-source](https://fosstr.com/blog/tags/open-source/) — 10 içerik
+- [security](https://fosstr.com/blog/tags/security/) — 15 içerik
+- [open-source](https://fosstr.com/blog/tags/open-source/) — 12 içerik
 - [linux](https://fosstr.com/blog/tags/linux/) — 8 içerik
 - [ai](https://fosstr.com/blog/tags/ai/) — 5 içerik
+- [cve](https://fosstr.com/blog/tags/cve/) — 5 içerik
 - [kernel](https://fosstr.com/blog/tags/kernel/) — 4 içerik
-- [cve](https://fosstr.com/blog/tags/cve/) — 3 içerik
+- [rce](https://fosstr.com/blog/tags/rce/) — 4 içerik
 - [llm](https://fosstr.com/blog/tags/llm/) — 3 içerik
 - [tech-industry](https://fosstr.com/blog/tags/tech-industry/) — 3 içerik
 - [teknoloji-haberleri](https://fosstr.com/blog/tags/teknoloji-haberleri/) — 3 içerik
 - [agents](https://fosstr.com/blog/tags/agents/) — 2 içerik
 - [ai-models](https://fosstr.com/blog/tags/ai-models/) — 2 içerik
+- [apache](https://fosstr.com/blog/tags/apache/) — 2 içerik
 - [arch](https://fosstr.com/blog/tags/arch/) — 2 içerik
+- [http2](https://fosstr.com/blog/tags/http2/) — 2 içerik
 - [kubernetes](https://fosstr.com/blog/tags/kubernetes/) — 2 içerik
 - [ai-agents](https://fosstr.com/blog/tags/ai-agents/) — 1 içerik
 - [anthropic](https://fosstr.com/blog/tags/anthropic/) — 1 içerik
-- [apache](https://fosstr.com/blog/tags/apache/) — 1 içerik
 - [apple](https://fosstr.com/blog/tags/apple/) — 1 içerik
 - [arduino](https://fosstr.com/blog/tags/arduino/) — 1 içerik
 - [automation](https://fosstr.com/blog/tags/automation/) — 1 içerik
@@ -73,10 +78,12 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [china](https://fosstr.com/blog/tags/china/) — 1 içerik
 - [cncf](https://fosstr.com/blog/tags/cncf/) — 1 içerik
 - [community](https://fosstr.com/blog/tags/community/) — 1 içerik
+- [cpanel](https://fosstr.com/blog/tags/cpanel/) — 1 içerik
 - [cpu](https://fosstr.com/blog/tags/cpu/) — 1 içerik
 - [cybersecurity](https://fosstr.com/blog/tags/cybersecurity/) — 1 içerik
 - [data-breach](https://fosstr.com/blog/tags/data-breach/) — 1 içerik
 - [deepseek](https://fosstr.com/blog/tags/deepseek/) — 1 içerik
+- [deserialization](https://fosstr.com/blog/tags/deserialization/) — 1 içerik
 - [desktop](https://fosstr.com/blog/tags/desktop/) — 1 içerik
 - [displaylink](https://fosstr.com/blog/tags/displaylink/) — 1 içerik
 - [diy](https://fosstr.com/blog/tags/diy/) — 1 içerik
@@ -89,9 +96,9 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [github](https://fosstr.com/blog/tags/github/) — 1 içerik
 - [gpustack](https://fosstr.com/blog/tags/gpustack/) — 1 içerik
 - [hacker-news](https://fosstr.com/blog/tags/hacker-news/) — 1 içerik
-- [http2](https://fosstr.com/blog/tags/http2/) — 1 içerik
 - [ios](https://fosstr.com/blog/tags/ios/) — 1 içerik
 - [jailbreak](https://fosstr.com/blog/tags/jailbreak/) — 1 içerik
+- [java](https://fosstr.com/blog/tags/java/) — 1 içerik
 - [link-hijacking](https://fosstr.com/blog/tags/link-hijacking/) — 1 içerik
 - [local-ai](https://fosstr.com/blog/tags/local-ai/) — 1 içerik
 - [macos](https://fosstr.com/blog/tags/macos/) — 1 içerik
@@ -100,6 +107,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [mekatronik](https://fosstr.com/blog/tags/mekatronik/) — 1 içerik
 - [menu-bar](https://fosstr.com/blog/tags/menu-bar/) — 1 içerik
 - [meta](https://fosstr.com/blog/tags/meta/) — 1 içerik
+- [nginx](https://fosstr.com/blog/tags/nginx/) — 1 içerik
 - [nodejs](https://fosstr.com/blog/tags/nodejs/) — 1 içerik
 - [noel](https://fosstr.com/blog/tags/noel/) — 1 içerik
 - [ntp](https://fosstr.com/blog/tags/ntp/) — 1 içerik
@@ -113,7 +121,6 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [quantization](https://fosstr.com/blog/tags/quantization/) — 1 içerik
 - [raid](https://fosstr.com/blog/tags/raid/) — 1 içerik
 - [ransomware](https://fosstr.com/blog/tags/ransomware/) — 1 içerik
-- [rce](https://fosstr.com/blog/tags/rce/) — 1 içerik
 - [rust](https://fosstr.com/blog/tags/rust/) — 1 içerik
 - [self-hosted](https://fosstr.com/blog/tags/self-hosted/) — 1 içerik
 - [shinyhunters](https://fosstr.com/blog/tags/shinyhunters/) — 1 içerik
@@ -127,6 +134,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [tls](https://fosstr.com/blog/tags/tls/) — 1 içerik
 - [unit42](https://fosstr.com/blog/tags/unit42/) — 1 içerik
 - [wayland](https://fosstr.com/blog/tags/wayland/) — 1 içerik
+- [wordpress](https://fosstr.com/blog/tags/wordpress/) — 1 içerik
 - [xfs](https://fosstr.com/blog/tags/xfs/) — 1 içerik
 - [zoned](https://fosstr.com/blog/tags/zoned/) — 1 içerik
 

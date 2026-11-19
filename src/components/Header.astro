@@ -2,6 +2,10 @@
 import { SITE_TITLE } from '../consts';
 import { getLocaleFromPath, localizedPath } from '../i18n';
 
+interface Props {
+	alternates?: { tr?: string; en?: string };
+}
+const { alternates } = Astro.props;
 const pathname = Astro.url.pathname;
 const locale = getLocaleFromPath(pathname);
 const isEn = locale === 'en';
@@ -10,8 +14,8 @@ const isActive = (href: string) => {
 	const target = base(href);
 	return href === '/' ? pathname === target : pathname.startsWith(target);
 };
-const trHref = localizedPath(pathname, 'tr');
-const enHref = localizedPath(pathname, 'en');
+const trHref = alternates?.tr ?? localizedPath(pathname, 'tr');
+const enHref = alternates?.en ?? localizedPath(pathname, 'en');
 const nav = isEn
 	? { blog: 'Posts', projects: 'Projects', about: 'About', contact: 'Contact', navLabel: 'Primary' }
 	: { blog: 'Yazılar', projects: 'Projeler', about: 'Hakkımda', contact: 'İletişime geç', navLabel: 'Birincil' };

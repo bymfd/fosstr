@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="500" viewBox="0 0 1000 500" role="img" aria-label="nginx2root: HTTP/2 flow-control overflow">
+<defs>
+<pattern id="g" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M25 0H0V25" fill="none" stroke="#17171f" stroke-width="1"/></pattern>
+<marker id="a-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#6e81e4"/></marker><marker id="a-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4ade80"/></marker><marker id="a-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#f0b429"/></marker><marker id="a-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#ff6b6b"/></marker>
+</defs>
+<rect width="1000" height="500" fill="#08080b"/><rect width="1000" height="500" fill="url(#g)"/>
+<text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">CVE-2026-123007</text>
+<text x="28" y="72" fill="#fafafa" font-size="24" font-family="system-ui, sans-serif">nginx2root: HTTP/2 flow-control overflow</text>
+<line x1="230" y1="198" x2="290" y2="198" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<line x1="505" y1="198" x2="555" y2="198" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<line x1="765" y1="198" x2="810" y2="198" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<line x1="810" y1="246" x2="765" y2="320" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<line x1="765" y1="364" x2="810" y2="364" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<rect x="25" y="150" width="205" height="96" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
+<rect x="25" y="150" width="5" height="96" rx="2" fill="#ff6b6b"/>
+<text x="39" y="174" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Unauthenticated</text>
+<text x="39" y="192" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">client</text>
+<text x="39" y="210" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">HTTP/2 + TLS</text>
+<rect x="290" y="150" width="215" height="96" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
+<rect x="290" y="150" width="5" height="96" rx="2" fill="#f0b429"/>
+<text x="304" y="174" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Queued response data</text>
+<text x="304" y="192" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">WINDOW_UPDATE / cancel</text>
+<rect x="555" y="150" width="210" height="96" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
+<rect x="555" y="150" width="5" height="96" rx="2" fill="#ff6b6b"/>
+<text x="569" y="174" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Flow-control</text>
+<text x="569" y="192" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">underflow</text>
+<text x="569" y="210" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">CWE-191 + CWE-787</text>
+<rect x="810" y="150" width="165" height="96" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
+<rect x="810" y="150" width="5" height="96" rx="2" fill="#ff6b6b"/>
+<text x="824" y="174" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Heap OOB write</text>
+<text x="824" y="192" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">worker memory</text>
+<text x="824" y="210" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">corruption</text>
+<rect x="555" y="320" width="210" height="88" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
+<rect x="555" y="320" width="5" height="88" rx="2" fill="#f0b429"/>
+<text x="569" y="344" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">ASLR off / bypassed</text>
+<text x="569" y="362" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">address leak or disabled</text>
+<rect x="810" y="320" width="165" height="88" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
+<rect x="810" y="320" width="5" height="88" rx="2" fill="#4ade80"/>
+<text x="824" y="344" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Worker RCE</text>
+<text x="824" y="362" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">fix: 1.30.7 /</text>
+<text x="824" y="380" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">1.31.9</text>
+<text x="28" y="464" fill="#aaa39f" font-size="13" font-family="system-ui, sans-serif">PoC: ~119 GiB plaintext 896-byte resource profile restart nginx after upgrade</text>
+</svg>

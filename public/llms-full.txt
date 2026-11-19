@@ -13,6 +13,250 @@ Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her 
 
 ---
 
+# Apache Roller (CVE-2026-129448): XML-RPC üzerinden kimlik doğrulamasız RCE aktif olarak istismar ediliyor
+
+- Kaynak: https://fosstr.com/blog/apache-roller-cve-2026-129448/
+- Tür: Yazı
+- Tarih: 2026-11-19
+- Etiketler: security, apache, java, cve, rce, deserialization
+- Özet: Apache Roller XML-RPC endpoint’inde kimlik doğrulamadan önce deserialize edilen veri uzaktan kod çalıştırıyor: CVE-2026-129448 teknik analizi ve acil önlemler.
+
+17 Kasım 2026'da Apache Software Foundation, Apache Roller için **CVE-2026-129448** duyurusunu yayınladı ve açığın **aktif olarak istismar edildiğini** belirtti. Java tabanlı blog sunucusunun XML-RPC endpoint'i, isteği yapan kullanıcı kimlik doğrulanmadan önce saldırgan kontrolündeki veriyi deserialize ediyor. Sonuç: kimlik doğrulamasız uzaktan kod çalıştırma.
+
+Aynı hata daha önce **CVE-2026-82384** adıyla sadece Roller 6.1.5 için listelenmişti. Yeni duyuru kapsamı 4.0.0–6.1.4 olarak genişletiyor ve iki CVE'nin aynı açık olduğunu açıkça söylüyor. Yani yalnızca Eylül duyurusuna bakan ekipler hâlâ açık kalabilir.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-129448 / CVE-2026-82384 (aynı hata) |
+| Etki | Kimlik doğrulamasız uzaktan kod çalıştırma |
+| CVSS | 3.1 9.8 Critical, `AV:N/AC:L/PR:N/UI:N` |
+| Zayıflık | CWE-502, güvenilmeyen verinin deserialize edilmesi |
+| Erişim noktası | `/roller-services/xmlrpc` |
+| Etkilenen | Apache Roller 4.0.0–6.1.5 |
+| Düzeltme | 6.1.6 veya üzeri |
+| Durum | Apache aktif istismar diyor; KEV listesinde değil |
+
+![Apache Roller XML-RPC deserialization akışı](/diagrams/roller-xmlrpc.svg)
+
+## Teknik mekanizma
+
+Apache'nin duyurusundaki kritik cümle sıralamayla ilgili: XML-RPC endpoint'i *vendor extension* tiplerini kabul ediyor ve bunları **isteyen tarafı doğrulamadan önce** deserialize ediyor. Normal bir akışta önce kimlik doğrulama, sonra nesne oluşturma beklenir. Burada tersi oluyor: saldırganın gönderdiği XML, servlet container içinde bir nesne grafiğine dönüştürülüyor; ardından bir *gadget chain* ile kod çalıştırma noktasına ulaşılabiliyor.
+
+Apache, istismarda kullanılan somut gadget zincirini açıklamadı; bu yüzden "hangi kütüphane sınıfı kullanıldı" iddiası doğrulanmış değil. Doğrulanmış olan şey: saldırgan geçerli bir kullanıcı hesabına ihtiyaç duymuyor ve `/roller-services/xmlrpc` ağ üzerinden erişilebiliyorsa risk var.
+
+Admin arayüzünden XML-RPC'yi kapatmak da yeterli **değil**. Apache'ye göre eski sürümler isteği deserialize ettikten sonra bu ayarı kontrol ediyor; yani kapatma kontrolü çok geç geliyor. Bu, "feature flag kapalı" yanılgısının klasik bir örneği.
+
+## Kim etkileniyor?
+
+Roller daha niş bir Java blog platformu olduğu için gündemde daha az görünüyor; ama internete açık, yamalanmamış bir Java web uygulaması, saldırgan için sunucu üzerinde kod çalıştırma fırsatı. Etkilenen aralık 4.0.0'dan 6.1.5'e kadar. 6.1.6, extension tiplerini devre dışı bırakıyor ve XML-RPC özelliği kapatıldığında bu endpoint'e gelen istekleri reddediyor.
+
+Apache aktif istismarı doğruluyor; saldırgan kimliği, hedef sayısı ve kampanya detayları paylaşılmadı. Rapid7 kaydı itibarıyla CVE henüz CISA KEV kataloğunda değil — bu, "istismar yok" anlamına gelmez, sadece KEV güncellemesinin geciktiğini gösterir.
+
+## Acil önlemler
+
+1. **Yükseltin:** Apache Roller 6.1.6 veya üzerine geçin ve uygulamayı yeniden dağıtıp restart edin. Mümkünse güncel sürümü hedefleyin; en azından bu CVE'nin kapandığı sürümü doğrulayın.
+2. **Yama bekliyorsanız extension'ları kapatın:** `WEB-INF/web.xml` içinde `enabledForExtensions` değerini `false` yapın **veya** `/roller-services/xmlrpc` servlet mapping'ini kaldırın. Apache her iki durumda da restart gerektiğini söylüyor.
+3. **Admin UI toggle'a güvenmeyin:** yukarıdaki adımlardan biri uygulanmadıysa ayar kapalı olsa bile deserialize ordering aynı kalıyor.
+4. **Erişimi doğrulayın:** değişiklikten sonra `/roller-services/xmlrpc` yolunun 404/403 döndüğünü, eski servlet'in hâlâ ayakta olmadığını kontrol edin. WAF kuralı geçici katman olabilir, patch yerine geçmez.
+
+## Tespit ve avcılık
+
+Apache somut IOC yayınlamadı. Bu yüzden davranış sinyallerine bakın:
+
+- XML-RPC endpoint'ine gelen beklenmeyen `POST` istekleri ve bilinmeyen kaynak IP'ler.
+- Java/servlet container sürecinden açılan beklenmeyen shell'ler, `curl`/`wget`, şüpheli child process'ler.
+- Webroot altında yeni veya değişmiş `.jsp`/`.war` benzeri dosyalar, bilinmeyen scheduled job'lar.
+- Uygulama sunucusundan gelen olağandışı outbound bağlantılar.
+
+Yamadan önceki dönem için log retention'ı kontrol edin; aktif istismar söz konusuyken "sonra bakarız" yaklaşımı pahalıya mal olabilir.
+
+## Kök neden
+
+Sorun XML-RPC'nin varlığı değil; **güven sınırından önce nesne oluşturulması**. Deserialization, input validation ve auth controlled bir işlem değil, ayrıcalıklı bir parsing işlemidir. Extension tipleri kabul ediliyorsa, gelen veri kod olarak değil veri olarak ele alınmalı; auth ve allowlist kontrolleri nesne grafiği oluşmadan önce çalışmalı. 6.1.6 yaması tam olarak bu sırayı düzeltiyor.
+
+Kaynaklar: [Apache mailing list duyurusu](https://lists.apache.org/thread/lnz4s26tv6hdo03wngtdbpfj4hg4gtds), [CVE-2026-129448](https://www.cve.org/CVERecord?id=CVE-2026-129448), [CVE-2026-82384](https://www.cve.org/CVERecord?id=CVE-2026-82384), [Apache Roller patch PR](https://github.com/apache/roller/pull/171), [Rapid7 kaydı](https://www.rapid7.com/db/vulnerabilities/cve-2026-129448), [BleepingComputer haberi](https://www.bleepingcomputer.com/news/security/apache-warns-of-roller-rce-vulnerability-exploited-in-attacks/).
+
+---
+
+# cPanel WP Toolkit proxy açığı: kimlik doğrulamasız RCE ve yama sürümleri
+
+- Kaynak: https://fosstr.com/blog/cpanel-wptk-proxy-rce/
+- Tür: Yazı
+- Tarih: 2026-11-19
+- Etiketler: security, cpanel, wordpress, rce, open-source
+- Özet: cPanel & WHM WP Toolkit proxy açığı: kimlik doğrulamasız uzaktan kod çalıştırma, etkilenen sürümler, yama ve geçici wptk.proxypass önlemi.
+
+cPanel, 18 Kasım 2026 akşamı tüm desteklenen cPanel & WHM sürümlerini etkileyen bir WP Toolkit proxy açığı yayınladı. Şirketin duyurusu kısa ama etki cümlesi net: başarılı istismar, **kimlik doğrulamasız uzaktan kod çalıştırma (RCE)** ve sunucunun ele geçirilmesiyle sonuçlanabiliyor. 19 Kasım itibarıyla cPanel bir CVE numarası, CVSS skoru, teknik kök neden veya istismar durumu yayınlamadı; aşağıda yalnızca doğrulanmış bilgiler var.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| Yayın | 18 Kasım 2026, cPanel Security |
+| CVE / CVSS | Henüz yayınlanmadı |
+| Etki | Kimlik doğrulamasız RCE; sunucu kontrolü |
+| Yüzey | cPanel & WHM WP Toolkit proxy (`wptk.proxypass`) |
+| Etkilenen | Tüm desteklenen cPanel & WHM sürümleri |
+| Düzeltilen | 110.0.159+, 134.0.72+, 136.0.52+, 138.0.25+; WP2 138.1.19 |
+| Geçici önlem | WP Toolkit proxy'yi devre dışı bırakmak |
+| Saha istismarı | cPanel duyurusunda belirtilmedi |
+
+![cPanel WP Toolkit proxy RCE şeması](/diagrams/cpanel-wptk-proxy.svg)
+
+## Neyi biliyoruz, neyi bilmiyoruz?
+
+cPanel'in güvenlik makalesi yalnızca "WP Toolkit proxy'sini etkileyen bir güvenlik açığı" diyor. Yama sürümleri ve geçici önlem dışında teknik ayrıntı yok. Bu yüzden şu an için bir exploit zinciri, CWE sınıfı veya saldırı ön koşulu uydurmak mümkün değil.
+
+Bilinen somut nokta, sorunun cPanel'in WP Toolkit proxy katmanında olduğu. Bu katman, wp-admin içindeki WordPress güvenlik ayarlarını panel tarafındaki işlemlere bağlar. Daha önceki WP Toolkit açıkları — örneğin Haziran 2026'daki CVE-2026-47365, Eylül'deki CVE-2026-87899/CVE-2026-87900 ve Ekim'deki CVE-2026-93699 — çoğunlukla kimlik doğrulamalı bir hesabın başka bir müşteri hesabına geçmesine odaklanıyordu. Bu duyuru ise **kimlik doğrulamasız** diyor ve etkiyi doğrudan sunucu kontrolü olarak tanımlıyor. Geçmiş açıklarla aynı kök nedeni varsaymak için elimizde kanıt yok; ama yüzeyin tekrar eden WP Toolkit proxy alanı olması, yamayı ertelemenin iyi bir fikir olmadığını gösteriyor.
+
+## Etkilenen ve düzeltilen sürümler
+
+| Ürün | Etkilenen | Düzeltilen |
+|---|---|---|
+| cPanel & WHM 110 | Tüm desteklenen 110.x derlemeleri | 110.0.159 veya üzeri |
+| cPanel & WHM 134 | Tüm desteklenen 134.x derlemeleri | 134.0.72 veya üzeri |
+| cPanel & WHM 136 | Tüm desteklenen 136.x derlemeleri | 136.0.52 veya üzeri |
+| cPanel & WHM 138 | Tüm desteklenen 138.x derlemeleri | 138.0.25 veya üzeri |
+| WP Squared | Düzeltilmemiş derlemeler | 138.1.19 |
+
+"All Supported Versions" ifadesi, desteklenen her şubenin etkilendiği anlamına geliyor. EOL şubeler için yama yok; onlar için tek gerçek çözüm desteklenen bir sürüme geçmek.
+
+## Hemen yapılacaklar
+
+Önce kurulu derlemeyi doğrulayın:
+
+```bash
+/usr/local/cpanel/cpanel -V
+```
+
+Ardından WHM'de **Upgrade to Latest Version** yolunu kullanın veya SSH üzerinden güncelleyin:
+
+```bash
+/usr/local/cpanel/scripts/upcp --force
+```
+
+Güncelleme sonrası `cpanel -V` çıktısını yeniden kontrol edin. "Otomatik güncelleme açıktı" varsayımı yeterli değil; özellikle sürüm sabitlemiş veya güncellemeleri kapalı tutan sunucularda derleme numarasını görmek gerekir. WP Squared kullanıyorsanız 138.1.19 ayrıca doğrulanmalı.
+
+## Yamaya kadar geçici önlem
+
+cPanel, yama uygulanamıyorsa WP Toolkit proxy'sini kapatmayı öneriyor. Duyurudaki komut:
+
+```bash
+/usr/local/cpanel/3rdparty/bin/perl -MCpanel::Leika -e 'Cpanel::Leika::set_leika_override("wptk.proxypass", "false")'
+```
+
+Bu ayar, wp-admin içinden WP Toolkit'in **WordPress Security Settings** bölümünü tam olarak yönetme yeteneğini kapatır. cPanel'in notuna göre sitelerin kendilerini, cPanel veya WHM arayüzlerini ve cPanel içindeki WP Toolkit arayüzünü etkilemez. Yine de bu bir geçici çözümdür: yama sonrası proxy davranışını gözden geçirin ve bu override'ı kalıcı bir yapılandırma gibi bırakmayın.
+
+## Neden önemli?
+
+Paylaşımlı barındırmada cPanel, tek bir müşteri hesabının ötesine geçen yetkilere sahip bir kontrol düzlemidir. Kimlik doğrulamasız RCE iddiası, saldırganın çalınmış bir cPanel şifresine bile ihtiyacı olmadığını gösterir. Teknik ayrıntı yayınlanmadığı için panik yerine hızlı envanter ve yama doğru tepki: hangi sunucularda WP Toolkit proxy'si açık, hangi derlemeler yamalı ve bu yüzeyler internete açık mı?
+
+Yama öncesinde açık kalan sunucular için cPanel bir IOC yayınlamadı. Buna rağmen olağandışı süreçler, yeni cron girdileri, SSH anahtarları, cPanel hook'ları ve WP Toolkit işlem kayıtları gözden geçirilmeli; şüphe halinde panel ve veritabanı kimlik bilgileri döndürülmeli.
+
+## Kaynaklar
+
+- [cPanel: Security — Vulnerability in cPanel & WHM's WP Toolkit Proxy - November 18, 2026](https://support.cpanel.net/hc/en-us/articles/45133380394135-Security-Vulnerability-in-cPanel-WHM-s-WP-Toolkit-Proxy-November-18-2026)
+- [cPanel: How do I update cPanel/WHM?](https://support.cpanel.net/hc/en-us/articles/1500004959421-How-do-I-update-cPanel-WHM)
+
+---
+
+# nginx2root (CVE-2026-123007): 11 yıllık HTTP/2 akış kontrolü hatası NGINX worker’da kod çalıştırıyor
+
+- Kaynak: https://fosstr.com/blog/nginx2root-cve-2026-123007/
+- Tür: Yazı
+- Tarih: 2026-11-19
+- Etiketler: security, nginx, http2, cve, rce, open-source
+- Özet: Kimlik doğrulamasız HTTP/2 akış kontrolü taşması NGINX worker belleğini bozuyor: CVE-2026-123007 teknik analizi, etkilenen sürümler, tespit ve geçici önlemler.
+
+18 Kasım 2026'da F5, NGINX Open Source ve NGINX Plus için **CVE-2026-123007**'yi yayınladı. Xint'in *nginx2root* adını verdiği açık grubunun en eski ve en kritik parçası olan bu hata, HTTP/2 akış kontrolü (flow control) state makinesinde oluşuyor. Kimlik doğrulaması gerektirmeyen bir istemci, NGINX worker sürecinin heap belleğini bozabilir; ASLR kapalıysa veya atlanabilirse worker yetkisiyle kod çalıştırabilir.
+
+Açık, NGINX 1.9.5 ile — yani 2015 sonbaharından beri — duruyor. Düzeltme aynı gün çıkan **1.30.7** (stable) ve **1.31.9** (mainline) sürümlerinde.Bu yazıda teknik mekanizmayı, doğru envanter sorgularını ve yama öncesi alınabilecek önlemleri toparlıyorum.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-123007 (nginx2root kümesi) |
+| Etki | Kimlik doğrulamasız worker heap bozulması; DoS ve koşullu RCE |
+| CVSS | 3.1: 8.1 High / 4.0: 9.2 Critical |
+| Zayıflık | CWE-191 (integer underflow) + CWE-787 (heap out-of-bounds write) |
+| Ön koşul | Dinleyicide HTTP/2 açık olması |
+| Etkilenen OSS | 1.9.5–1.30.6 ve 1.31.0–1.31.8 |
+| Düzeltme | 1.30.7 / 1.31.9; Plus için 37.0.8.1 / 37.3.0.1 |
+| PoC maliyeti | Rapid7: ~119 GiB plaintext; 10 Gbit/s ~2 dk, 1 Gbit/s ~17 dk |
+| Saha istismarı | 18 Kasım 2026 itibarıyla doğrulanmış değil |
+
+![nginx2root HTTP/2 akış kontrolü taşması şeması](/diagrams/nginx2root-flow.svg)
+
+## Hata tam olarak nerede?
+
+HTTP/2, aynı bağlantı üzerinden birden fazla stream taşır ve her stream'in alıcı tarafından duyurulan bir **flow-control window** değeri vardır. `WINDOW_UPDATE` bu pencereyi büyütür; gönderici duyurulan limitin dışına çıkamaz. Rapid7'nin analizine göre NGINX, istemcinin gönderilmesine izin verdiği *response* verisi miktarını yanlış hesaplıyor: kuyrukta bekleyen veri iptal edildiğinde alt akış (underflow) oluşuyor ve sonraki kopyalama işlemi geçersiz bir uzunlukla yapılıyor. F5 duyurusu aynı durumu "flow control window'un izin verilen eşiği aşması" olarak özetliyor; CERT-EU ise integer overflow sonucu heap üzerinde out-of-bounds write diyor.
+
+Sonuç çoğu zaman worker segmentation fault. Ama bellek bozulması kontrol altına alınırsa, saldırgan worker sürecinin yetkileriyle kod çalıştırabilir. F5 bu sonuç için **ASLR'nin kapalı olmasını veya saldırganın ASLR'yi atlamasını** şart koşuyor; Xint'in teknik yazısında adres sızıntısıyla bu bariyerin aşıldığı anlatılıyor. F5 ayrıca bunun bir **data plane** sorunu olduğunu, control plane etkilenmediğini belirtiyor.
+
+İkinci bir HTTP/2 açığı olan **CVE-2026-123633** ise connection draining sırasında aktif HTTP/2 bağlantısı kapanırken NGINX upstream'e bağlanıyorsa tetiklenen use-after-free. O da aynı sürümlerle düzeltiliyor ama önkosulu farklı: `proxy_pass` gibi bir upstream yolu var.
+
+## PoC'nin gerçek maliyeti: 896-byte profil ve ~119 GiB trafik
+
+Rapid7'nin yayınladığı PoC, "kimlik doğrulamasız RCE" başlığının ardındaki maliyeti de ölçüyor. Test hedefi, sabitlenmiş nginx 1.31.8 imajının varsayılan `index.html` dosyası; dosyanın `content-length` değeri **896 byte**. PoC önce bu dosyayı `Range: bytes=0-9` ile sorguluyor ve `content-range: bytes 0-9/896` yanıtını doğruluyor. Çalışma zamanı profil satırı şöyle görünüyor:
+
+```text
+runtime HTTP profile: resource=896 initial=2 probes + 71 full + 127 ranged bytes max_concurrent=128
+```
+
+Yani **896 byte, exploit payload'ının boyutu değil**; seçilen 896-byte statik kaynağın heap düzenini profillemek için kullanılan dosya boyutu. Bu profil, hangi response owner'ların hangi heap yerleşimini ürettiğini, adres sızıntısı ve cleanup callback yazımı için hangi offset'lerin uygun olduğunu kalibre ediyor. Farklı bir dosya boyutu, farklı bir nginx build'i veya "dağınık" bir heap, aynı profilin işlemesini beklemez.
+
+Trafik tarafında hesap daha da çarpıcı: `2^32` adet 13-byte'lık `WINDOW_UPDATE` Frame'i ~52 GiB, `2^64`'e yakın değerlere ulaşmak ~104 GiB; PoC buna 15 GiB'lık sabit request-header carrier ekliyor ve toplam **~119.02 GiB plaintext** bildiriyor. Rapid7 blogu bunu yuvarlak **~128 GB HTTP/2 verisi** olarak özetliyor; TLS ve ağ overhead'i wire üzerindeki gerçek miktarı artırıyor. Sadece worker'ı çökertmeyi hedefleyen trigger bile ~60 GiB gönderiyor.
+
+Bant genişliği pratik bir sınır: 10 Gbit/s'de ~2 dakika, 1 Gbit/s'de ~17 dakika. NGINX'in varsayılan bir saatlik bağlantı ömrü göz önüne alındığında, yaklaşık **300 Mbit/s altındaki** bir hat süreyi aşıyor. PoC ayrıca 16 yardımcı bağlantı açıyor; her ~1.08 GiB'lık response-owner aralığı 60 saniyelik send timeout içinde kalmalı. Yavaş veya jitter'lı hatlar, HTTP/2'yi sonlandıran L7 proxy/CDN'ler ve frame'leri yeniden üreten ara katmanlar bu yöntemi kırıyor. Rapid7'in PoC'si temiz veya az kullanılmış bir heap varsayıyor; yoğun trafik görmüş worker'larda denemeler başarısız olabiliyor.
+
+Bu, "uzaktan ve kimlik doğrulamasız"ın "kolay ve sessiz" anlamına gelmediğini gösteriyor. Saldırı gürültülü, yüksek bant isteyen ve doğrudan TCP/TLS erişimi gerektiren bir yöntem. Ama PoC'nin varlığı ve yamanın düşük maliyeti, yine de acil güncellemeyi gerektiriyor.
+
+## Etki sınırı ve önem derecesi
+
+- Saldırgan için **kimlik doğrulama veya kullanıcı etkileşimi yok**: `AV:N/AC:H/PR:N/UI:N`.
+- `http2 on;` veya `listen ... http2` yeterli. Statik dosya sunan bir origin bile etkilenebilir.
+- CDN veya WAF HTTP/2'yi uçta sonlandırıyorsa saldırının bir kısmı engellenebilir; bu yüzden testi **doğrudan origin'e** yapmak gerekir.
+- Konteyner sınırı korumaz: worker süreci konteyner içinde çalışır ve bellek bozulması orada etkilidir.
+- 18 Kasım itibarıyla güvenilir kaynaklar aktif istismar doğrulamıyor; CERT-EU açıkça "no exploitation in the wild has been reported yet" diyor. Yine de PoC var ve yama önceliği yüksek.
+
+## Envanter: etkilenmiş miyim?
+
+```bash
+nginx -v
+nginx -T 2>/dev/null | grep -nE '^\s*(http2\s+on\b|listen\b[^#]*\bhttp2\b)'
+nginx -T 2>/dev/null | grep -nE '\b(proxy|fastcgi|uwsgi|scgi|grpc)_pass\b'
+```
+
+İlk grep çıktı veriyorsa CVE-2026-123007 için ön koşul var. İkinci grep de çıktı veriyorsa CVE-2026-123633 yönünden de risk var demektir. Sürüm numarasına tek başına güvenmeyin: dağıtımlar yamayı backport edip `nginx -v` çıktısını değiştirmeden bırakabiliyor. Package sürümünüzü dağıtım güvenlik duyurusuyla karşılaştırın.
+
+## Ne yapılmalı?
+
+**Kalıcı çözüm:** 1.30.7 veya 1.31.9'a — ya da dağıtımınızın yamalı paketine — geçin ve NGINX'i **restart** edin. JFrog ve Cloudflare Radar'ın da vurguladığı gibi config reload yeterli değil; eski worker binary'si açık bağlantılarda çalışmaya devam edebilir. Docker kullanıyorsanız image'i yeniden çekin: resmi `1.31.9`, `1.30.7`, `mainline`, `stable` ve `latest` tag'leri 18 Kasım'da güncellendi.
+
+OpenResty, ingress controller veya başka bir ürün NGINX'i gömülü taşıyorsa kendi tedarikçisinden yama bekleyin. JFrog'a göre arşivlenen `kubernetes/ingress-nginx` için düzeltme gelmeyecek; bu yükü kullanan ortamların alternatif bir controller'a geçmesi gerekiyor.
+
+**Yama gecikiyorsa** HTTP/2'yi geçici olarak kapatın:
+
+```nginx
+listen 443 ssl;
+http2 off;
+```
+
+veya `listen 443 ssl http2;` içindeki `http2` parametresini kaldırın, ardından test edip reload edin. NGINX 1.25.1 ve üzerinde `http2 off;` kullanılabilir. Bu önlem 123007 ve 123633'ü engeller; F5'in aynı gün açıkladığı HTTP/3, resolver ve mail proxy açıklarını engellemez. Yamanın yerine geçmez.
+
+**Tespit tarafında** `worker process ... exited on signal` satırları, tekrarlayan worker yeniden başlatmaları ve core dump'lar şüpheli. Bunlar tek başına başarılı RCE göstergesi değil, deneme göstergesidir; process creation log'larıyla (worker'dan beklenmeyen shell/child process) korele edin.
+
+## Ders
+
+Flow-control sayacı "sadece trafik yönetimi" değil, bir bellek güvenliği sınırı. Beklenen yol kadar iptal, timeout ve connection-draining yolları da aynı özenle test edilmeli. On yıl boyunca doğru sanılan bir state makinesi, cancellation path'indeki tek bir yanlış uzunluk hesabıyla worker kaçışına dönüşebiliyor.
+
+Kaynaklar: [F5 K000163926](https://my.f5.com/manage/s/article/K000163926), [CVE kaydı](https://www.cve.org/CVERecord?id=CVE-2026-123007), [CERT-EU 2026-022](https://cert.europa.eu/publications/security-advisories/2026-022), [Rapid7 analizi](https://www.rapid7.com/blog/post/ve-cve-2026-123007-critical-nginx-http-2-integer-underflow-leads-to-rce-fixed), [Rapid7 PoC deposu](https://github.com/sfewer-r7/CVE-2026-123007), [standalone reproduction ve 896-byte profil](https://github.com/sfewer-r7/CVE-2026-123007/blob/main/NGINX_HTTP2_STANDALONE_REPRODUCTION.md), [JFrog nginx2shell yazısı](https://research.jfrog.com/post/nginx2shell-all-you-need-to-know-about-cve-2026-123007-and-cve-2026-123633), [Cloudflare Radar](https://radar.cloudflare.com/zero-wire/nginx2root), [NGINX security advisories](https://nginx.org/en/security_advisories.html).
+
+---
+
 # NoisyTCP (CVE-2026-99288): 11 yıllık Linux TCP açığı uzaktan sunucu çökertiyor
 
 - Kaynak: https://fosstr.com/blog/noisytcp-cve-2026-99288/
