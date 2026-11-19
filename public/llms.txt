@@ -19,6 +19,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 - [Apache Roller (CVE-2026-129448): XML-RPC üzerinden kimlik doğrulamasız RCE aktif olarak istismar ediliyor](https://fosstr.com/blog/apache-roller-cve-2026-129448/) — Apache Roller XML-RPC endpoint’inde kimlik doğrulamadan önce deserialize edilen veri uzaktan kod çalıştırıyor: CVE-2026-129448 teknik analizi ve acil önlemler.
 - [cPanel WP Toolkit proxy açığı: kimlik doğrulamasız RCE ve yama sürümleri](https://fosstr.com/blog/cpanel-wptk-proxy-rce/) — cPanel & WHM WP Toolkit proxy açığı: kimlik doğrulamasız uzaktan kod çalıştırma, etkilenen sürümler, yama ve geçici wptk.proxypass önlemi.
+- [Neden her şey 2shell oluyor?](https://fosstr.com/blog/neden-her-sey-2shell-oluyor/) — Her bug 2shell olmaz; ama auth öncesi native parser/runtime hataları zincirlenince shell çıkar. Pazarlama etiketi ile gerçek örüntüyü ayıran saha rehberi.
 - [nginx2root (CVE-2026-123007): 11 yıllık HTTP/2 akış kontrolü hatası NGINX worker’da kod çalıştırıyor](https://fosstr.com/blog/nginx2root-cve-2026-123007/) — Kimlik doğrulamasız HTTP/2 akış kontrolü taşması NGINX worker belleğini bozuyor: CVE-2026-123007 teknik analizi, etkilenen sürümler, tespit ve geçici önlemler.
 - [Ruby2Shell: Ruby'nin case conversion açığı Rails ve Sinatra'yı vurdu](https://fosstr.com/blog/ruby2shell-cve-2026-132825/) — CVE-2026-132825 / GHSA-34m4-m9fh-gqp5: Ruby'de tek baytlık heap taşması, legacy encoding'lerde upcase yoluyla RCE'ye gidebiliyor. Etkilenen sürümler, yama ve self-hosted etkileri.
 - [NoisyTCP (CVE-2026-99288): 11 yıllık Linux TCP açığı uzaktan sunucu çökertiyor](https://fosstr.com/blog/noisytcp-cve-2026-99288/) — Kilitlenmeyen TCP arama yoluyla kimlik doğrulamasız kernel panic: CVE-2026-99288 nasıl çalışıyor, hangi çekirdekler etkileniyor ve geçici çözümler neler?
@@ -51,12 +52,12 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Tags
 
-- [security](https://fosstr.com/blog/tags/security/) — 16 içerik
-- [open-source](https://fosstr.com/blog/tags/open-source/) — 13 içerik
+- [security](https://fosstr.com/blog/tags/security/) — 17 içerik
+- [open-source](https://fosstr.com/blog/tags/open-source/) — 14 içerik
 - [linux](https://fosstr.com/blog/tags/linux/) — 8 içerik
-- [cve](https://fosstr.com/blog/tags/cve/) — 6 içerik
+- [cve](https://fosstr.com/blog/tags/cve/) — 7 içerik
+- [rce](https://fosstr.com/blog/tags/rce/) — 6 içerik
 - [ai](https://fosstr.com/blog/tags/ai/) — 5 içerik
-- [rce](https://fosstr.com/blog/tags/rce/) — 5 içerik
 - [kernel](https://fosstr.com/blog/tags/kernel/) — 4 içerik
 - [llm](https://fosstr.com/blog/tags/llm/) — 3 içerik
 - [tech-industry](https://fosstr.com/blog/tags/tech-industry/) — 3 içerik
@@ -106,6 +107,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [maintainers](https://fosstr.com/blog/tags/maintainers/) — 1 içerik
 - [masaüstü](https://fosstr.com/blog/tags/masaustu/) — 1 içerik
 - [mekatronik](https://fosstr.com/blog/tags/mekatronik/) — 1 içerik
+- [memory-corruption](https://fosstr.com/blog/tags/memory-corruption/) — 1 içerik
 - [menu-bar](https://fosstr.com/blog/tags/menu-bar/) — 1 içerik
 - [meta](https://fosstr.com/blog/tags/meta/) — 1 içerik
 - [nginx](https://fosstr.com/blog/tags/nginx/) — 1 içerik
