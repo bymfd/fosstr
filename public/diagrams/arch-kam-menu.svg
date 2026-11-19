@@ -5,7 +5,7 @@
 </defs>
 <rect width="1000" height="500" fill="#08080b"/><rect width="1000" height="500" fill="url(#g)"/>
 <text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">ARCH-KAM PROJECT</text>
-<text x="28" y="72" fill="#fafafa" font-size="26" font-family="monospace">One menu, repeatable Arch rituals</text>
+<text x="28" y="72" fill="#fafafa" font-size="24" font-family="system-ui, sans-serif">One menu, repeatable Arch rituals</text>
 <line x1="225" y1="189" x2="290" y2="189" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="225" y1="243" x2="290" y2="243" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="225" y1="280" x2="290" y2="316" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
@@ -13,28 +13,28 @@
 <line x1="745" y1="256" x2="810" y2="256" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <rect x="25" y="180" width="200" height="100" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
 <rect x="25" y="180" width="5" height="100" rx="2" fill="#6e81e4"/>
-<text x="41" y="210" fill="#fafafa" font-size="19" font-family="monospace">arch-kam.sh</text>
-<text x="41" y="232" fill="#aaa39f" font-size="15" font-family="monospace">interactive menu</text>
+<text x="39" y="204" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">arch-kam.sh</text>
+<text x="39" y="222" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">interactive menu</text>
 <rect x="290" y="100" width="200" height="96" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
 <rect x="290" y="100" width="5" height="96" rx="2" fill="#4ade80"/>
-<text x="306" y="130" fill="#fafafa" font-size="19" font-family="monospace">hibernate</text>
-<text x="306" y="152" fill="#aaa39f" font-size="15" font-family="monospace">swap + GRUB + resume</text>
-<text x="306" y="174" fill="#aaa39f" font-size="15" font-family="monospace">hook + mkinitcpio</text>
+<text x="304" y="124" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">hibernate</text>
+<text x="304" y="142" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">swap + GRUB + resume</text>
+<text x="304" y="160" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">hook + mkinitcpio</text>
 <rect x="290" y="208" width="200" height="96" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
 <rect x="290" y="208" width="5" height="96" rx="2" fill="#4ade80"/>
-<text x="306" y="238" fill="#fafafa" font-size="19" font-family="monospace">battery</text>
-<text x="306" y="260" fill="#aaa39f" font-size="15" font-family="monospace">TLP + thresholds</text>
+<text x="304" y="232" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">battery</text>
+<text x="304" y="250" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">TLP + thresholds</text>
 <rect x="290" y="316" width="200" height="96" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
 <rect x="290" y="316" width="5" height="96" rx="2" fill="#4ade80"/>
-<text x="306" y="346" fill="#fafafa" font-size="19" font-family="monospace">boot</text>
-<text x="306" y="368" fill="#aaa39f" font-size="15" font-family="monospace"> bootloader theme</text>
+<text x="304" y="340" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">boot</text>
+<text x="304" y="358" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">bootloader theme</text>
 <rect x="555" y="208" width="190" height="96" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
 <rect x="555" y="208" width="5" height="96" rx="2" fill="#f0b429"/>
-<text x="571" y="238" fill="#fafafa" font-size="19" font-family="monospace">clean</text>
-<text x="571" y="260" fill="#aaa39f" font-size="15" font-family="monospace">dry-run by default</text>
+<text x="569" y="232" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">clean</text>
+<text x="569" y="250" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">dry-run by default</text>
 <rect x="810" y="208" width="165" height="96" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
 <rect x="810" y="208" width="5" height="96" rx="2" fill="#6e81e4"/>
-<text x="826" y="238" fill="#fafafa" font-size="19" font-family="monospace">Backup first</text>
-<text x="826" y="260" fill="#aaa39f" font-size="15" font-family="monospace">restore supported</text>
-<text x="28" y="470" fill="#aaa39f" font-size="15" font-family="monospace">BTRFS and EXT4 supported | Existing swap is not overwritten without --force</text>
+<text x="824" y="232" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Backup first</text>
+<text x="824" y="250" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">restore supported</text>
+<text x="28" y="464" fill="#aaa39f" font-size="13" font-family="system-ui, sans-serif">BTRFS and EXT4 supported Existing swap is not overwritten without --force</text>
 </svg>

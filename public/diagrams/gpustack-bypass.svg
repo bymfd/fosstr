@@ -5,37 +5,36 @@
 </defs>
 <rect width="1000" height="500" fill="#08080b"/><rect width="1000" height="500" fill="url(#g)"/>
 <text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">CVE-2026-102895</text>
-<text x="28" y="72" fill="#fafafa" font-size="26" font-family="monospace">GPUStack auth bypass -&gt; RCE</text>
+<text x="28" y="72" fill="#fafafa" font-size="24" font-family="system-ui, sans-serif">GPUStack auth bypass -&gt; RCE</text>
 <line x1="225" y1="208" x2="285" y2="208" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="485" y1="208" x2="545" y2="208" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="545" y1="256" x2="485" y2="320" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
-<rect x="480.5" y="264" width="69" height="22" rx="4" fill="#08080b" stroke="#6e81e4" stroke-opacity="0.5"/>
-<text x="515" y="279" fill="#6e81e4" font-size="15" text-anchor="middle" font-family="monospace">trust</text>
 <line x1="485" y1="368" x2="545" y2="368" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="760" y1="368" x2="815" y2="368" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <rect x="25" y="160" width="200" height="96" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
 <rect x="25" y="160" width="5" height="96" rx="2" fill="#ff6b6b"/>
-<text x="41" y="190" fill="#fafafa" font-size="19" font-family="monospace">Remote client</text>
-<text x="41" y="212" fill="#aaa39f" font-size="15" font-family="monospace">no credentials</text>
+<text x="39" y="184" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Remote client</text>
+<text x="39" y="202" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">no credentials</text>
 <rect x="285" y="160" width="200" height="96" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
 <rect x="285" y="160" width="5" height="96" rx="2" fill="#6e81e4"/>
-<text x="301" y="190" fill="#fafafa" font-size="19" font-family="monospace">Reverse proxy</text>
-<text x="301" y="212" fill="#aaa39f" font-size="15" font-family="monospace">same host / trusted hop</text>
+<text x="299" y="184" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Reverse proxy</text>
+<text x="299" y="202" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">same host / trusted hop</text>
 <rect x="545" y="160" width="215" height="96" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
 <rect x="545" y="160" width="5" height="96" rx="2" fill="#f0b429"/>
-<text x="561" y="190" fill="#fafafa" font-size="19" font-family="monospace">X-GPUStack-Real-IP</text>
-<text x="561" y="212" fill="#aaa39f" font-size="15" font-family="monospace">client sets: 127.0.0.1</text>
+<text x="559" y="184" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">X-GPUStack-Real-IP</text>
+<text x="559" y="202" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">client sets: 127.0.0.1</text>
 <rect x="285" y="320" width="200" height="96" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
 <rect x="285" y="320" width="5" height="96" rx="2" fill="#ff6b6b"/>
-<text x="301" y="350" fill="#fafafa" font-size="19" font-family="monospace">get_current_user()</text>
-<text x="301" y="372" fill="#aaa39f" font-size="15" font-family="monospace">loopback = built-in admin</text>
+<text x="299" y="344" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">get_current_user()</text>
+<text x="299" y="362" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">loopback = built-in</text>
+<text x="299" y="380" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">admin</text>
 <rect x="545" y="320" width="215" height="96" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
 <rect x="545" y="320" width="5" height="96" rx="2" fill="#f0b429"/>
-<text x="561" y="350" fill="#fafafa" font-size="19" font-family="monospace">Admin API</text>
-<text x="561" y="372" fill="#aaa39f" font-size="15" font-family="monospace">from-yaml backend</text>
+<text x="559" y="344" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Admin API</text>
+<text x="559" y="362" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">from-yaml backend</text>
 <rect x="815" y="320" width="160" height="96" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
 <rect x="815" y="320" width="5" height="96" rx="2" fill="#ff6b6b"/>
-<text x="831" y="350" fill="#fafafa" font-size="19" font-family="monospace">Code execution</text>
-<text x="831" y="372" fill="#aaa39f" font-size="15" font-family="monospace">GPU node access</text>
-<text x="28" y="470" fill="#aaa39f" font-size="15" font-family="monospace">force_auth_localhost=true | strip client-supplied IP headers | upgrade to 2.2.2</text>
+<text x="829" y="344" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Code execution</text>
+<text x="829" y="362" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">GPU node access</text>
+<text x="28" y="464" fill="#aaa39f" font-size="13" font-family="system-ui, sans-serif">force_auth_localhost=true strip client-supplied IP headers upgrade to 2.2.2</text>
 </svg>

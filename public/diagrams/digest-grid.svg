@@ -5,38 +5,38 @@
 </defs>
 <rect width="1000" height="500" fill="#08080b"/><rect width="1000" height="500" fill="url(#g)"/>
 <text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">WEEKLY ROUNDUP</text>
-<text x="28" y="72" fill="#fafafa" font-size="26" font-family="monospace">Security + AI headlines, one week</text>
+<text x="28" y="72" fill="#fafafa" font-size="24" font-family="system-ui, sans-serif">Security + AI headlines, one week</text>
 <rect x="30" y="120" width="220" height="84" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
 <rect x="30" y="120" width="5" height="84" rx="2" fill="#6e81e4"/>
-<text x="46" y="150" fill="#fafafa" font-size="19" font-family="monospace">Model launches</text>
-<text x="46" y="172" fill="#aaa39f" font-size="15" font-family="monospace">frontier + price war</text>
+<text x="44" y="144" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Model launches</text>
+<text x="44" y="162" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">frontier + price war</text>
 <rect x="270" y="120" width="220" height="84" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
 <rect x="270" y="120" width="5" height="84" rx="2" fill="#ff6b6b"/>
-<text x="286" y="150" fill="#fafafa" font-size="19" font-family="monospace">Agent attacks</text>
-<text x="286" y="172" fill="#aaa39f" font-size="15" font-family="monospace">ARTEX / Cairn</text>
+<text x="284" y="144" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Agent attacks</text>
+<text x="284" y="162" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">ARTEX / Cairn</text>
 <rect x="510" y="120" width="220" height="84" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
 <rect x="510" y="120" width="5" height="84" rx="2" fill="#f0b429"/>
-<text x="526" y="150" fill="#fafafa" font-size="19" font-family="monospace">Supply chain</text>
-<text x="526" y="172" fill="#aaa39f" font-size="15" font-family="monospace">packages + pipelines</text>
+<text x="524" y="144" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Supply chain</text>
+<text x="524" y="162" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">packages + pipelines</text>
 <rect x="750" y="120" width="220" height="84" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
 <rect x="750" y="120" width="5" height="84" rx="2" fill="#4ade80"/>
-<text x="766" y="150" fill="#fafafa" font-size="19" font-family="monospace">Kernel + distros</text>
-<text x="766" y="172" fill="#aaa39f" font-size="15" font-family="monospace">new stable releases</text>
+<text x="764" y="144" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Kernel + distros</text>
+<text x="764" y="162" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">new stable releases</text>
 <rect x="30" y="270" width="220" height="84" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
 <rect x="30" y="270" width="5" height="84" rx="2" fill="#ff6b6b"/>
-<text x="46" y="300" fill="#fafafa" font-size="19" font-family="monospace">Breaches</text>
-<text x="46" y="322" fill="#aaa39f" font-size="15" font-family="monospace">credentials + records</text>
+<text x="44" y="294" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Breaches</text>
+<text x="44" y="312" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">credentials + records</text>
 <rect x="270" y="270" width="220" height="84" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
 <rect x="270" y="270" width="5" height="84" rx="2" fill="#f0b429"/>
-<text x="286" y="300" fill="#fafafa" font-size="19" font-family="monospace">Patches</text>
-<text x="286" y="322" fill="#aaa39f" font-size="15" font-family="monospace">CVEs and KEV</text>
+<text x="284" y="294" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Patches</text>
+<text x="284" y="312" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">CVEs and KEV</text>
 <rect x="510" y="270" width="220" height="84" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
 <rect x="510" y="270" width="5" height="84" rx="2" fill="#6e81e4"/>
-<text x="526" y="300" fill="#fafafa" font-size="19" font-family="monospace">Identity</text>
-<text x="526" y="322" fill="#aaa39f" font-size="15" font-family="monospace">passkeys debate</text>
+<text x="524" y="294" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Identity</text>
+<text x="524" y="312" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">passkeys debate</text>
 <rect x="750" y="270" width="220" height="84" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
 <rect x="750" y="270" width="5" height="84" rx="2" fill="#4ade80"/>
-<text x="766" y="300" fill="#fafafa" font-size="19" font-family="monospace">Platforms</text>
-<text x="766" y="322" fill="#aaa39f" font-size="15" font-family="monospace">runtimes + tooling</text>
-<text x="28" y="470" fill="#aaa39f" font-size="15" font-family="monospace">Weekly digests group many unrelated events - verify each primary source</text>
+<text x="764" y="294" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Platforms</text>
+<text x="764" y="312" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">runtimes + tooling</text>
+<text x="28" y="464" fill="#aaa39f" font-size="13" font-family="system-ui, sans-serif">Weekly digests group many unrelated events - verify each primary source</text>
 </svg>

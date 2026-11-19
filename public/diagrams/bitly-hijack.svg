@@ -5,27 +5,27 @@
 </defs>
 <rect width="1000" height="500" fill="#08080b"/><rect width="1000" height="500" fill="url(#g)"/>
 <text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">SHORT-LINK TAKEOVER</text>
-<text x="28" y="72" fill="#fafafa" font-size="26" font-family="monospace">Old tweets, new destinations</text>
+<text x="28" y="72" fill="#fafafa" font-size="24" font-family="system-ui, sans-serif">Old tweets, new destinations</text>
 <line x1="230" y1="220" x2="295" y2="220" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="500" y1="220" x2="565" y2="220" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
-<rect x="481.5" y="196" width="102" height="22" rx="4" fill="#08080b" stroke="#6e81e4" stroke-opacity="0.5"/>
-<text x="532.5" y="211" fill="#6e81e4" font-size="15" text-anchor="middle" font-family="monospace">redirect</text>
 <line x1="770" y1="220" x2="835" y2="220" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <rect x="25" y="170" width="205" height="100" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
 <rect x="25" y="170" width="5" height="100" rx="2" fill="#6e81e4"/>
-<text x="41" y="200" fill="#fafafa" font-size="19" font-family="monospace">2011 brand tweet</text>
-<text x="41" y="222" fill="#aaa39f" font-size="15" font-family="monospace">bit.ly/... embedded</text>
+<text x="39" y="194" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">2011 brand tweet</text>
+<text x="39" y="212" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">bit.ly/... embedded</text>
 <rect x="295" y="170" width="205" height="100" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
 <rect x="295" y="170" width="5" height="100" rx="2" fill="#f0b429"/>
-<text x="311" y="200" fill="#fafafa" font-size="19" font-family="monospace">Back-half</text>
-<text x="311" y="222" fill="#aaa39f" font-size="15" font-family="monospace">re-registered</text>
+<text x="309" y="194" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Back-half</text>
+<text x="309" y="212" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">re-registered</text>
 <rect x="565" y="170" width="205" height="100" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
 <rect x="565" y="170" width="5" height="100" rx="2" fill="#ff6b6b"/>
-<text x="581" y="200" fill="#fafafa" font-size="19" font-family="monospace">New destination</text>
-<text x="581" y="222" fill="#aaa39f" font-size="15" font-family="monospace">offensive content</text>
+<text x="579" y="194" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">New destination</text>
+<text x="579" y="212" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">offensive content</text>
 <rect x="835" y="170" width="140" height="100" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
 <rect x="835" y="170" width="5" height="100" rx="2" fill="#ff6b6b"/>
-<text x="851" y="200" fill="#fafafa" font-size="19" font-family="monospace">Brand reputation</text>
-<text x="851" y="222" fill="#aaa39f" font-size="15" font-family="monospace">no account compromise</text>
-<text x="28" y="470" fill="#aaa39f" font-size="15" font-family="monospace">Nov 15, 2026: Burger King, McDonald’s and others | Bitly suspended accounts</text>
+<text x="849" y="194" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Brand</text>
+<text x="849" y="212" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">reputation</text>
+<text x="849" y="230" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">no account</text>
+<text x="849" y="248" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">compromise</text>
+<text x="28" y="464" fill="#aaa39f" font-size="13" font-family="system-ui, sans-serif">Nov 15, 2026: Burger King, McDonald’s and others Bitly suspended accounts</text>
 </svg>

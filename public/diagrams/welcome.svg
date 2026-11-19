@@ -5,34 +5,38 @@
 </defs>
 <rect width="1000" height="500" fill="#08080b"/><rect width="1000" height="500" fill="url(#g)"/>
 <text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">FOSSTR.COM</text>
-<text x="28" y="72" fill="#fafafa" font-size="26" font-family="monospace">What lives on this site</text>
+<text x="28" y="72" fill="#fafafa" font-size="24" font-family="system-ui, sans-serif">What lives on this site</text>
 <line x1="235" y1="187.5" x2="300" y2="187.5" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="235" y1="247.5" x2="300" y2="247.5" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="235" y1="280" x2="300" y2="340" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="795" y1="265" x2="855" y2="265" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <rect x="25" y="180" width="210" height="100" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
 <rect x="25" y="180" width="5" height="100" rx="2" fill="#6e81e4"/>
-<text x="41" y="210" fill="#fafafa" font-size="19" font-family="monospace">fosstr</text>
-<text x="41" y="232" fill="#aaa39f" font-size="15" font-family="monospace">software, security, systems</text>
+<text x="39" y="204" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">fosstr</text>
+<text x="39" y="222" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">software, security,</text>
+<text x="39" y="240" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">systems</text>
 <rect x="300" y="100" width="200" height="90" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
 <rect x="300" y="100" width="5" height="90" rx="2" fill="#4ade80"/>
-<text x="316" y="130" fill="#fafafa" font-size="19" font-family="monospace">Blog posts</text>
-<text x="316" y="152" fill="#aaa39f" font-size="15" font-family="monospace">analysis + field notes</text>
+<text x="314" y="124" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Blog posts</text>
+<text x="314" y="142" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">analysis + field notes</text>
 <rect x="300" y="220" width="200" height="90" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
 <rect x="300" y="220" width="5" height="90" rx="2" fill="#4ade80"/>
-<text x="316" y="250" fill="#fafafa" font-size="19" font-family="monospace">Projects</text>
-<text x="316" y="272" fill="#aaa39f" font-size="15" font-family="monospace">open-source tools</text>
+<text x="314" y="244" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Projects</text>
+<text x="314" y="262" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">open-source tools</text>
 <rect x="300" y="340" width="200" height="90" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
 <rect x="300" y="340" width="5" height="90" rx="2" fill="#6e81e4"/>
-<text x="316" y="370" fill="#fafafa" font-size="19" font-family="monospace">English edition</text>
-<text x="316" y="392" fill="#aaa39f" font-size="15" font-family="monospace">/en/, paired hreflang</text>
+<text x="314" y="364" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">English edition</text>
+<text x="314" y="382" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">/en/, paired hreflang</text>
 <rect x="575" y="220" width="220" height="90" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
 <rect x="575" y="220" width="5" height="90" rx="2" fill="#f0b429"/>
-<text x="591" y="250" fill="#fafafa" font-size="19" font-family="monospace">RSS + llms.txt</text>
-<text x="591" y="272" fill="#aaa39f" font-size="15" font-family="monospace">feeds for humans and agents</text>
+<text x="589" y="244" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">RSS + llms.txt</text>
+<text x="589" y="262" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">feeds for humans and</text>
+<text x="589" y="280" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">agents</text>
 <rect x="855" y="220" width="120" height="90" rx="8" fill="#101017" stroke="#2b2523" stroke-width="1"/>
 <rect x="855" y="220" width="5" height="90" rx="2" fill="#2b2523"/>
-<text x="871" y="250" fill="#fafafa" font-size="19" font-family="monospace">TR is default</text>
-<text x="871" y="272" fill="#aaa39f" font-size="15" font-family="monospace">x-default -&gt; Turkish</text>
-<text x="28" y="470" fill="#aaa39f" font-size="15" font-family="monospace">Static site on Cloudflare Pages | No tracking beyond analytics</text>
+<text x="869" y="244" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">TR is</text>
+<text x="869" y="262" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">default</text>
+<text x="869" y="280" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">x-default -&gt;</text>
+<text x="869" y="298" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">Turkish</text>
+<text x="28" y="464" fill="#aaa39f" font-size="13" font-family="system-ui, sans-serif">Static site on Cloudflare Pages No tracking beyond analytics</text>
 </svg>

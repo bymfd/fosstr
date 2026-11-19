@@ -5,38 +5,41 @@
 </defs>
 <rect width="1000" height="500" fill="#08080b"/><rect width="1000" height="500" fill="url(#g)"/>
 <text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">CVE-2026-109618 / 109619</text>
-<text x="28" y="72" fill="#fafafa" font-size="26" font-family="monospace">php2shell: two engine-level paths</text>
+<text x="28" y="72" fill="#fafafa" font-size="24" font-family="system-ui, sans-serif">php2shell: two engine-level paths</text>
 <line x1="225" y1="175" x2="290" y2="175" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="225" y1="235" x2="290" y2="235" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="510" y1="150" x2="575" y2="150" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="510" y1="200" x2="575" y2="220" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="510" y1="270" x2="575" y2="270" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="785" y1="242.5" x2="845" y2="242.5" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
-<rect x="780.5" y="218.5" width="69" height="22" rx="4" fill="#08080b" stroke="#6e81e4" stroke-opacity="0.5"/>
-<text x="815" y="233.5" fill="#6e81e4" font-size="15" text-anchor="middle" font-family="monospace">patch</text>
 <rect x="25" y="150" width="200" height="100" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
 <rect x="25" y="150" width="5" height="100" rx="2" fill="#ff6b6b"/>
-<text x="41" y="180" fill="#fafafa" font-size="19" font-family="monospace">HTTP request</text>
-<text x="41" y="202" fill="#aaa39f" font-size="15" font-family="monospace">untrusted input</text>
+<text x="39" y="174" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">HTTP request</text>
+<text x="39" y="192" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">untrusted input</text>
 <rect x="290" y="100" width="220" height="100" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
 <rect x="290" y="100" width="5" height="100" rx="2" fill="#f0b429"/>
-<text x="306" y="130" fill="#fafafa" font-size="19" font-family="monospace">OOM corruption</text>
-<text x="306" y="152" fill="#aaa39f" font-size="15" font-family="monospace">allocator bypassed mid-request</text>
+<text x="304" y="124" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">OOM corruption</text>
+<text x="304" y="142" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">allocator bypassed</text>
+<text x="304" y="160" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">mid-request</text>
 <rect x="290" y="220" width="220" height="100" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
 <rect x="290" y="220" width="5" height="100" rx="2" fill="#f0b429"/>
-<text x="306" y="250" fill="#fafafa" font-size="19" font-family="monospace">Stale global state</text>
-<text x="306" y="272" fill="#aaa39f" font-size="15" font-family="monospace">freed state after fatal error</text>
+<text x="304" y="244" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Stale global state</text>
+<text x="304" y="262" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">freed state after fatal</text>
+<text x="304" y="280" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">error</text>
 <rect x="575" y="100" width="210" height="100" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
 <rect x="575" y="100" width="5" height="100" rx="2" fill="#ff6b6b"/>
-<text x="591" y="130" fill="#fafafa" font-size="19" font-family="monospace">Memory disclosure</text>
-<text x="591" y="152" fill="#aaa39f" font-size="15" font-family="monospace">other requests, secrets</text>
+<text x="589" y="124" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Memory disclosure</text>
+<text x="589" y="142" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">other requests, secrets</text>
 <rect x="575" y="220" width="210" height="100" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
 <rect x="575" y="220" width="5" height="100" rx="2" fill="#ff6b6b"/>
-<text x="591" y="250" fill="#fafafa" font-size="19" font-family="monospace">Code execution</text>
-<text x="591" y="272" fill="#aaa39f" font-size="15" font-family="monospace">heap engineering required</text>
+<text x="589" y="244" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Code execution</text>
+<text x="589" y="262" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">heap engineering required</text>
 <rect x="845" y="160" width="130" height="110" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
 <rect x="845" y="160" width="5" height="110" rx="2" fill="#4ade80"/>
-<text x="861" y="190" fill="#fafafa" font-size="19" font-family="monospace">Patched builds</text>
-<text x="861" y="212" fill="#aaa39f" font-size="15" font-family="monospace">8.2.35 / 8.3.36 / 8.4.27 / 8.5.12</text>
-<text x="28" y="470" fill="#aaa39f" font-size="15" font-family="monospace">CVSS 9.2 (PHP) / 9.8 (NVD) | No verified post-patch bypass as of Oct 22, 2026</text>
+<text x="859" y="184" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Patched</text>
+<text x="859" y="202" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">builds</text>
+<text x="859" y="220" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">8.2.35 /</text>
+<text x="859" y="238" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">8.3.36 /</text>
+<text x="859" y="256" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">8.4.27 /...</text>
+<text x="28" y="464" fill="#aaa39f" font-size="13" font-family="system-ui, sans-serif">CVSS 9.2 (PHP) / 9.8 (NVD) No verified post-patch bypass as of Oct 22, 2026</text>
 </svg>

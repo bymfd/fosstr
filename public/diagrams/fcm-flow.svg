@@ -5,30 +5,31 @@
 </defs>
 <rect width="1000" height="500" fill="#08080b"/><rect width="1000" height="500" fill="url(#g)"/>
 <text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">FCM PROJECT</text>
-<text x="28" y="72" fill="#fafafa" font-size="26" font-family="monospace">Menu bar -&gt; SMC fan control</text>
+<text x="28" y="72" fill="#fafafa" font-size="24" font-family="system-ui, sans-serif">Menu bar -&gt; SMC fan control</text>
 <line x1="235" y1="220" x2="300" y2="220" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="500" y1="220" x2="565" y2="220" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="765" y1="220" x2="830" y2="220" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="665" y1="270" x2="665" y2="330" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <rect x="25" y="170" width="210" height="100" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
 <rect x="25" y="170" width="5" height="100" rx="2" fill="#6e81e4"/>
-<text x="41" y="200" fill="#fafafa" font-size="19" font-family="monospace">Menu bar app</text>
-<text x="41" y="222" fill="#aaa39f" font-size="15" font-family="monospace">RPM, temp, MAX/MIN/AUTO</text>
+<text x="39" y="194" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Menu bar app</text>
+<text x="39" y="212" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">RPM, temp, MAX/MIN/AUTO</text>
 <rect x="300" y="170" width="200" height="100" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
 <rect x="300" y="170" width="5" height="100" rx="2" fill="#6e81e4"/>
-<text x="316" y="200" fill="#fafafa" font-size="19" font-family="monospace">FIFO channel</text>
-<text x="316" y="222" fill="#aaa39f" font-size="15" font-family="monospace">read SMC as user</text>
+<text x="314" y="194" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">FIFO channel</text>
+<text x="314" y="212" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">read SMC as user</text>
 <rect x="565" y="170" width="200" height="100" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
 <rect x="565" y="170" width="5" height="100" rx="2" fill="#f0b429"/>
-<text x="581" y="200" fill="#fafafa" font-size="19" font-family="monospace">Root launch daemon</text>
-<text x="581" y="222" fill="#aaa39f" font-size="15" font-family="monospace">com.fcm.helper</text>
+<text x="579" y="194" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Root launch daemon</text>
+<text x="579" y="212" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">com.fcm.helper</text>
 <rect x="830" y="170" width="145" height="100" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
 <rect x="830" y="170" width="5" height="100" rx="2" fill="#4ade80"/>
-<text x="846" y="200" fill="#fafafa" font-size="19" font-family="monospace">SMC write</text>
-<text x="846" y="222" fill="#aaa39f" font-size="15" font-family="monospace">fan curve 50-88 C</text>
+<text x="844" y="194" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">SMC write</text>
+<text x="844" y="212" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">fan curve 50-88</text>
+<text x="844" y="230" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">C</text>
 <rect x="565" y="330" width="200" height="88" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
 <rect x="565" y="330" width="5" height="88" rx="2" fill="#4ade80"/>
-<text x="581" y="360" fill="#fafafa" font-size="19" font-family="monospace">Exit fail-safe</text>
-<text x="581" y="382" fill="#aaa39f" font-size="15" font-family="monospace">fan forced to MAX</text>
-<text x="28" y="470" fill="#aaa39f" font-size="15" font-family="monospace">One-time privileged helper setup | Watchdog re-applies target RPM every 1.5 s</text>
+<text x="579" y="354" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Exit fail-safe</text>
+<text x="579" y="372" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">fan forced to MAX</text>
+<text x="28" y="464" fill="#aaa39f" font-size="13" font-family="system-ui, sans-serif">One-time privileged helper setup Watchdog re-applies target RPM every 1.5 s</text>
 </svg>

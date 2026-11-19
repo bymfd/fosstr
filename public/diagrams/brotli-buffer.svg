@@ -5,29 +5,30 @@
 </defs>
 <rect width="1000" height="500" fill="#08080b"/><rect width="1000" height="500" fill="url(#g)"/>
 <text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">CVE-2026-111497</text>
-<text x="28" y="72" fill="#fafafa" font-size="26" font-family="monospace">Broccoli2Shell: Brotli decoder overflow</text>
+<text x="28" y="72" fill="#fafafa" font-size="24" font-family="system-ui, sans-serif">Broccoli2Shell: Brotli decoder overflow</text>
 <line x1="235" y1="230" x2="295" y2="230" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="525" y1="230" x2="585" y2="230" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
-<rect x="438" y="206" width="234" height="22" rx="4" fill="#08080b" stroke="#6e81e4" stroke-opacity="0.5"/>
-<text x="555" y="221" fill="#6e81e4" font-size="15" text-anchor="middle" font-family="monospace">false = needs input?</text>
 <line x1="800" y1="230" x2="860" y2="230" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
-<rect x="779" y="206" width="102" height="22" rx="4" fill="#08080b" stroke="#6e81e4" stroke-opacity="0.5"/>
-<text x="830" y="221" fill="#6e81e4" font-size="15" text-anchor="middle" font-family="monospace">overflow</text>
 <rect x="30" y="180" width="205" height="100" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
 <rect x="30" y="180" width="5" height="100" rx="2" fill="#ff6b6b"/>
-<text x="46" y="210" fill="#fafafa" font-size="19" font-family="monospace">Crafted Brotli stream</text>
-<text x="46" y="232" fill="#aaa39f" font-size="15" font-family="monospace">untrusted input</text>
+<text x="44" y="204" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Crafted Brotli</text>
+<text x="44" y="222" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">stream</text>
+<text x="44" y="240" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">untrusted input</text>
 <rect x="295" y="180" width="230" height="100" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
 <rect x="295" y="180" width="5" height="100" rx="2" fill="#f0b429"/>
-<text x="311" y="210" fill="#fafafa" font-size="19" font-family="monospace">DecodeBlockTypeAndLength()</text>
-<text x="311" y="232" fill="#aaa39f" font-size="15" font-family="monospace">boolean return only</text>
+<text x="309" y="204" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">DecodeBlockTypeAndLengt</text>
+<text x="309" y="222" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">h()</text>
+<text x="309" y="240" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">boolean return only</text>
 <rect x="585" y="180" width="215" height="100" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
 <rect x="585" y="180" width="5" height="100" rx="2" fill="#f0b429"/>
-<text x="601" y="210" fill="#fafafa" font-size="19" font-family="monospace">8-byte internal buffer</text>
-<text x="601" y="232" fill="#aaa39f" font-size="15" font-family="monospace">fast path ignores return</text>
+<text x="599" y="204" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">8-byte internal</text>
+<text x="599" y="222" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">buffer</text>
+<text x="599" y="240" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">fast path ignores return</text>
 <rect x="860" y="180" width="115" height="100" rx="8" fill="#101017" stroke="#ff6b6b" stroke-width="2"/>
 <rect x="860" y="180" width="5" height="100" rx="2" fill="#ff6b6b"/>
-<text x="876" y="210" fill="#fafafa" font-size="19" font-family="monospace">Out-of-bounds write</text>
-<text x="876" y="232" fill="#aaa39f" font-size="15" font-family="monospace">corrupt decoder state</text>
-<text x="28" y="470" fill="#aaa39f" font-size="15" font-family="monospace">Broken versions 1.0.3-1.2.0 | Fixed 1.2.1 / 1.1.1 / 1.0.10</text>
+<text x="874" y="204" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Out-of-bou</text>
+<text x="874" y="222" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">nds write</text>
+<text x="874" y="240" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">corrupt</text>
+<text x="874" y="258" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">decoder...</text>
+<text x="28" y="464" fill="#aaa39f" font-size="13" font-family="system-ui, sans-serif">Broken versions 1.0.3-1.2.0 Fixed 1.2.1 / 1.1.1 / 1.0.10</text>
 </svg>

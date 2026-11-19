@@ -5,37 +5,32 @@
 </defs>
 <rect width="1000" height="500" fill="#08080b"/><rect width="1000" height="500" fill="url(#g)"/>
 <text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">RFC 8915</text>
-<text x="28" y="72" fill="#fafafa" font-size="26" font-family="monospace">Network Time Security (NTS)</text>
+<text x="28" y="72" fill="#fafafa" font-size="24" font-family="system-ui, sans-serif">Network Time Security (NTS)</text>
 <line x1="235" y1="215" x2="300" y2="215" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
-<rect x="244" y="191" width="47" height="22" rx="4" fill="#08080b" stroke="#6e81e4" stroke-opacity="0.5"/>
-<text x="267.5" y="206" fill="#6e81e4" font-size="15" text-anchor="middle" font-family="monospace">TLS</text>
 <line x1="500" y1="215" x2="565" y2="215" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
-<rect x="487" y="191" width="91" height="22" rx="4" fill="#08080b" stroke="#6e81e4" stroke-opacity="0.5"/>
-<text x="532.5" y="206" fill="#6e81e4" font-size="15" text-anchor="middle" font-family="monospace">cookies</text>
 <line x1="780" y1="215" x2="835" y2="215" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
 <line x1="500" y1="330" x2="565" y2="270" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
-<rect x="481.5" y="276" width="102" height="22" rx="4" fill="#08080b" stroke="#6e81e4" stroke-opacity="0.5"/>
-<text x="532.5" y="291" fill="#6e81e4" font-size="15" text-anchor="middle" font-family="monospace">residual</text>
 <rect x="25" y="160" width="210" height="110" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
 <rect x="25" y="160" width="5" height="110" rx="2" fill="#6e81e4"/>
-<text x="41" y="190" fill="#fafafa" font-size="19" font-family="monospace">NTS-KE</text>
-<text x="41" y="212" fill="#aaa39f" font-size="15" font-family="monospace">TLS 1.3, TCP/4460</text>
-<text x="41" y="234" fill="#aaa39f" font-size="15" font-family="monospace">ALPN: ntske/1</text>
+<text x="39" y="184" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">NTS-KE</text>
+<text x="39" y="202" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">TLS 1.3, TCP/4460 ALPN:</text>
+<text x="39" y="220" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">ntske/1</text>
 <rect x="300" y="160" width="200" height="110" rx="8" fill="#101017" stroke="#6e81e4" stroke-width="2"/>
 <rect x="300" y="160" width="5" height="110" rx="2" fill="#6e81e4"/>
-<text x="316" y="190" fill="#fafafa" font-size="19" font-family="monospace">Key material</text>
-<text x="316" y="212" fill="#aaa39f" font-size="15" font-family="monospace">NTS cookies + CERT</text>
+<text x="314" y="184" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Key material</text>
+<text x="314" y="202" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">NTS cookies + CERT</text>
 <rect x="565" y="160" width="215" height="110" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
 <rect x="565" y="160" width="5" height="110" rx="2" fill="#4ade80"/>
-<text x="581" y="190" fill="#fafafa" font-size="19" font-family="monospace">NTPv4 + NTS fields</text>
-<text x="581" y="212" fill="#aaa39f" font-size="15" font-family="monospace">UDP/123, authenticated</text>
+<text x="579" y="184" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">NTPv4 + NTS fields</text>
+<text x="579" y="202" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">UDP/123, authenticated</text>
 <rect x="835" y="160" width="140" height="110" rx="8" fill="#101017" stroke="#4ade80" stroke-width="2"/>
 <rect x="835" y="160" width="5" height="110" rx="2" fill="#4ade80"/>
-<text x="851" y="190" fill="#fafafa" font-size="19" font-family="monospace">Verified time</text>
-<text x="851" y="212" fill="#aaa39f" font-size="15" font-family="monospace">TLS / token lifetimes</text>
+<text x="849" y="184" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Verified time</text>
+<text x="849" y="202" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">TLS / token</text>
+<text x="849" y="220" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">lifetimes</text>
 <rect x="300" y="330" width="200" height="90" rx="8" fill="#101017" stroke="#f0b429" stroke-width="2"/>
 <rect x="300" y="330" width="5" height="90" rx="2" fill="#f0b429"/>
-<text x="316" y="360" fill="#fafafa" font-size="19" font-family="monospace">Not solved</text>
-<text x="316" y="382" fill="#aaa39f" font-size="15" font-family="monospace">on-path delay attacks</text>
-<text x="28" y="470" fill="#aaa39f" font-size="15" font-family="monospace">nts.meta.com (key exchange) + time.meta.com (time) | NTP was unsigned since 1985</text>
+<text x="314" y="354" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Not solved</text>
+<text x="314" y="372" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">on-path delay attacks</text>
+<text x="28" y="464" fill="#aaa39f" font-size="13" font-family="system-ui, sans-serif">nts.meta.com (key exchange) + time.meta.com (time) NTP was unsigned since 1985</text>
 </svg>
