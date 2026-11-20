@@ -13,6 +13,922 @@ Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her 
 
 ---
 
+# ASUS Control Center Express: CVSS 10 hard-coded key
+
+- Kaynak: https://fosstr.com/blog/asus-control-center-cve-2026-114202/
+- Tür: Yazı
+- Tarih: 2026-11-20
+- Etiketler: security, asus, cve, hard-coded-credentials, rce
+- Özet: CVE-2026-114202, sabit kriptografik anahtarla yönetim konsoluna uzaktan yönetici erişimi sağlıyor. Resmi bülten, düzeltme sürümü ve ikincil PoC iddiası ayrı ayrı incelendi.
+
+18 Kasım 2026'da **CVE-2026-114202** yayımlandı. ASUS'un kendi CVE kaydı ve güvenlik bülteni, Control Center Express'te sabit (hard-coded) bir kriptografik anahtar kullanıldığını ve bununla uzaktaki bir saldırganın sahte kimlik doğrulama token'ı üreterek yönetici ayrıcalığı kazanabildiğini söylüyor. Skor **CVSS 4.0 tabanında 10.0**. Bu, "maksimum skor" başlıklarının arkasındaki iddiayı doğrulayan birincil kayıt anlamına geliyor; ama kayıt hâlâ `Received` durumunda ve bazı ayrıntılar bülten ile CVE arasında birebir örtüşmüyor.
+
+## Kısa özet
+
+| Alan | Doğrulanmış | İddia / uyarı |
+|---|---|---|
+| Kimlik | `CVE-2026-114202`, CNA: ASUS, CWE-321 | — |
+| Açıklama | Sabit kriptografik anahtar; sahte token ile yönetici erişimi | Token'ın nasıl imzalandığı bültende yazmıyor |
+| Etkilenen | CVE kaydı: Control Center Express ≤ v1.7.27 | ASUS bülteni: "v1.7.29'dan önceki sürümler" |
+| Düzeltme | ASUS bülteni: v1.7.29 veya üzeri + client agent güncellemesi | v1.7.28'ın durumu iki kayıt arasında net değil |
+| Skor | ASUS/CVE: CVSS 4.0 **10.0 Critical** | NVD'de v3.1 skoru yok; skor NVD'de "Secondary" |
+| Vektör | `AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` | Ayrıcalık veya kullanıcı etkileşimi gerekmiyor |
+| Ön koşul | Ağ üzerinden yönetim konsoluna erişim | — |
+| İstismar | CISA SSVC: `exploitation: none`; KEV'de yok | CSIRT Toscana "PoC var" diyor; ikincil/doğrulanmadı |
+| Geçici çözüm | ASUS bülteninde workaround yok | Ağ kısıtlaması genel sertleştirme önerisidir |
+
+![ASUS Control Center Express hard-coded key açığı şeması](/diagrams/asus-control-center-cve-2026-114202.svg)
+
+## 1. Resmi kayıt aslında ne diyor?
+
+NVD API kaydını doğrudan okuduğumuzda tablo net:
+
+- **CNA:** ASUS
+- **Yayın:** 18 Kasım 2026; **son güncelleme:** 18 Kasım 2026
+- **NVD durumu:** `Received` — NVD analizi henüz tamamlanmadı
+- **Zayıflık:** CWE-321, *Use of Hard-coded Cryptographic Key*
+- **Açıklama:** "Use of Hard-coded Cryptographic Key in ASUS Control Center Express allows a remote user to gain administrative privileges via a forged authentication token."
+- **Etkilenen ürün:** ASUS Control Center Express, `through v1.7.27`
+- **Referans:** `https://www.asus.com/security-advisory`
+
+Dolayısıyla "kimlik doğrulama atlandı ve yönetici olundu" iddiası bir aggregator yorumu değil, **satıcının kendi kaydının** özü. Bülten ayrıca aynı güncelleme kapsamında yönetim konsolunun ve yönettiği istemcilerin etkilenebileceğini yazıyor.
+
+Skorun kaynağı da önemli: NVD kaydındaki CVSS 4.0 metriği `type: Secondary` ve kaynak ASUS. Yani 10.0, NVD'nin bağımsız analizi değil **ASUS'un verdiği skor**. NVD'de v3.1 skoru bulunmuyor; "CVSS 3.1 10.0" diyen bir başlık kaynakla desteklenmez.
+
+## 2. ASUS bülteni ve düzeltme sürümü
+
+ASUS'un güvenlik bülteni (18 Kasım 2026) şu adımları veriyor:
+
+1. Control Center Express **v1.7.29 veya üzerini** resmi indirme sayfasından kurun.
+2. Cihaz listesinden hedef cihazları seçin.
+3. **Select Function → Client Agent Updater** yolunu izleyerek istemci ajanlarını güncelleyin.
+4. Ajan sürümünün güncellendiğini doğrulayın.
+
+Bu son adım kritik: açık yalnızca konsol değil, konsolun yönettiği ajanlar zincirini de ilgilendiriyor. Konsolu güncelleyip ajanları eski bırakmak, yönetilen uç noktalarda kötü yapılandırılmış bir durum yaratabilir.
+
+Bir uyumsuzluk var: CVE kaydı etkilenenleri "≤ v1.7.27" diye işaretlerken ASUS bülteni "v1.7.29'dan önceki tüm sürümler" diyor. **v1.7.28'in durumu bu iki birincil kayıt arasında belirsiz.** Pratik sonuç değişmiyor: hedef sürüm 1.7.29.
+
+## 3. Saldırı modeli ve ön koşullar
+
+CVSS vektörünü parçalara ayırmak, saldırının ne kadar kolay tetiklendiğini gösterir:
+
+- `AV:N` — ağ vektörü; saldırganın kurbana fiziksel veya yerel erişimi gerekmiyor.
+- `AC:L` — düşük saldırı karmaşıklığı.
+- `AT:N` — ek saldırı koşulu yok.
+- `PR:N` — **hiçbir ayrıcalık gerekmiyor**; saldırgan önceden kullanıcı değil.
+- `UI:N` — kullanıcı etkileşimi yok; kurbanın bir bağlantıya tıklaması gerekmiyor.
+- `VC:H/VI:H/VA:H` — etkilenen sistemde gizlilik, bütünlük ve erişilebilirlik üzerinde yüksek etki.
+- `SC:H/SI:H/SA:H` — **sonraki sistemlerde** de yüksek etki; bu, yönetim konsolunun altındaki yönetilen cihazların da kapsama girmesiyle uyumlu.
+
+Özetle ön koşul, yönetim arayüzüne ağdan ulaşabilmektir. Sabit anahtarın bilinmesi, saldırganın geçerli görünen bir token imzalamasını ve konsola yönetici olarak girmesini sağlar. Bülten, token'ın hangi algoritmayla imzalandığını veya anahtarın nerede saklandığını açıklamıyor; bu yüzden "anahtar her yere aynıdır, şu dosyadadır" gibi ayrıntılar **doğrulanmamış** sayılmalı.
+
+## 4. CVSS 10.0'ı doğru okumak
+
+10.0, CVSS 4.0 ölçeğinin tavanıdır. Bu skorun iki bileşeni birlikte okunmalı:
+
+- **Saldırılabilirlik tarafı tamamen açık:** ağ, düşük karmaşıklık, ayrıcalık yok, etkileşim yok.
+- **Etki tarafı da tamamen açık:** hem konsol hem onun yönettiği sistemler için C/I/A yüksek.
+
+Bu ikisinin birleşimi, "yönetim düzleminin tamamının ele geçirilmesi" senaryosuna karşılık gelir. ASUS Control Center Express, IT yöneticilerinin PC filolarını uzaktan yönetmek için kullandığı merkezi bir konsol; bu yüzden yönetici erişimi, tek bir sunucuya değil yönetilen filoya giden bir kapıdır. `S:H` (scope changed) alanı da bunu yansıtıyor.
+
+Buna karşılık 10.0, "şu an aktif istismar ediliyor" anlamına gelmez. Skor, etki ve saldırılabilirliğin kuramsal ölçüsüdür; istismar durumu ayrı bir alandır.
+
+## 5. Aynı bültendeki iki kardeş açık
+
+ASUS bülteni üç CVE birden yayımladı; hepsi Critical ama ön koşulları farklı:
+
+| CVE | CVSS 4.0 | Vektör öne çıkanı | Ön koşul |
+|---|---|---|---|
+| CVE-2026-114202 | 10.0 | `PR:N`, `AT:N` | Yok — uzaktan yönetici erişimi |
+| CVE-2026-114204 | 9.0 | `PR:L`, `AT:P` | Düşük ayrıcalıklı kullanıcı + yakın zamanda açılmış oturum |
+| CVE-2026-114205 | 9.4 | `PR:L`, `AT:N` | Düşük ayrıcalıklı kullanıcı, yönetici hesabı oluşturma |
+
+CVE-2026-114204 yine sabit anahtar kaynaklı ama saldırganın yakın zamanda giriş yapmış bir hesabın oturum token'ını taklit etmesi gerekiyor. CVE-2026-114205 ise yetkilendirme hatası: düşük ayrıcalıklı kullanıcı yönetici hesabı açabiliyor. Başlıkları üçünü birbirine karıştırmamak gerekiyor; **en geniş erişim sunan 114202**.
+
+## 6. İstismar durumu ve PoC iddiası
+
+NVD kaydındaki CISA SSVC girişi şu değerleri taşıyor: `exploitation: none`, `automatable: yes`, `technicalImpact: total`. Yani: gözlenen istismar yok, ancak otomasyona uygun bir açık ve doğrulanırsa toplam teknik etki söz konusu. CISA KEV kataloğunda (20 Kasım 2026 itibarıyla) bu CVE yok.
+
+İtalya CSIRT'inin (CSIRT Toscana, 19 Kasım) bülteninde CVE-2026-114202 için ağ üzerinde bir PoC bulunduğu yazıyor. Bu **ikincil bir kaynak iddiasıdır**; birincil ASUS bülteninde veya NVD kaydında PoC'ye dair doğrulanmış bir bağlantı yok. "PoC var" ile "vahşi ortamda istismar ediliyor" aynı şey değildir; ikincisi için kanıt bulunmuyor.
+
+ASUS bülteninde bu açıklar için ayrı bir workaround bölümü yok. Yayınlanan tek resmi eylem, sürüm yükseltme ve ajan güncellemesi.
+
+## 7. Ne yapmalı?
+
+1. **Konsolu v1.7.29 veya üzerine yükseltin.** Bu, ASUS'un yayınladığı tek resmi düzeltme yolu.
+2. **Client agent'ları da güncelleyin.** Select Function → Client Agent Updater adımını atlamayın ve ajan sürümünü doğrulayın.
+3. **Yönetim arayüzünü internete açmayın.** Ağ erişimini güvenilir yönetim segmentleriyle sınırlamak, yamaya kadar olan sürede en etkili azaltmadır; bu genel sertleştirme önerisidir, ASUS'un bu CVE'ye özel workaround'u değildir.
+4. **Yönetici oturumlarını gözden geçirin.** Beklenmeyen girişler, yeni oluşturulmuş yönetici hesapları ve alışılmadık token kullanımları olay yanıtı tetiklemeli.
+5. **Ajan envanterini çıkarın.** Konsol güncel olsa bile eski ajan kalmış uç noktaları tespit edin.
+6. **PoC iddiasını doğrulamadan paniklemeyin.** Yamanın uygulanması, doğrulanmamış bir PoC tartışmasından daha değerli bir eylemdir.
+
+## 8. Ne yazmamalı?
+
+- "Aktif olarak istismar ediliyor" — CISA SSVC `exploitation: none`, KEV'de kayıt yok.
+- "CVSS 3.1 ile 10.0" — kayıtta yalnızca CVSS 4.0 var ve skor ASUS kaynaklı.
+- "Sadece masaüstü kullanıcılarını etkiler" — açık merkezi yönetim konsolunda; `S:H` ile sonraki sistemler de kapsamda.
+- "Kullanıcının bir bağlantıya tıklaması gerekiyor" — vektör `UI:N` diyor.
+- "v1.7.28 kesin etkilenmedi" — bülten "v1.7.29'dan önce" diyor; net değil.
+- "Düzeltme sürümü belli değil" — ASUS bülteni v1.7.29'u açıkça belirtiyor.
+- "Üç açık da aynı ön koşula sahip" — 114204 ve 114205 ayrıcalık/oturum koşulu taşıyor.
+
+## Durum
+
+20 Kasım 2026 itibarıyla bu açık, **birincil kayıtlarla iyi doğrulanmış ama NVD analizi tamamlanmamış** bir vaka. Skor, vektör, satıcı bülteni ve düzeltme sürümü net; belirsiz olan v1.7.28'ın statüsü ve PoC iddiasının doğruluğu. Başlık bu yüzden satıcının kendi skorunu kullanıyor: CVSS 10.0.
+
+## Bu seriden
+
+- [Neden her şey 2shell oluyor?](/blog/neden-her-sey-2shell-oluyor)
+- [Ruby2Shell: case conversion taşması](/blog/ruby2shell-cve-2026-132825)
+- [WhatsApp iOS Noise anahtarı iddiası](/blog/whatsapp-ios-noise-anahtari-cve-2026-128974)
+
+## Kaynaklar
+
+- [MITRE/NVD API: CVE-2026-114202](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-114202)
+- [NVD: CVE-2026-114202](https://nvd.nist.gov/vuln/detail/CVE-2026-114202)
+- [ASUS Product Security Advisory](https://www.asus.com/security-advisory/)
+- [ASUS Security Advisory RSS akışı](https://security-advisory-api.asus.com/rss/securityrss.xml)
+- [GitHub Advisory: GHSA-h9mr-7752-ffhq](https://github.com/advisories/ghsa-h9mr-7752-ffhq)
+- [Rapid7 VEDB: CVE-2026-114202](https://www.rapid7.com/db/vulnerabilities/cve-2026-114202/)
+- [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
+- [CSIRT Toscana bülteni (ikincil)](https://csirt.regione.toscana.it/vulnerabilita-in-prodotti-asus-al13-261119-csirt-ita/)
+
+---
+
+# Cisco Expressway root RCE’si: PoC sonrası ilk istismar
+
+- Kaynak: https://fosstr.com/blog/cisco-expressway-cve-2026-76466/
+- Tür: Yazı
+- Tarih: 2026-11-20
+- Etiketler: security, cisco, expressway, cve, rce, active-exploitation
+- Özet: CVE-2026-76466, kümelenmiş Cisco Expressway cihazlarında root komut çalıştırılmasına yol açıyor. F6’nın ilk vahsi istismar bulgusu, IoC’ler ve CISA KEV durumu.
+
+Cisco, **CVE-2026-76466** için cisco-sa-vcs-static-cred-hr7EWZ8t danışma notunu 21 Ekim 2026'da yayımladı. Açık, kümelenmiş Expressway-C ve Expressway-E cihazlarının veritabanı servisinde kimlik doğrulamasız uzaktan root komut çalıştırılmasına izin veriyor; CVSS 3.1 skoru **9.8** ve workaround yok.
+
+18 Kasım 2026'da Rus güvenlik şirketi F6, açığın kamuya açık PoC'tan kısa süre sonra vahşi ortamda istismar edildiğini bildirdi. Cisco'nun danışma notu hâlâ "kötüye kullanım bilgisi yok" diyor; buna karşın 20 Kasım itibarıyla CVE CISA KEV kataloğunda. Bu yazı, satıcı bildirimi ile saha kanıtı arasındaki farkı net tutuyor.
+
+## Kısa özet
+
+| Alan | Doğrulanmış bilgi |
+|---|---|
+| Kimlik | `CVE-2026-76466`, danışma notu `cisco-sa-vcs-static-cred-hr7EWZ8t`, bug `CSCww27732` |
+| Skor | CVSS 3.1 9.8, `AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` |
+| Sınıf | CWE-798, Use of Hard-coded Credentials |
+| Etkilenen | Yalnızca **küme** oluşturan Expressway-C / Expressway-E; sanal ve appliance |
+| Ön koşul | Ağ erişimi ve kalıcı çerezlerin (persistent cookies) ele geçirilmesi |
+| Etki | Veritabanı servisi RPC çağrılarıyla OS üzerinde root olarak keyfi komut |
+| workaround | Yok; Cisco yalnızca X15.5.20'ye yükseltmeyi öneriyor |
+| Eski sürümler | X14 ve öncesi için düzeltilmiş sürüm yok, göç gerekiyor |
+| İstismar | F6: 18 Kasım 2026'da ilk vahsi vaka; Cisco notu güncellenmedi |
+| CISA KEV | **Evet**, 20 Kasım 2026'da eklendi; BOD 26-04 teslim tarihi 23 Kasım |
+
+![Expressway küme veritabanı servisi istismar zinciri](/diagrams/cisco-expressway-cve-2026-76466.svg)
+
+## 1. Cisco'nun danışma notu ne diyor?
+
+21 Ekim 2026 tarihli ve "Version 1.0: Final" olarak işaretlenmiş danışma notunun ana noktaları:
+
+- Expressway serisinin veritabanı servisindeki kusur, kimlik doğrulamasız uzaktaki saldırgana ağ erişimiyle keyfi OS komutu çalıştırma imkânı veriyor.
+- Kök neden **kalıcı çerezlerin** kullanılması. Ayrıca kümeleme için TLS Verify Mode "Enabled" iken istemci sertifikaları yeterince doğrulanmıyor; yani sertifika doğrulaması fiilen yapılmıyor.
+- Çerezleri ele geçiren saldırgan, veritabanı servisine bağlanıp belirli RPC komutlarını çağırabiliyor; komutlar cihazın işletim sisteminde **root** olarak çalışıyor.
+- Etkilenen ürünler Expressway Core (Expressway-C) ve Expressway Edge (Expressway-E); sanal ve appliance sürümleri, **yalnızca küme içinde yapılandırılmışsa**.
+- Düzeltme: X15.5.3 ve öncesi için ilk düzeltilmiş sürüm **X15.5.20**; X14 ve öncesinde düzeltilmiş sürüm yok, desteklenen bir sürüme göç gerekiyor.
+- **workaround yok.** Cisco, yamayı geçici çözüm olarak görmediğini açıkça yazıyor.
+- "Exploitation and Public Announcements" bölümü hâlâ PSIRT'in kamuya açık duyuru veya kötüye kullanım bilgisine sahip olmadığını söylüyor.
+
+Açığı Stefan Aleksic (Jane Street) bildirmiş. Cisco, bu düzeltmenin Ekim 2026 Expressway sertleştirme sürümünün bir parçası olduğunu da belirtiyor.
+
+## 2. Neden yalnızca kümelenmiş sistemler?
+
+Küme, Expressway düğümleri arasında kayıt ve arama durumunu çoğaltır; bunu sağlayan veritabanı servisi düğümler arasında erişilebilir olmak zorundadır. Aynı tasarım, sınır düğümünün küme bağlantısı üzerinden merkezi düğümlere ulaşabilmesi anlamına gelir.
+
+Kamuya açık PoC'a dayanan ikincil analizler, servisin Erlang dağıtım mekanizmasına dayandığını ve sabit bir düğüm kimliği ile çerez kullandığını anlatıyor. F6'ın yayımladığı IoC'de bu kimlik `wombat@127.0.0.1` olarak görünüyor: başarılı istismarda Expressway'in `erlang.log` dosyasına `nodeup,'wombat@127.0.0.1'` kaydı düşüyor. PoC'un çerez değeri ve TCP 4372 üzerinden RPC zinciri ikincil kaynaklarda yer alıyor; Cisco danışma notu bu ayrıntıları doğrulamıyor ve çerezlerin nasıl ele geçirildiğini açıklamıyor.
+
+Tek bir cihaz, küme dışında çalışıyorsa danışma notunun kapsamı dışında. "İnternete açık Expressway var" ifadesi de tek başına yeterli değil; küme durumu ve veritabanı servisine erişim ayrıca gerekli.
+
+## 3. F6'nın gördüğü saldırı zinciri
+
+F6'nın 18 Kasım 2026 tarihli basın açıklaması, Rus bir kuruluşta görülen ilk vakayı şöyle özetliyor:
+
+1. Saldırganlar önce internete açık **iki Expressway X15.5.3** cihazını ele geçiriyor.
+2. Bunlardan biri üzerinden iç ağdaki **iki küme düğümüne** geçiyor; toplam dört cihaz.
+3. Root yetkisini aldıktan sonra yatay hareket için özel Python betikleri hazırlıyorlar: ağ tarama, SMB kaynaklarını bulma, SQL Server ve WinRM ile etkileşim, GitLab depolarında kimlik bilgisi arama.
+4. Betikler saldırı sırasında değiştiriliyor. F6, kaynak koddaki karakteristik yorum ve düzeltme açıklamalarının bir **AI asistanı kullanımına işaret ettiğini** yazıyor; bu bir çıkarım, saldırganın kimliği ya da gruba atfı değil.
+5. F6 olayı bilinen bir aktöre atfetmiyor.
+
+PoC'un GitHub'da 5 Kasım 2026'da yayımlandığı bilgisi ikincil kaynaklardan geliyor. F6 yalnızca "PoC'tan kısa süre sonra" diyor; kesin PoC tarihini birincil kaynak doğrulamıyor.
+
+## 4. İstismar durumu ve KEV
+
+| Kaynak | Konum |
+|---|---|
+| Cisco PSIRT (21 Ekim notu) | Kötüye kullanım bilgisi yok; not güncellenmedi |
+| F6 (18 Kasım) | İlk vahsi istismar, Rus kuruluş, X15.5.3 cihazlar |
+| CISA KEV (20 Kasım kataloğu) | CVE listelendi; eklenme 20 Kasım, teslim 23 Kasım, forensic triage "Yes" |
+| CISA ADP SSVC | `Exploitation: active`, `Automatable: yes`, `Technical Impact: total` |
+
+Yani "Cisco istismarı doğruladı" denemez; satıcı notu sessiz. Ancak "KEV'de yok" da artık doğru değil. CISA, CVE'yi 20 Kasım 2026'da BOD 26-04 kapsamına aldı ve adli üçlaj gerektirdi.
+
+## 5. IoC ve tespit
+
+F6'ın defang edilmiş göstergeleri:
+
+- IP adresleri: `66.179.31[.]32` ve `18.130.47[.]116`
+- `erlang.log` içinde `nodeup,'wombat@127.0.0.1'` kaydı
+- Dosya yolları: `/mnt/harddisk/i{0-9}{4}[a-zA-Z]?/*.py`
+
+F6, yama uygulanamıyorsa TCP 4371–4372 bağlantılarını yalnızca güvenilir küme düğümlerinin IP'leriyle sınırlamayı öneriyor. Bu, Cisco'nun resmi bir workaround'u değil; yalnızca maruziyeti azaltan geçici bir ağ kontrolü. `nodeup` kaydı görülürse diğer loglar ve artefaktlarla doğrulama yapılmalı; tek başına kesin ele geçirme kanıtı değil.
+
+## 6. Ne yapmalı?
+
+1. **Kümedeki tüm düğümleri yükseltin.** X15.5.3 ve öncesi için X15.5.20; X14 ve öncesinde düzeltilmiş sürüm olmadığından desteklenen sürüme göç planlayın.
+2. **Yamayı tüm düğümlere uygulayın.** Tek bir düğümde kalmış eski sürüm, küme bağlantısı üzerinden diğerlerine açık kapı bırakır.
+3. **İstismar izi arayın.** Erlang loglarında `wombat` düğüm kaydı, belirtilen IP'ler ve şüpheli Python dosyaları; tespit halinde cihazı yalnızca yamamak yerine olay müdahalesi başlatın.
+4. **Küme portlarını sınırlayın.** TCP 4371–4372'yi yükseltme tamamlanana kadar küme üyeleriyle sınırlı tutun; bu resmi workaround değil.
+5. **Yönetim ve küme arayüzlerini internetten çıkarın.** Expressway'in dış uç bileşeni olsa bile veritabanı servisi bir yönetim düzlemidir.
+6. **Sınırlamayı belgeleyin.** KEV teslim tarihi 23 Kasım 2026; BOD 26-04 ve adli üçlaj gereksinimleri kapsamında envanter ve kanıt toplama şart.
+
+## 7. Ne yazmamalı?
+
+- "Tek başına Expressway de etkilendi" — danışma notu yalnızca kümelenmiş cihazları listeliyor.
+- "Cisco aktif istismarı doğruladı" — danışma notu hâlâ kötüye kullanım bilgisi olmadığını söylüyor.
+- "CISA KEV'de değil" — 20 Kasım 2026 kataloğunda **var**, 23 Kasım teslim tarihiyle.
+- "Workaround var, portları kapatmak yeterli" — Cisco workaround yok diyor; port kısıtı yalnızca F6 önerisi.
+- "F6 saldırıyı bilinen bir APT'ye atfetti" — F6 atıf yapmadı.
+- "AI ile yazıldığı kanıtlandı" — F6 yalnızca kod yorumlarının buna işaret ettiğini söyledi.
+- "PoC 5 Kasım'da yayımlandı" — ikincil kaynak iddiası; F6 sadece "kısa süre sonra" diyor.
+
+## Durum
+
+20 Kasım 2026 itibarıyla bu, PoC sonrası sahada görülen, satıcı notu ile saha kanıtı arasında zaman farkı bulunan bir root RCE. Yama mevcut, CISA KEV kaydı var, fakat Cisco danışma notu hâlâ ilk hâli. En güvenli okuma: istismar kanıtı F6'dan, düzeltme bilgisi Cisco'dan, önceliklendirme ise KEV'den.
+
+## Bu seriden
+
+- [Neden her şey 2shell oluyor?](/blog/neden-her-sey-2shell-oluyor)
+- [WhatsApp iOS Noise anahtarı iddiası](/blog/whatsapp-ios-noise-anahtari-cve-2026-128974)
+- [Ruby2Shell: case conversion taşması](/blog/ruby2shell-cve-2026-132825)
+
+## Kaynaklar
+
+- [Cisco Advisory: cisco-sa-vcs-static-cred-hr7EWZ8t](https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-vcs-static-cred-hr7EWZ8t)
+- [MITRE CVE API: CVE-2026-76466](https://cveawg.mitre.org/api/cve/CVE-2026-76466)
+- [F6: İlk CVE-2026-76466 istismarı ve IoC'ler](https://www.f6.ru/media-center/press-releases/cisco-cve-2026-76466/)
+- [CISA KEV: CVE-2026-76466](https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-76466)
+- [SecurityWeek: PoC sonrası istismar zaman çizelgesi (ikincil)](https://www.securityweek.com/hackers-exploit-cisco-expressway-vulnerability-soon-after-poc-release/)
+- [Ostorlab: PoC teknik ayrıntıları (ikincil)](https://blog.ostorlab.co/cisco-expressway-root-rce-cve-2026-76466.html)
+
+---
+
+# IBM Guardium Data Protection: CVE-2026-84236 unauthenticated RCE
+
+- Kaynak: https://fosstr.com/blog/ibm-guardium-cve-2026-84236/
+- Tür: Yazı
+- Tarih: 2026-11-20
+- Etiketler: security, ibm, guardium, cve, rce
+- Özet: IBM Guardium 12.2 SharePoint Tap bileşeninde güvenilmeyen deserialization açığı. CVE-2026-84236, 12.2.4 düzeltmesi ve 14 açıklık bülteninin doğrulanmış dökümü.
+
+19 Kasım 2026'da IBM, Guardium Data Protection için çoklu güvenlik bülteni yayımladı. Bülende **14 CVE** yer alıyor; bunlardan biri de **CVE-2026-84236**: SharePoint Tap `MulticastTransceiver` bileşeninde güvenilmeyen verinin deserializasyonu (CWE-502). IBM'in açıklamasına göre kimlik doğrulamasız uzaktaki bir saldırgan bu açığı kullanarak etkilenen sistemde keyfi kod yürütebiliyor. Skor, IBM kaynaklı **CVSS 3.1 tabanında 9.8**.
+
+## Kısa özet
+
+| Alan | Doğrulanmış | İddia / uyarı |
+|---|---|---|
+| Kimlik | `CVE-2026-84236`, CNA: IBM PSIRT, CWE-502 | — |
+| Bülten | IBM Security Bulletin, 19 Kasım 2026, ilk yayımlama | — |
+| Bileşen | SharePoint Tap `MulticastTransceiver` | Servis/port bilgisi bültende yok |
+| Etkilenen | Guardium Data Protection 12.2 (metadata: Linux) | Diğer sürüm dalları bültende listelenmiyor |
+| Düzeltme | 12.2.4; Fix Central `SqlGuard_12.0p7240_GPU_Oct_2026_V12.2.4_FC` | — |
+| Skor | IBM: CVSS 3.1 **9.8 Critical** | NVD'de skor `Secondary` (kaynak IBM), analiz bekliyor |
+| Vektör | `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` | Hesap veya kullanıcı etkileşimi gerekmiyor |
+| Ön koşul | Ağ üzerinden ilgili servise erişim | — |
+| İstismar | CISA SSVC: `exploitation: none`; KEV'de yok | Bültenin kendisi istismar bildirimi içermiyor |
+| Geçici çözüm | **None** (bültenin Workarounds bölümü) | Ağ kısıtlaması genel sertleştirme, IBM workaround'u değil |
+| Açık sayısı | Bülende 14 CVE sayıldı | Üçü kritik ve hesapsız |
+
+![IBM Guardium deserialization açığı şeması](/diagrams/ibm-guardium-cve-2026-84236.svg)
+
+## 1. Resmi bülten ne diyor?
+
+IBM'in Security Bulletin'i (19 Kasım 2026, ilk yayımlama) CVE-2026-84236 için şu alanları veriyor:
+
+- **Açıklama:** "IBM Security Guardium Data Protection is vulnerable to insecure deserialization in the SharePoint Tap MulticastTransceiver component. An unauthenticated remote attacker could exploit this vulnerability to execute arbitrary code on the affected system."
+- **CWE:** CWE-502, *Deserialization of Untrusted Data*
+- **CVSS Source:** IBM
+- **CVSS Base score:** 9.8
+- **CVSS Vector:** `(CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H)`
+- **Etkilenen:** IBM Guardium Data Protection, sürüm 12.2
+- **Düzeltme:** 12.2.4
+- **Workarounds and Mitigations:** None
+
+NVD API kaydı 19 Kasım 2026'da oluşturuldu, 20 Kasım'da güncellendi ve hâlâ `Awaiting Analysis`. Kaydı IBM PSIRT (`psirt@us.ibm.com`) göndermiş; CVSS metriği `type: Secondary`. Yani 9.8, IBM'in kendi skoru ve NVD'nin bağımsız analizi henüz yok. CPE alanları 12.2 ve 12.2.0'ı kapsıyor.
+
+Bültenin kendisinde "istismar görmedik" gibi bir cümle **yok**. İkincil kaynaklar IBM'in istismar olmadığını bildirdiğini yazıyor; bunu birincil bültene dayanarak söylemek doğru değil. Doğrulanmış olan, CISA SSVC girişinin `exploitation: none` demesi.
+
+## 2. Deserialization neden kod yürütmeye dönüşür?
+
+Deserialization, serileştirilmiş (serialize edilmiş) veriyi yeniden nesneye dönüştürme işlemidir. Güvenilmeyen veri bu işleme sokulduğunda, veri içindeki alanlar nesne oluşturma sırasında yorumlanır. Uygulama gelen veriyi doğrulamıyor ve sınırlı bir tür kümesiyle çalışmıyorsa, saldırganın seçtiği sınıflar ve geri çağrı metotları süreç içinde çalışabilir.
+
+IBM'in açıklaması tam olarak bu sınıfa işaret ediyor: SharePoint Tap `MulticastTransceiver` bileşeni, SharePoint izleme tarafından gelen veriyi yeterli doğrulama olmadan deserialize ediyor ve bu, uzaktaki kimlik doğrulamasız saldırgana keyfi kod yürütme imkânı veriyor.
+
+Bülten hangi protokolün, portun veya serileştirme mekanizmasının kullanıldığını yazmıyor. Bu yüzden "şu port açıksa" ya da "şu gadget zinciri kullanılıyor" gibi ayrıntılar **doğrulanmamıştır**. Saldırı yüzeyini tararken tek güvenilir çıkarım, ilgili bileşenin ağdan erişilebilir olması gerektiğidir.
+
+## 3. Saldırı ön koşulları
+
+CVSS vektörü `AV:N/AC:L/PR:N/UI:N` diyor:
+
+- **AV:N** — ağ üzerinden; kurbanın cihazına yerel erişim gerekmiyor.
+- **AC:L** — düşük karmaşıklık.
+- **PR:N** — saldırganın geçerli bir hesabı olmasına gerek yok.
+- **UI:N** — kullanıcı etkileşimi yok.
+- **C:H/I:H/A:H** — gizlilik, bütünlük ve erişilebilirlik üzerinde yüksek etki. Vektör `S:U` (scope unchanged) diyor; yani etki Guardium süreciyle sınırlı, sonraki sistemler için ayrı bir yüksek etki skoru yok.
+
+Pratik ön koşul, SharePoint Tap verisini alan servise ağdan ulaşabilmektir. Guardium genellikle veritabanı ve SharePoint izleme için kullanıldığından, toplayıcı servislerin kurum içinde geniş bir ağ kesiminden erişilebilir olması riski yükseltir. Bu, IBM'in bültende yazdığı bir koşul değil; dağıtım mimarisine dayanan genel bir değerlendirmedir.
+
+## 4. Bülendeki 14 açık ve üç kritik madde
+
+Bültenin Vulnerability Details bölümünde 14 ayrı CVE saydık. Aggregator'ların "14 açık" iddiası birincil bültenle uyumlu. Hepsinin kapsamı aynı değil:
+
+| CVE | Skor | Tür | Ön koşul |
+|---|---|---|---|
+| CVE-2026-84236 | 9.8 | Güvenilmeyen deserialization (SharePoint Tap) | Hesapsız |
+| CVE-2026-87977 | 9.8 | SQL injection (edge-controller) | Hesapsız |
+| CVE-2026-82339 | 9.1 | Eksik kimlik doğrulama (SharePoint S-TAP RelayService) | Hesapsız |
+| CVE-2026-82342 | 8.1 | PROXY protocol v1 stack overflow | Hesapsız, yüksek karmaşıklık |
+| CVE-2026-84273 | 8.1 | Path traversal (datasource) | Kimlik doğrulamalı |
+| CVE-2026-84087 | 7.8 | Yerel ayrıcalık yükseltme (SUID `podman_wrapper`) | Yerel, düşük ayrıcalıklı |
+
+Üç kritik maddenin ortak özelliği hesap gerektirmemesi. Ancak etkileri farklı: 84236 kod yürütme, 87977 veritabanı içeriğine erişim/değiştirme, 82339 ise sahte denetim olayı enjeksiyonu ve aktif izleme politikasına erişim. Bültenin geri kalan maddeleri undici gibi üçüncü taraf bileşenleri ve daha düşük etkili hataları içeriyor.
+
+"14 açık" ifadesini kullanırken şunu net söylemek gerekiyor: bunların hepsi Guardium'a özgü kod hataları değil; IBM, ürününde bulunan bileşenleri de aynı bültende listeliyor.
+
+## 5. İstismar durumu ve KEV
+
+- **CISA SSVC:** NVD kaydındaki giriş `exploitation: none`, `automatable: yes`, `technicalImpact: total` diyor.
+- **CISA KEV:** 20 Kasım 2026 itibarıyla CVE-2026-84236 listede yok.
+- **Birincil bülten:** istismar veya PoC hakkında bir ifade içermiyor.
+- **İkincil kaynaklar:** kyberkit, securityonline ve dailysecurityreview "istismar yok, PoC yok" diyor; bunlar **ikincil ve doğrulanmamış** yorumlardır.
+
+Yani "aktif istismar ediliyor" demek için birincil kanıt yok; "IBM kesin istismar olmadığını açıkladı" demek de bültenin ötesine geçmek olur. En güvenli ifade: SSVC exploitation `none`, KEV'de yok, birincil bültende istismar bildirimi bulunmuyor.
+
+## 6. Ne yapmalı?
+
+1. **12.2.4'e yükseltin.** IBM'in Fix Central'da yayınladığı paket kimliği: `SqlGuard_12.0p7240_GPU_Oct_2026_V12.2.4_FC`.
+2. **Tüm 14 CVE'yi kapsayacak şekilde plan yapın.** Yalnızca 84236'yı kapatmak, aynı bültendeki SQL injection ve eksik kimlik doğrulama açıklarını bırakır.
+3. **SharePoint Tap servislerini sınırlayın.** S-TAP ve toplayıcı arayüzlerini yalnızca gereken sunucuların ve yönetim ağının erişimine açın. Bu, IBM'in bu CVE için yazdığı bir workaround değil, genel ağ sertleştirmedir.
+4. **Denetim kayıtlarını inceleyin.** 82339 sahte audit olayı enjeksiyonuna izin verdiği için denetim bütünlüğünü ayrıca doğrulayın.
+5. **Yönetilen hizmet kullanıyorsanız tedarikçiyi sorun.** Guardium'u bir servis sağlayıcı yönetiyorsa 12.2.4 durumunu yazılı olarak teyit edin.
+6. **Workaround beklemeyin.** Bültenin Workarounds and Mitigations alanı açıkça "None" diyor.
+
+## 7. Ne yazmamalı?
+
+- "Aktif istismar ediliyor" — SSVC `none`, KEV'de yok.
+- "IBM istismar olmadığını resmen açıkladı" — birincil bültende böyle bir ifade yok.
+- "Sadece 84236 yamandı" — bülten 14 CVE kapsıyor.
+- "NVD 9.8 verdi" — skor IBM kaynaklı ve NVD analizi bekliyor; 9.8 doğru ama kaynağı IBM.
+- "Workaround var" — bülten `None` diyor.
+- "Tüm sürümler etkileniyor" — bülten yalnızca 12.2'yi listeliyor.
+- "Kurbanın tıklaması gerekiyor" — vektör `UI:N`.
+- "Kod yürütme sonraki sistemlere de yayılıyor" — vektör `S:U` diyor.
+
+## Durum
+
+20 Kasım 2026 itibarıyla bu vaka **satıcı bülteniyle güçlü biçimde doğrulanmış, NVD analizi tamamlanmamış** bir açık. Bileşen, sınıf, skor, vektör, etkilenen sürüm ve düzeltme net. Belirsiz olan, istismara dair birincil bir bildirimin bulunmaması ve bültenin saldırı yüzeyine dair teknik ayrıntı vermemesi.
+
+## Bu seriden
+
+- [Neden her şey 2shell oluyor?](/blog/neden-her-sey-2shell-oluyor)
+- [Ruby2Shell: case conversion taşması](/blog/ruby2shell-cve-2026-132825)
+- [WhatsApp iOS Noise anahtarı iddiası](/blog/whatsapp-ios-noise-anahtari-cve-2026-128974)
+
+## Kaynaklar
+
+- [IBM Security Bulletin: Guardium Data Protection multiple vulnerabilities](https://www.ibm.com/support/pages/node/7297484)
+- [IBM Security Bulletin (alternate URL)](https://www.ibm.com/support/pages/security-bulletin-ibm-guardium-data-protection-affected-multiple-vulnerabilities-41)
+- [NVD API: CVE-2026-84236](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-84236)
+- [NVD: CVE-2026-84236](https://nvd.nist.gov/vuln/detail/cve-2026-84236)
+- [CVE.org kaydı: CVE-2026-84236](https://www.cve.org/CVERecord?id=CVE-2026-84236)
+- [CWE-502: Deserialization of Untrusted Data](https://cwe.mitre.org/data/definitions/502.html)
+- [IBM Fix Central: 12.2.4 paketi](https://www.ibm.com/support/fixcentral/swg/quickorder?parent=IBM%20Security&product=ibm/Information+Management/InfoSphere+Guardium&release=All&platform=All&function=fixId&fixids=SqlGuard_12.0p7240_GPU_Oct_2026_V12.2.4_FC&includeSupersedes=0&source=fc)
+- [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
+- [Kyberkit analizi (ikincil)](https://kyberkit.com/en/articles/ibm-guardium-data-protection-cve-2026-84236-critical-flaws)
+
+---
+
+# KVM guest-to-host kaçışı: CVE-2026-99312 ve 127 GB host belleği
+
+- Kaynak: https://fosstr.com/blog/linux-kvm-cve-2026-99312/
+- Tür: Yazı
+- Tarih: 2026-11-20
+- Etiketler: security, linux, kvm, virtualization, cve, memory-safety
+- Özet: AMD nested virtualization açığı, konuk VM’den host belleğine erişimi mümkün kılıyor. CVE-2026-99312 teknik nedeni, düzeltme sürümleri ve skor çelişkisiyle birlikte incelendi.
+
+18 Kasım 2026'da Linux çekirdeği CVE kaydı yayımlandı: **CVE-2026-99312**, başlığıyla "KVM: x86: Unconditionally reset MMU context when emulating INIT". Terra Security araştırmacısı Oren Yomtov'un bulgusu, yalnızca bir kullanım-sonrası-serbest bırakma (use-after-free) hatası değil; doğru koşullarda konuk sanal makinenin host belleğini okuyup yazabildiği bir guest-to-host sınır ihlali.
+
+DigitalOcean üzerindeki bir Droplet'ta yaklaşık **127 GB host RAM'i** salt okunur olarak haritalandı ve ilk çıktı host çekirdeğinin sürüm bayrağı oldu. Yazma primitive'i ise başka müşteri bulunmayan, araştırmacılara ait bare-metal AMD sunucusunda 32 seçilmiş baytla gösterildi. 20 Kasım itibarıyla açık CISA KEV'de değil ve kamuya açık exploit veya tespit rehberi yok.
+
+## Kısa özet
+
+| Alan | Doğrulanmış bilgi |
+|---|---|
+| Kimlik | `CVE-2026-99312`, CNA: Linux; kayıt 18 Kasım 2026'da yayımlandı |
+| Teknik neden | L2 `CR0.PG=0` iken INIT taklidi MMU bağlamını sıfırlamıyor; bayat NPT işaretçisi |
+| Etkilenen | AMD üzerinde nested virtualization açık KVM host'ları (nested SVM) |
+| Etkilenmeyen | Intel KVM host'ları; nested kapalı host'lar |
+| Ön koşul | Konuk VM kontrolü; ağ üzerinden tetiklenmiyor |
+| Gösterilen etki | DigitalOcean'da ~127 GB okuma; kendi bare-metal sunucusunda 32 bayt yazma |
+| Skor | Çekirdek CNA: 8.8; Red Hat sayfası: geçici 7.8 (AC:H) |
+| Düzeltme | 7.4-rc2 (9 Kasım), stable 7.3.5 ve LTS 6.18.64 / 6.12.118 (17 Kasım) |
+| Geçici önlem | `kvm_amd` için `nested=0` |
+| İstismar / KEV | Araştırma dışında istismar bildirimi yok; KEV'de değil |
+
+![KVM MMU bağlamı ve host belleği erişimi](/diagrams/linux-kvm-cve-2026-99312.svg)
+
+## 1. Kök neden: INIT sonrası bayat MMU bağlamı
+
+Linux CVE duyurusunun başlığı hatanın tam yerini veriyor. KVM, MMU sayfa rolünde `guest_mode` (L2) bilgisini de taşıyor. L2 çalışırken `CR0.PG=0` iken bir INIT taklit edilirse, KVM L1'e geri döndüğünde MMU bağlamını sıfırlamıyor ve eski (stale) bağlamla çalışmaya devam ediyor.
+
+Duyurudaki kritik not: hata yalnızca **nested SVM** yani AMD tarafını etkiliyor. VMX (Intel) tarafında INIT koşulsuz bir intercept olduğu için L2 aktifken INIT taklit etmek mümkün değil. Etkilenen dosya `arch/x86/kvm/x86.c`.
+
+Hata yeni değil: 6.1 çekirdeğine 2022'de giren bir commit ile geldi; 5.15.81 ve 6.0.11'e de backport edildi. Terra'ya göre asıl neden, 2022'de CVE-2022-3344 için yapılan düzeltmenin VMCB işaretçisini doğru yere döndürürken sayfa tablosu işaretçisini atlaması. Yani yaklaşık dört yıl boyunca bir güvenlik yamasının kendi açığı olarak durdu.
+
+## 2. 127 GB nasıl okundu, 32 bayt nasıl yazıldı?
+
+Terra'nın anlatımı, KVM'in her sanal CPU için tuttuğu VMCB içindeki `nCR3` alanına dayanıyor. Bu alan, konuğun nested page table (NPT) üst seviye sayfasının host adresini gösteriyor:
+
+1. L2 dururken INIT, KVM'in L1'in NPT işaretçisini yenilemesini atlıyor; işaretçi artık serbest bırakılmış bir sayfayı gösteriyor.
+2. Çekirdek o sayfayı konuğun yeni bir alt seviye NPT sayfası olarak yeniden kullanıyor. İşlemci ise bayat işaretçiyi hâlâ üst seviye gibi okuyor.
+3. CPU, alt seviye girdisini ikinci seviye tablo adresi sanıp konuğun kendi belleğindeki bir sayfayı (Page A) tablo olarak kullanıyor. Page A'nın tüm girdileri saldırganın kontrolünde.
+4. Geri kalan tablo saldırgan tarafından yazılıyor; girdiler host'un istediği fiziksel sayfasını işaret edebiliyor.
+
+DigitalOcean Droplet'ında bu tablo yaklaşık 127 GB host RAM'ine, salt okunur olarak yönlendirildi; ilk okunan veri host çekirdek sürüm bayrağıydı. **Yazma testi paylaşımlı üretim ortamında yapılmadı**: araştırmacılar kendi bare-metal AMD sunucularında bir host çekirdek sayfasını yazılabilir eşlediler ve host'a yükledikleri witness modülüyle 32 seçilmiş baytın değiştiğini doğruladılar. Terra, host üzerinde keyfi kod çalıştırdığını iddia etmiyor.
+
+## 3. Ön koşullar ve etkilenmeyen sistemler
+
+- Saldırganın konuk VM üzerinde kontrolü olmalı; her iki test de konuk içinde root ile başladı. CNA'nın vektörü ise host tarafında `/dev/kvm` erişimi olan ayrıcalıksız bir kullanıcıyı (`PR:L`) tarif ediyor.
+- Tetikleyici bir ağ mesajı değil; `AV:L`. Bu yüzden "uzaktan RCE" tanımı doğru değil.
+- Host AMD olmalı ve `kvm_amd` için nested virtualization açık olmalı. Red Hat, Intel tabanlı KVM dağıtımlarının ve nested AMD virtualization olmayan standart ortamların etkilenmediğini yazıyor.
+- Terra'nın incelediği birçok bulut sağlayıcısı, AMD üzerinde nested virtualization'ı açmadığı için etkilenmedi.
+
+Bunlar "her KVM host'u etkilendi" başlıklarını geçersiz kılıyor. Ölçüt iki şey: işlemci mimarisi ve `nested` parametresi.
+
+## 4. Düzeltme ve dağıtım durumu
+
+Terra'nın zaman çizelgesi ve çekirdek kaydı örtüşüyor:
+
+- **21 Ekim 2026:** KVM bakımcılarına bildirim.
+- **2 Kasım:** Düzeltme mainline'a birleşti.
+- **9 Kasım:** İlk tag `v7.4-rc2`.
+- **17 Kasım:** Stable `7.3.5` ve LTS `6.18.64`, `6.12.118` yayımlandı.
+- **18 Kasım:** CVE yayımlandı.
+
+DigitalOcean, açığı kendi host'larında doğruladığını, critical olarak sınıflandırdığını ve canlı yama (live patch) hazırladığını bildirdi; Droplet müşterileri için "No action needed on your part" diyor. İkincil kaynaklara göre 20 Kasım itibarıyla çoğu dağıtımın kararlı paketi henüz yayımlanmış değil; bu nedenle kendi host'unu yöreten taraf için işletim sistemi güncellemesi ve yeniden başlatma şart.
+
+## 5. Skor çelişkisi ve istismar durumu
+
+| Kaynak | Skor | Not |
+|---|---|---|
+| Linux CNA | CVSS 3.1 **8.8**, `AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H` | Gizlilik, bütünlük ve erişilebilirlik yüksek |
+| Red Hat (mevcut sayfa) | Geçici **7.8**, `AV:L/AC:H/PR:L/UI:N/S:C/C:H/I:H/A:H` | `AC:H`; C/I/A yine High |
+| İkincil basın iddiası | 5.6 Moderate, yalnızca DoS | Mevcut Red Hat sayfasıyla uyuşmuyor; doğrulanmadı |
+| DigitalOcean | Kendi ortamı için critical | Paylaşımlı host riski |
+
+Red Hat'in canlı CVE sayfası, "preliminary and subject to review" notuyla 7.8 ve `AC:H` gösteriyor; gizlilik/bütünlük etkisini High olarak listeliyor. Buna karşın bazı ikincil haberler Red Hat'i 5.6 Moderate ve "DoS-only" olarak aktarıyor. Bu aktarımı birincil kaynak doğrulamıyor; yazılacaksa ikincil ve doğrulanmamış olarak etiketlenmeli.
+
+**İstismar:** Araştırma dışında vahşi istismar bildirimi yok; kamuya açık exploit yok. EUVD, CISA KEV ve EU KEV için "Not listed" diyor; 2026.11.20 KEV kataloğunda CVE-2026-99312 bulunmuyor. Terra ve DigitalOcean herhangi bir IoC veya geçmiş istismarı tespit rehberi yayımlamadı.
+
+## 6. Ne yapmalı?
+
+1. **Host envanterini ayırın.** AMD işlemcili ve `nested=1` olan KVM host'larını bulun: `cat /sys/module/kvm_amd/parameters/nested`.
+2. **Çekirdeği güncelleyip yeniden başlatın.** 7.3.5, 6.18.64, 6.12.118 veya sonrası; dağıtım paketi gelene kadar `uname -r` ile mevcut sürümü doğrulayın. Konukların içini güncellemek bu hatayı düzeltmez.
+3. **Yama bekleniyorsa nested'i kapatın.** `options kvm_amd nested=0` ayarını modül yapılandırmasına yazın; Red Hat'e göre değişiklik için tüm VM'ler kapatılmalı, kalıcılık için yeniden başlatma gerekir.
+4. **Kiracıları uyarın.** Nested virtualization'ın kapanması, konukların içinde VM çalıştıran kullanıcıları doğrudan etkiler.
+5. **Bulut müşterileri için aksiyon yok.** Düzeltme host çekirdeğinde; DigitalOcean filoyu canlı yamayla kapattığını açıkladı.
+6. **Tespit yerine maruziyet ölçün.** IoC olmadığından, "zamanında istismar edildik mi" sorusundan önce "hangi host'lar açıktı" sorusunu yanıtlayın.
+
+## 7. Ne yazmamalı?
+
+- "Uzaktan tetiklenen RCE" — vektör `AV:L`, ağ mesajı tetikleyici değil.
+- "Intel host'lar da etkilendi" — hata yalnızca nested SVM'de.
+- "Host'ta keyfi kod çalıştırıldı" — gösterilen etki okuma ve kontrollü yazma; kod çalıştırma iddiası yok.
+- "DigitalOcean'da paylaşımlı host'a yazıldı" — yazma testi yalnızca araştırmacıların kendi bare-metal sunucusunda.
+- "KEV'de, aktif istismar var" — 20 Kasım 2026 kataloğunda kayıt yok; istismar bildirimi yok.
+- "Red Hat 5.6 DoS-only diyor" — canlı sayfa 7.8 ve High C/I/A gösteriyor; 5.6 ikincil aktarım.
+- "Konukları güncelleyin" — düzeltme host çekirdeğinde.
+
+## Durum
+
+20 Kasım 2026 itibarıyla açık, yukarı yönlü düzeltmeleri çıkmış bir hypervisor sınır ihlali. Teknik kanıt güçlü; fakat yazma aşaması kontrollü bir ortamda gösterildi, istismar ve tespit verisi yok. Skor tartışması, gerçek ön koşulları gizlemesin: AMD + nested + konuk kontrolü.
+
+## Bu seriden
+
+- [Neden her şey 2shell oluyor?](/blog/neden-her-sey-2shell-oluyor)
+- [WhatsApp iOS Noise anahtarı iddiası](/blog/whatsapp-ios-noise-anahtari-cve-2026-128974)
+- [Ruby2Shell: case conversion taşması](/blog/ruby2shell-cve-2026-132825)
+
+## Kaynaklar
+
+- [CVE Record: CVE-2026-99312](https://cve.org/CVERecord/?id=CVE-2026-99312)
+- [Linux CVE duyurusu: KVM: x86: Unconditionally reset MMU context when emulating INIT](https://lists.openwall.net/linux-cve-announce/2026/11/18/2)
+- [Terra Security: KVM Guest-to-Host Escape](https://www.terra.security/blog/kvm-guest-to-host-escape)
+- [DigitalOcean: Virtualization, Responsible Disclosure, and CVE-2026-99312](https://www.digitalocean.com/blog/cve-2026-99312-kvm-patch)
+- [Red Hat CVE: CVE-2026-99312](https://access.redhat.com/security/cve/cve-2026-99312)
+- [EUVD-2026-128497: exploitation status](https://euvd.enisa.europa.eu/vulnerability/EUVD-2026-128497)
+- [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
+- [The Hacker News: skor aktarımı (ikincil)](https://thehackernews.com/2026/11/new-linux-kvm-flaw-cve-2026-99312-lets.html)
+
+---
+
+# SonicWall Gen 6 uyarısı: destek bitince critical CVE de gelmiyor
+
+- Kaynak: https://fosstr.com/blog/sonicwall-gen6-cve-2026-19868/
+- Tür: Yazı
+- Tarih: 2026-11-20
+- Etiketler: security, sonicwall, firewall, cve, kev, edge
+- Özet: SonicWall, SonicOS 6.x çalıştıran Gen 6 firewall cihazlarının hemen emekli edilmesini istiyor. KEV listesindeki CVE-2026-19868 ve yamasız kenar cihazları.
+
+SonicWall, 18 Kasım 2026'da yayımladığı ürün uyarısında SonicOS 6.x çalıştıran tüm Generation 6 (Gen 6 / 6.5) firewall'ların derhal değiştirilmesini istedi. Gerekçe sadece cihazların yaşlanması değil: **Gen 6 artık hiçbir güvenlik yaması almıyor; yeni bulunan bir açık Critical olsa bile yama gelmeyecek.**
+
+Bu uyarı, 6 Kasım'da CISA KEV listesine eklenen **CVE-2026-19868** ile aynı haftaya denk geliyor. Söz konusu SSL VPN açığı, resmi kayıtlarda Gen 7 ve Gen 8 sürümlerini kapsıyor; Gen 6 bu CVE'nin etkilenen sürüm listesinde yer almıyor. Ancak SonicWall'ın mesajı net: destek biten bir cihazda "bir sonraki critical açık" için de yama olmayacak.
+
+## Kısa özet
+
+| Alan | Durum |
+|---|---|
+| Gen 6 uyarısı | 18 Kasım 2026, SonicWall Product Advisory |
+| Kapsam | SonicOS 6.x çalışan tüm Gen 6 / 6.5 firewall'lar ve Gen 6 NSv sanal cihazları |
+| Yama politikası | Critical dâhil hiçbir yeni güvenlik yaması yok; destek satın alınamıyor |
+| Hedef mimari | SonicOS 8 çalışan Gen 8 |
+| CVE-2026-19868 | SonicOS SSLVPN, CWE-308, SAML ve SAML ile zorunlu kılınan MFA bypass |
+| CVSS | 7.1 High, kaynak: SonicWall CVE kaydı (ikincil raporlarda doğrulandı) |
+| Ön koşul | Alternatif bir kimlik doğrulama yöntemi için geçerli kimlik bilgileri; SSLVPN'de SAML açık olmalı |
+| CISA KEV | Eklenme 6 Kasım 2026, süre 20 Kasım 2026, ransomware kullanımı Unknown, forensic triage No |
+| Resmi workaround | Yok; satıcı düzeltmesi firmware yükseltme |
+
+![SonicWall Gen 6 ve CVE-2026-19868 şeması](/diagrams/sonicwall-gen6-cve-2026-19868.svg)
+
+## 1. SonicWall ne diyor?
+
+Resmi uyarının dili alışılmadık derecede doğrudan: "An end-of-life firewall that is still running is not a firewall that can still be secured." SonicWall, internet kenarında çalışan Gen 6 cihazların aktif olarak hedef alınmasını beklediğini ve bunların yüksek riskli maruziyet olarak ele alınması gerektiğini yazıyor.
+
+Gerekçe olarak üç eğilim gösteriliyor: kenar cihazları ve VPN'ler, istismar edilen bir açıkla başlayan ihlallerin önemli bir bölümünde hedef; açıklama ile doğrulanmış istismar arasındaki süre kısalıyor; saldırganlar desteklenmeyen cihazları taramak ve exploit üretmek için otomasyon ve AI kullanıyor.
+
+SonicWall'ın uyarısındaki en kritik cümle şu: yeni bir açık bulunduğunda desteklenen nesiller yama alır, Gen 6 almaz ve yayımlanan advisory saldırganlara nereye bakacaklarını gösterir. Şirket, 2024'teki CVE-2024-40766 vakasını örnek gösteriyor; o açık Gen 5, Gen 6 ve erken Gen 7'i etkilemiş, desteklenen cihazlar yama almıştı.
+
+## 2. Kapsamdaki modeller
+
+Uyarı, SonicOS 6.x çalışan tüm Gen 6 ve Gen 6.5 cihazlarını kapsıyor. Model listesi ve destek bitiş tarihleri şöyle:
+
+- **1 Ekim 2026:** TZ350, TZ350W, TZ500, TZ500W, SOHO 250, SOHO 250W; NSA 4600, NSA 5600, NSA 6600; NSa 4650, NSa 5650, NSa 6650.
+- **1 Ağustos 2026:** TZ400, TZ400W, TZ600, TZ600P, NSA 3600; NSa 3650.
+- **1 Mayıs 2026:** NSa 2650.
+- **16 Nisan 2026:** SOHO, SOHO W, TZ300P, NSa 9250, NSa 9450, NSa 9650; NSv 10 - NSv 1600 sanal cihazlar.
+- **20 Şubat 2026:** SuperMassive 9200, 9400, 9600, 9800; NSsp 12800, NSsp 12400.
+- **23 Ocak 2025:** TZ300, TZ300W.
+- **8 Mart 2024:** NSA 2600.
+
+Bütün bu tarihler 20 Kasım 2026 itibarıyla geçmiş durumda. Model adı tek başına nesli belirlemeyebilir; `NSa` hem Gen 6.5 hem Gen 7 olabilir. Bu yüzden firmware sürümünü (6.x ise kapsam içinde) ve cihaz envanterini kontrol etmek gerekir. NSv sanal cihazları da liste dışında bırakılmamalı.
+
+## 3. CVE-2026-19868: SAML ve MFA'nın atlanması
+
+CVE-2026-19868, SonicOS SSLVPN servisinde kimlik doğrulamanın zorunlu kılınmamasıyla ilgili; CWE-308, yani "Use of Single-Factor Authentication". Alternatif bir kimlik doğrulama yöntemi için geçerli kimlik bilgilerine sahip bir kullanıcı, SAML kontrollerini ve SAML üzerinden zorunlu kılınan MFA'yı atlayabiliyor.
+
+Bu bir kimliksiz RCE değil. İki koşul önemli: SSLVPN oturumları için SAML etkin olmalı ve saldırganın yerel hesap veya LDAP gibi başka bir yönteme ait geçerli kimlik bilgileri bulunmalı. SAML'e geçişin amacı her girişin kimlik sağlayıcı ve MFA üzerinden geçmesini sağlamak olduğu için, bypass gerçekten anlamlı bir güvenlik kaybı yaratıyor.
+
+SonicWall'ın advisory'si etkilenen sürümleri Gen 7 için 7.3.3-7015 ve öncesi, Gen 8 için 8.2.2-8015 ve öncesi olarak veriyor. Düzeltilmiş sürümler **7.3.4-7013** ve **8.2.3-8015**. Yalnızca SAML kullanan SSLVPN konfigürasyonları etkileniyor.
+
+Satıcının resmi workaround alanı **None**. Bazı ikincil raporlarda alternatif LDAP, RADIUS veya TACACS+ sunucularını kapatmak geçici önlem olarak anlatılıyor; bu, satıcının "yama yerine geçer" dediği bir çözüm değil ve operasyonel etkisi dikkatle değerlendirilmelidir.
+
+## 4. KEV kaydı tam olarak ne diyor?
+
+CISA, açığı 6 Kasım 2026'da KEV kataloğuna ekledi. Kayıt alanları:
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-19868 |
+| Ürün | SonicWall SonicOS SSLVPN |
+| Date Added | 2026-11-06 |
+| Due Date | 2026-11-20 |
+| Known Ransomware Campaign Use | Unknown |
+| Forensic Triage | No |
+| CWE | CWE-308 |
+
+CISA, eklemeyi "evidence of active exploitation" gerekçesine dayandırıyor. SonicWall ise PSIRT adiyle yürüttüğü soruşturmada "potential exploitation" raporu incelediğini yazıyor. İki ifade aynı değil: KEV, federal ajanslar için risk temelli önceliklendirme kararıdır; satıcının dili daha temkinlidir.
+
+Ransomware kullanımı **Unknown**; yani ne olduğu kanıtlanmış ne de yokluğu kanıtlanmış. Forensic Triage alanı **No**, bu da BOD 26-04 kapsamındaki federal ajanslar için ek adli inceleme zorunluluğu olmadığı anlamına gelir. Bu alanlar özel sektör için yasal bir süre sınırı değildir.
+
+## 5. Ne yapmalı?
+
+1. **Gen 6 cihazları envanterleyin ve emekli edin.** Yedek cihazlar ve şube birimleri dâhil tüm Gen 6 / 6.5 varlıklarını bulun.
+2. **Internet'e açık ve uzaktan erişim sağlayan cihazlara öncelik verin.** SSL VPN ve WAN yönetimi açık olan birimler ilk sırada.
+3. **Gen 8'e geçin.** Hedef SonicOS 8 çalışan desteklenen donanım; desteklenen ayarlar ürün içi import veya NSM Migration App ile taşınabiliyor.
+4. **CVE-2026-19868 için firmware uygulayın.** Gen 7 için 7.3.4-7013+, Gen 8 için 8.2.3-8015+.
+5. **Değiştirmeden önce maruziyeti azaltın.** WAN yönetimini (HTTPS, SSH, SNMP) kapatın, SSL VPN'i devre dışı bırakın veya bilinen kaynak adreslerle sınırlayın.
+6. **Kalan hesapları sıkın.** Tüm uzaktan erişim ve yönetici hesaplarında MFA zorunlu kılın, yerel parolaları sıfırlayın.
+7. **Gereksiz servis ve arayüzleri kapatın, logları izleyin.** Olağandışı girişler, yapılandırma değişiklikleri ve trafik değişimleri erken sinyaldir.
+8. **Yamadan sonra da olay incelemesi yapın.** Yama geçmiş erişimi silmez; Kimlik sağlayıcı loglarıyla SSL VPN oturumlarını karşılaştırın.
+
+## 6. Ne yazmamalı?
+
+- "CVE-2026-19868 Gen 6'yı da etkiliyor" — resmi sürüm listesi Gen 7 ve Gen 8.
+- "Gen 6 için critical yama yayınlandı" — SonicWall açıkça hayır diyor.
+- "Kimlik bilgisi gerekmeden giriş yapılıyor" — alternatif yöntem için geçerli kimlik bilgisi şart.
+- "Ransomware ile doğrulandı" — KEV alanı Unknown.
+- "Resmi workaround var" — satıcı workaround alanı None.
+- "KEV süresi özel sektör için yasal zorunluluk" — BOD 26-04 FCEB ajanslarına yönelik.
+
+## Durum
+
+20 Kasım 2026, CVE-2026-19868 için CISA KEV süresinin son günü ve aynı zamanda SonicWall'ın Gen 6 uyarısının gündemde olduğu tarih. Desteklenen cihazlarda yama var ve acil; desteklenmeyen cihazlarda ise kalıcı çözüm yalnızca değişim. "Yamayı beklemek" Gen 6 için bir seçenek değil.
+
+## Bu seriden
+
+- [WhatsApp iOS açığı: cck.dat içinde düz metin Noise anahtarı iddiası](/blog/whatsapp-ios-noise-anahtari-cve-2026-128974)
+- [Neden her şey 2shell oluyor?](/blog/neden-her-sey-2shell-oluyor)
+- [Ruby2Shell: case conversion taşması](/blog/ruby2shell-cve-2026-132825)
+
+## Kaynaklar
+
+- [SonicWall: Product Advisory - Retire Unsupported Gen 6 Firewalls](https://www.sonicwall.com/support/notices/product-advisory-retire-unsupported-gen-6-firewalls/kA1VN000002iouP0AQ)
+- [SonicWall PSIRT: SNWLID-2026-0014](https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2026-0014)
+- [CISA: Adds One Known Exploited Vulnerability to Catalog](https://www.cisa.gov/news-events/alerts/2026/11/06/cisa-adds-one-known-exploited-vulnerability-catalog)
+- [CISA KEV Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
+- [The Hacker News: SonicWall Warns Gen 6 Firewalls Won't Get Security Patches](https://thehackernews.com/2026/11/sonicwall-warns-gen-6-firewalls-wont.html)
+- [BleepingComputer: SonicWall warns of new SSL-VPN MFA bypass flaw](https://www.bleepingcomputer.com/news/security/sonicwall-warns-of-new-ssl-vpn-mfa-bypass-flaw-exploited-in-attacks/)
+
+---
+
+# Spring Security SpEL injection: CVE-2026-59273
+
+- Kaynak: https://fosstr.com/blog/spring-spel-cve-2026-59273/
+- Tür: Yazı
+- Tarih: 2026-11-20
+- Etiketler: security, spring, java, cve, rce
+- Özet: Spring Security ELRequestMatcher, sınırsız SpEL değerlendirmesiyle uzaktan kod yürütmeye açık. Etkilenen sürümler, düzeltmeler ve "50 açık" iddiasının doğrulanması.
+
+19 Kasım 2026'da Spring, Security ürünü için **CVE-2026-59273** numaralı Critical bir uyarı yayımladı. `ELRequestMatcher` sınıfı, SpEL ifadelerini belgelenen istek eşleştirme işlemleriyle sınırlı olmayan, tam yansıma (reflection), tip referansı ve keyfi metot çağrısına izin veren bir değerlendirme bağlamında çalıştırıyor. Spring Framework'ün veri bağlama mekanizması bu tip için isim kuralıyla bir property editor keşfettiğinden, dışarıdan gelen girdiyi bu tipte bir bean özelliğine bağlayan uygulamalar girdiyi doğrudan SpEL olarak değerlendirebiliyor. Sonuç: **uzaktan kod yürütme**.
+
+## Kısa özet
+
+| Alan | Doğrulanmış | İddia / uyarı |
+|---|---|---|
+| Kimlik | `CVE-2026-59273`, Spring Security, CWE-94/95/470 referansları | — |
+| Yayın | 19 Kasım 2026, Spring advisory | — |
+| Bileşen | `ELRequestMatcher` (Spring Security) | — |
+| Etkilenen | 7.1.0–7.1.2, 7.0.0–7.0.8, 6.5.0–6.5.12, 6.4.0–6.4.19, 5.8.0–5.8.28, 5.7.26 ve öncesi | — |
+| Düzeltme | OSS: 7.1.3, 7.0.9; diğerleri enterprise-only | 6.5/6.4/5.8/5.7 yamaları ücretli destek kapsamında |
+| Skor | Spring'in bağladığı CVSS 3.1 vektörü **9.8** | NVD kaydı yok; ikincil kaynak CVSS 4.0 **9.3** diyor |
+| Vektör | `AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` | Yalnızca bağlama koşulu sağlanan uygulamalar etkilenir |
+| Ön koşul | Saldırganın kontrol ettiği girdinin `ELRequestMatcher` tipindeki bir bean özelliğine bağlanması | Her Spring uygulaması etkilenmez |
+| İstismar | Spring advisory istismardan bahsetmiyor; KEV'de yok | İkincil kaynaklar bilinen istismar/PoC olmadığını yazıyor |
+| "50 açık" | Spring'in advisory feed'inde 19 Kasım tarihli **50** kayıt var | Feed 50 ile sınırlı olabilir; kesin toplam federe bağlı |
+
+![Spring Security SpEL injection şeması](/diagrams/spring-spel-cve-2026-59273.svg)
+
+## 1. Resmi advisory ne diyor?
+
+Spring'in güvenlik sayfasındaki açıklama oldukça açık:
+
+- **Başlık:** "Spring Security ELRequestMatcher allows Remote Code Execution via unrestricted SpEL evaluation"
+- **Önem:** CRITICAL; **tarih:** 19 Kasım 2026
+- **Sorun:** `ELRequestMatcher`, SpEL ifadesini tam yansıma, tip referansı ve keyfi metot çağrısı veren sınırsız bir bağlamda değerlendiriyor.
+- **Tetikleyici:** Spring Framework veri bağlaması, tipin adlandırma kuralı üzerinden otomatik bir property editor buluyor. Dış girdiyi bu tipte bir bean özelliğine bağlayan uygulamada girdi SpEL olarak çalışıyor.
+- **Etki:** Saldırgan, uygulama sürecinde keyfi kod yürütebiliyor.
+- **History:** 19 Kasım 2026 — ilk yayımlama.
+
+Spring ayrıca "**No further mitigation steps are necessary**" diyor; yani yama dışında ek bir yapılandırma değişikliği önerilmiyor. Bu, yamanın tek başına yeterli olduğu anlamına gelir; ama yalnızca etkilenen sürüm kullanılıyorsa.
+
+## 2. SpEL ve ELRequestMatcher neden tehlikeli?
+
+SpEL (Spring Expression Language), Spring ekosisteminde yapılandırma ve koşul ifadeleri yazmak için kullanılan bir ifade dilidir. Güçlü olması onu tehlikeli kılar: bir ifade, tip referansı üzerinden sınıflara erişebilir, yansıma ile metot çağırabilir ve nesne grafiğinde gezinebilir.
+
+Güvenli kullanımda ifade değerlendirmesi, yalnızca ihtiyaç duyulan işlemlere izin veren kısıtlı bir bağlamda (`SimpleEvaluationContext` gibi) yapılır. Spring'in advisory'sine göre `ELRequestMatcher` bunu yapmıyor: belgelenen istek eşleştirme işlemleriyle sınırlı bir bağlam yerine **sınırsız** bir bağlam kullanıyor.
+
+Sorunun ikinci katmanı otomatik veri bağlama. Spring Framework, bir bean özelliğinin tipine göre isim kuralıyla property editor arar. Eğer uygulama harici girdiyi `ELRequestMatcher` tipinde bir özelliğe bağlıyorsa, saldırganın gönderdiği düz bir metin değeri ayrıca bir "ifade" olarak yorumlanıyor. Yani saldırganın özel bir SpEL parametresi göndermesine gerek yok; **bağlama işleminin kendisi** değeri ifadeye dönüştürüyor.
+
+Bu iki koşulun birleşimi klasik "eval injection" senaryosudur: girdi veri olarak değil, kod olarak değerlendirilir. Advisory'nin CWE referansları da bunu gösteriyor: CWE-94 (code injection), CWE-95 (eval injection), CWE-470 (unsafe reflection).
+
+## 3. Hangi uygulamalar gerçekten etkilenir?
+
+Kritik nokta şu: **her Spring uygulaması etkilenmez.** Advisory'nin tarif ettiği senaryo için şu koşulların birlikte gerçekleşmesi gerekir:
+
+1. Uygulama etkilenen bir Spring Security sürümü kullanıyor.
+2. Uygulama, dışarıdan kontrol edilen girdiyi `ELRequestMatcher` tipinde bir bean özelliğine bağlıyor.
+3. Bu bağlama, Spring Framework'ün otomatik property editor keşfi üzerinden gerçekleşiyor.
+
+`ELRequestMatcher` tipinde bir özelliğe harici girdi bağlamayan uygulamalar bu özel RCE yoluyla etkilenmez. Denetim yaparken aranacak şey tam olarak bu: yapılandırmada veya bean tanımlarında `ELRequestMatcher` tipinde bir alan var mı ve bu alana kullanıcı kontrollü bir değer geliyor mu?
+
+`AV:N/PR:N/UI:N` vektörü, koşul sağlandığında saldırının uzaktan, kimlik doğrulamasız ve etkileşimsiz yapılabileceğini söyler. Ancak vektör, "bağlama koşulu"nu zaten varsayar; bu yüzden 9.8 skoru her dağıtım için aynı gerçek risk anlamına gelmez.
+
+## 4. Etkilenen ve düzeltilen sürümler
+
+| Seri | Etkilenen | Düzeltme | Kullanılabilirlik |
+|---|---|---|---|
+| 7.1.x | 7.1.0–7.1.2 | 7.1.3 (ayrıca 7.1.2.1) | OSS / enterprise |
+| 7.0.x | 7.0.0–7.0.8 | 7.0.9 (ayrıca 7.0.8.1) | OSS / enterprise |
+| 6.5.x | 6.5.0–6.5.12 | 6.5.13 | Enterprise Support Only |
+| 6.4.x | 6.4.0–6.4.19 | 6.4.20 | Enterprise Support Only |
+| 5.8.x | 5.8.0–5.8.28 | 5.8.29 | Enterprise Support Only |
+| 5.7.x | 5.7.26 ve öncesi | 5.7.27 | Enterprise Support Only |
+
+En önemli operasyonel ayrıntı: **yalnızca 7.1.3 ve 7.0.9 açık kaynak (OSS) olarak yayımlandı.** Daha eski serilerin yamaları yalnızca enterprise destek sözleşmesi olanlar için. Eski bir serideyseniz "yamayı indiremedim" durumu gerçek bir engeldir; ya destek kapsamına girin ya da desteklenen bir seriye yükseltin.
+
+## 5. CVSS 9.8 nereden geliyor?
+
+Spring advisory, skoru doğrudan yazmak yerine NVD'nin CVSS 3.1 hesaplayıcısına götüren bir bağlantı veriyor: `AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H`. Bu vektör **9.8** üretir. Yani 9.8, Spring'in kendi yayımladığı vektörden gelir.
+
+Doğruluk açısından iki uyarı:
+
+- **20 Kasım 2026 itibarıyla NVD API'sinde CVE-2026-59273 için kayıt bulunamadı** (`totalResults: 0`). Dolayısıyla "NVD 9.8 verdi" demek doğru değil; skor Spring kaynaklı.
+- İkincil bir veritabanı (Cybersecurity Help) CVSS 4.0 **9.3** veriyor ve `S:N` (scope unchanged) kullanıyor. Bu, Spring'in 3.1 vektörüyle aynı ölçek değildir; karşılaştırırken sürüm farkı gözetilmeli.
+
+"9.8" başlığı yanlış değil, ama kaynağı belirtmek gerekiyor: Spring'in advisory'sindeki CVSS 3.1 vektörü.
+
+## 6. "Spring 50 açık yamadı" iddiası doğru mu?
+
+Aggregator'lar 19 Kasım 2026 için "50 güvenlik açığı" diyordu. Bunu Spring'in kendi RSS/Atom feed'inden (`spring.io/security.atom`) doğruladık:
+
+- Feed'de toplam **50 advisory** var.
+- **50'si de** 19 Kasım 2026 tarihli.
+- CVE'ler Spring Security, Spring AI, Spring Integration, Spring Web Services, Spring Data, Spring LDAP, Spring Boot ve diğer projelere dağılmış durumda.
+
+Yani sayı, Spring'in kendi yayımladığı feed ile uyumlu. Tek ihtiyat: feed 50 kayıtla sınırlı olabilir; "gün içinde yayımlanan toplam açık sayısı" ile "feed'de görünen kayıt sayısı" aynı olmayabilir. Bu yüzden doğru ifade "Spring'in advisory feed'inde o gün 50 kayıt var" şeklindedir. CVE-2026-59273, bu 50 advisory içindeki **tek Critical** maddedir.
+
+## 7. İstismar durumu
+
+Spring advisory'sinde istismar veya PoC ile ilgili bir ifade yok. İkincil kaynaklar (dailysecurityreview, cybersecurity-help.cz) bilinen bir istismar veya kamuya açık exploit olmadığını yazıyor; bunlar **ikincil ve doğrulanmamış** bilgilerdir.
+
+CISA KEV kataloğunu 20 Kasım 2026 itibarıyla kontrol ettik; CVE-2026-59273 listede yok. NVD kaydı olmadığı için bu CVE için NVD üzerinden bir CISA SSVC değerlendirmesi de mevcut değil. "Aktif istismar ediliyor" demek için elimizde birincil kanıt bulunmuyor.
+
+## 8. Ne yapmalı?
+
+1. **Spring Security sürümlerini envanterleyin.** Özellikle 7.1.x, 7.0.x, 6.5.x, 6.4.x, 5.8.x ve 5.7.x dağıtımlarını bulun.
+2. **`ELRequestMatcher` kullanımını arayın.** Kod tabanınızda ve bean yapılandırmanızda bu tipte bir özelliğe dış girdi bağlanıp bağlanmadığını denetleyin.
+3. **OSS serilerine yükseltin.** 7.1.3 veya 7.0.9 doğrudan indirilebilir; eski seriler için enterprise yamalarını değerlendirin.
+4. **Bağlama yüzeylerini daraltın.** Kullanıcı girdisini doğrudan altyapı tiplerine bağlamak yerine ayrı DTO'lara alın; bu, sınıfın kendisine özel olmayan iyi bir mimari alışkanlıktır.
+5. **Ek mitigation aramayın.** Spring "further mitigation steps necessary" demiyor; yama yeterli.
+6. **İstismar iddialarını takip edin.** NVD kaydı açıldığında skor ve SSVC alanları netleşebilir.
+
+## 9. Ne yazmamalı?
+
+- "NVD 9.8 verdi" — NVD'de kayıt yok; skor Spring kaynaklı.
+- "Tüm Spring uygulamaları etkileniyor" — bağlama ön koşulu aranmalı.
+- "CVSS 4.0 9.8" — Spring 3.1 vektörü kullanıyor; ikincil kaynak 4.0 için 9.3 diyor.
+- "Aktif istismar var" — KEV'de yok, birincil kaynak istismardan bahsetmiyor.
+- "50 açık da Critical" — feed'deki 50 advisory'nin yalnızca biri Critical.
+- "Ek yapılandırma değişikliği şart" — Spring açıkça aksini söylüyor.
+
+## Durum
+
+20 Kasım 2026 itibarıyla elimizde **satıcının yayımladığı teknik olarak ayrıntılı bir advisory, net sürüm listesi ve OSS yamaları** var. Belirsiz olan noktalar NVD kaydının henüz oluşmamış olması, istismar durumuna dair birincil bir ifadenin bulunmaması ve "50" sayısının feed sınırına tabi olabileceği.
+
+## Bu seriden
+
+- [Neden her şey 2shell oluyor?](/blog/neden-her-sey-2shell-oluyor)
+- [Ruby2Shell: case conversion taşması](/blog/ruby2shell-cve-2026-132825)
+- [WhatsApp iOS Noise anahtarı iddiası](/blog/whatsapp-ios-noise-anahtari-cve-2026-128974)
+
+## Kaynaklar
+
+- [Spring Security Advisory: CVE-2026-59273](https://spring.io/security/cve-2026-59273/)
+- [Spring Security Advisories listesi](https://spring.io/security/)
+- [Spring Security Advisory Atom feed'i](https://spring.io/security.atom)
+- [NVD CVSS 3.1 hesaplayıcı (Spring'in vektörü)](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H&version=3.1)
+- [NVD API: CVE-2026-59273](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-59273)
+- [CWE-94: Code Injection](https://cwe.mitre.org/data/definitions/94.html)
+- [CWE-95: Eval Injection](https://cwe.mitre.org/data/definitions/95.html)
+- [CWE-470: Unsafe Reflection](https://cwe.mitre.org/data/definitions/470.html)
+- [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
+- [Cybersecurity Help: CVE-2026-59273 (ikincil)](https://www.cybersecurity-help.cz/vdb/vulns/168587/)
+
+---
+
+# VMware vCenter zero-day’si: SRP anahtar sızıntısından administrator@vsphere.local’a
+
+- Kaynak: https://fosstr.com/blog/vmware-vcenter-cve-2026-123890/
+- Tür: Yazı
+- Tarih: 2026-11-20
+- Etiketler: security, vmware, vcenter, cve, zero-day, active-exploitation
+- Özet: CVE-2026-123890, VMSA-2026-0009.1 ile düzeltildi. ARMORY CASTLE’ın Eylül 2026’dan beri kullandığı SRP-6a oturum anahtarı sızıntısından SAML imza anahtarı hırsızlığına uzanan zincirin analizi.
+
+19 Kasım 2026'da Broadcom, **CVE-2026-123890** için VMSA-2026-0009.1'i yayımladı; 20 Kasım'da danışma notunu güncelledi. Açık, VMware Directory Service'te (vmdird) kimlik doğrulama atlatma olarak tanımlanıyor ve CVSS 3.1 ile **9.8**. Google Threat Intelligence Group ile Mandiant, aynı gün şüpheli PRC bağlantılı ARMORY CASTLE'ın bu açığı Eylül 2026 başından beri zero-day olarak kullandığını açıkladı.
+
+Burada kritik olan yalnızca skor değil. Saldırgan, parola bilmeden oturum anahtarını ele geçirip `administrator@vsphere.local` olarak oturum açabiliyor; ardından dizin veritabanını, SAML imzalama anahtarını ve SSO yönetici hesabını alıyor. 20 Kasım itibarıyla CVE, CISA KEV kataloğunda da yer alıyor.
+
+## Kısa özet
+
+| Alan | Doğrulanmış bilgi |
+|---|---|
+| Kimlik | `CVE-2026-123890`, CNA: VMware; danışma notu `VMSA-2026-0009.1` |
+| Skor | CVSS 3.1 9.8, `AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` |
+| Sınıf | CWE-288, Authentication Bypass Using an Alternate Path or Channel |
+| Ön koşul | Ağ erişimi; kimlik doğrulama veya kullanıcı etkileşimi yok |
+| Mekanizma | TCP/2012 üzerinden DCE/RPC, `vmdird` SRP-6a oturum anahtarı sızıntısı |
+| Düzeltme | 9.1.1.0200 / 9.0.2.0200 / 8.0 U3m; VCF 5.x için 5.2.5 |
+| vCenter 7.0 | Genel destek 2 Ekim 2025'te bitti; yama yalnızca genişletilmiş destekle |
+| workaround | Yok; Broadcom FAQ bunu açıkça teyit ediyor |
+| İstismar | Mandiant/GTIG: Eylül 2026 başından beri; Broadcom notu istismardan bahsetmiyor |
+| CISA KEV | **Evet**, 20 Kasım 2026'da eklendi; BOD 26-04 teslim tarihi 23 Kasım |
+
+![vCenter SRP anahtar sızıntısı zinciri](/diagrams/vmware-vcenter-cve-2026-123890.svg)
+
+## 1. Resmi kayıt ve danışma notu ne diyor?
+
+VMware'in CVE kaydı ve VMSA-2026-0009.1 birbiriyle tutarlı:
+
+- **Yayın:** 19 Kasım 2026; **güncelleme:** 20 Kasım 2026.
+- **Etki:** VMware Directory Service'te kimlik doğrulama atlatma; ağ erişimi olan kötü niyetli aktör sisteme yetkisiz erişim kazanıyor.
+- **Skor:** CVSS 3.1 taban 9.8; vektör `AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H`.
+- **CWE:** 288, yani alternatif yol veya kanalla kimlik doğrulama atlatma.
+- **workaround:** Yok. FAQ, kurumların kendi telafi edici kontrollerini değerlendirmesi gerektiğini, ancak Broadcom'un resmi bir workaround sunmadığını yazıyor.
+- **Düzeltme matrisi:** vCenter 9.1.x için 9.1.1.0200, 9.0.x için 9.0.2.0200, 8.0 için 8.0 U3m, VCF 5.x için 5.2.5. Telco Cloud Platform/Infrastructure için KB463116 yol gösteriyor.
+- **vCenter 7.0:** Danışma notunun matrisinde var; genel destek bitmiş olduğundan yama için genişletilmiş destek sözleşmesi gerekiyor.
+
+FAQ'ın iki noktası yanlış yorumları engelliyor: bu bir **VM kaçışı değil** (sanaldan ESX host üzerinde kod çalıştırma yok) ve Enhanced Linked Mode kullanılmıyor olsa da açık mevcut. Yani "ELM kullanmıyorum, güvendeyim" doğru bir çıkarım değil.
+
+## 2. SRP-6a oturum anahtarı nasıl sızıyor?
+
+GTIG/Mandiant'ın teknik anlatımı, Broadcom'un genel "yetkisiz erişim" ifadesini somutlaştırıyor:
+
+1. Saldırgan, vCenter'ın **TCP/2012** portundaki DCE/RPC arayüzüne erişir. Mandiant bu portu keşif aşamasında 9080 ve 5480 ile birlikte tarıyor.
+2. `vmdird` servisinin `rpc_srp_verifier` arayüzü, SRP-6a kimlik doğrulamasında **öngörülebilir UUIDv1 zaman damgası** üretir.
+3. Bu zayıflık, parolayı bilmeden SRP oturumunun paylaşılan anahtarını (K) elde etmeyi sağlar.
+4. Elde edilen anahtarla `administrator@vsphere.local` olarak doğrulanmış bir oturum kurulur.
+
+Sonuç bir "scope" hatası değil, yönetim düzleminin tümüyle ele geçirilmesi: oturum, vCenter üzerinde keyfi komut ve dosya erişimi anlamına geliyor. Google'ın yayımladığı BONESAW tespit kuralı, `/storage/db/vmware-vmdir/data.mdb` yolunu ve SRP arayüz UUID'lerini imza olarak kullanıyor.
+
+## 3. BONESAW sonrası zincir
+
+Mandiant, saldırganın Golang yazılmış **BONESAW** aracını kullandığını bildiriyor. Araç tek bir açığı değil, sonraki adımların tamamını otomatikleştiriyor:
+
+- `vmdirdbcp` RPC arayüzüyle LMDB veritabanı `data.mdb` dışarı aktarılıyor.
+- STS (Security Token Service) SAML özel RSA imzalama anahtarı çıkarılıyor.
+- `vmdir` üzerinden arka kapı makine hesabı ve SSO yönetici hesabı oluşturuluyor.
+- **SAWSNAKE** adlı ikinci araç, IdP imzalama anahtarlarıyla sahte SAML 2.0 onayları üretip yönetici oturum çerezi alıyor; Golden SAML Mantığında MFA'yı atlayıp istediği kullanıcıyı taklit edebiliyor.
+- VAMI API üzerinden SSH açılıyor, vCenter ana simetrik anahtarı ve PostgreSQL parolası çalınıyor, SSH yeniden kapatılıyor.
+- ESXi tarafında root `authorized_keys` değiştiriliyor ve VM disklerinden dosya çıkarılıyor.
+
+Bu sıra, yamanın tek başına yeterli olmadığını gösteriyor: yama açığı kapatır, ancak saldırganın önceden oluşturduğu hesapları, çalınan imza anahtarlarını ve sahte tokenları geri almaz.
+
+## 4. CVE-2026-59309 ile karıştırılmamalı
+
+Broadcom FAQ'u CVE-2026-123890'u "new and distinct issue" olarak nitelendiriyor. İki açık arasındaki farklar:
+
+| | CVE-2026-59309 | CVE-2026-123890 |
+|---|---|---|
+| Yayın | 29 Temmuz 2026 | 19 Kasım 2026 |
+| Arayüz | LDAP, TCP 389/636 | DCE/RPC, TCP 2012 |
+| Kusur | Bozuk yetkilendirme token'larıyla LDAP kimlik doğrulama atlatma | SRP-6a oturum anahtarının öngörülebilir UUIDv1 ile sızması |
+
+Mandiant, BONESAW'ın 59309'a karşı yamalanmış bir vCenter'a karşı da çalıştığını gördü. Dolayısıyla "Temmuz yamasını uyguladık" ifadesi bu yeni açık için geçerli bir savunma değil. BONESAW ikilisi 13 Temmuz 2026 derleme zamanı taşısa da Google, Go derleme metadata'sının değiştirilebileceği uyarısını ekliyor.
+
+## 5. İstismar durumu, KEV ve PoC
+
+- **İstismar:** GTIG/Mandiant, Eylül 2026 başında bir vCenter'a karşı istismar gördüğünü ve birden fazla olay soruşturduğunu bildiriyor. Broadcom'un danışma notu ise istismardan bahsetmiyor; bu bir çelişki değil, farklı yayımlama disiplinleri.
+- **Atıf:** ARMORY CASTLE, daha önce UNC5221 olarak izlenen ve ikincil kaynaklarda Warp Panda olarak da adlandırılan, suspect PRC nexus casusluk aktörü.
+- **Erişim yolu:** Zincir, 15 Ekim 2026'da açıklanan BeyondTrust Remote Support zero-day'si CVE-2026-102764 ile başlıyor; saldırgan önce iç ağdaki Linux cihazlara geçiyor.
+- **CISA KEV:** Katalog sürüm 2026.11.20 itibarıyla CVE-2026-123890 **listede**; eklenme tarihi 20 Kasım 2026, BOD 26-04 teslim tarihi 23 Kasım, forensic triage "Yes". CISA ADP SSVC alanları `Exploitation: active`, `Automatable: yes`, `Technical Impact: total`.
+- **PoC:** 20 Kasım itibarıyla kamuya açık bir exploit kodu doğrulanmadı. Buna karşılık ilgili CVE-2026-59309 için PoC mevcut.
+
+## 6. Ne yapmalı?
+
+1. **Tüm vCenter envanterini çıkarın.** Gömülü veya üçüncü tarafça kurulmuş örnekler dahil, sürümü vSphere Client Summary sekmesinden veya PowerCLI `$global:DefaultVIServer.Build` ile doğrulayın.
+2. **Düzeltme sürümlerine geçin.** 9.1.1.0200, 9.0.2.0200, 8.0 U3m; VCF 5.x için KB88287 ile asenkron yama ve SDDC Manager 5.2.5. vCenter 7.0 için genişletilmiş destek kanalını kullanın.
+3. **Yamayı yalnızca başlangıç kabul edin.** Yeni SSO yönetici hesapları, VAMI üzerinden SSH değişiklikleri, ESXi root ssh anahtarları ve alışılmadık iç IP'lerden gelen oturumlar için arama yapın.
+4. **Sızmış materyali döndürün.** SAML imzalama anahtarı ve vCenter anahtarı çalınmış olabileceğinden, federasyon güven ilişkilerini ve yerel parolaları gözden geçirin.
+5. **Yönetim arayüzünü daraltın.** TCP 2012, 9080 ve 5480'a yalnızca yetkili yönetim istasyonlarından erişim verin; vCenter'dan dış internete çıkışı engelleyin.
+6. **Önce giriş noktasını da kapatın.** BeyondTrust Remote Support zero-day'si zincirin başında; uzaktan destek cihazlarını da yamayın.
+
+## 7. Ne yazmamalı?
+
+- "VM kaçışı" — Broadcom FAQ açıkça hayır diyor; etki vCenter yönetim düzlemi ve onun yönettiği hostlar.
+- "CVE-2026-59309 ile aynı açık" — farklı port, farklı kusur, farklı CVE; eski yama yeni açığı kapatmıyor.
+- "CISA KEV'de değil" — 20 Kasım 2026 kataloğunda **var**; 23 Kasım teslim tarihiyle BOD 26-04 kapsamında.
+- "Broadcom istismarı doğruladı" — danışma notu hâlâ sessiz; istismar verisi Mandiant/GTIG'den geliyor.
+- "Sadece ELM kullananlar etkileniyor" — FAQ aksini söylüyor.
+- "Yama yeterli, temiziz" — yama sonrası hesap, anahtar ve token izleri ayrıca araştırılmalı.
+- "Kamuya açık PoC var" — 123890 için doğrulanmadı; PoC komşu CVE-2026-59309 için.
+
+## Durum
+
+20 Kasım 2026 itibarıyla bu, yaması çıkmış ama iki ayı aşkın süredir istismar edilmiş bir zero-day. Resmi yama, istismar kanıtı ve KEV kaydı aynı hafta içinde bir araya geldi. Yama uygulamak zorunlu; fakat Mandiant'ın bulguları, olay öncesi iz sürmeyi de zorunlu kılıyor.
+
+## Bu seriden
+
+- [Neden her şey 2shell oluyor?](/blog/neden-her-sey-2shell-oluyor)
+- [WhatsApp iOS Noise anahtarı iddiası](/blog/whatsapp-ios-noise-anahtari-cve-2026-128974)
+- [Ruby2Shell: case conversion taşması](/blog/ruby2shell-cve-2026-132825)
+
+## Kaynaklar
+
+- [Broadcom VMSA-2026-0009.1](https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39495)
+- [Google Cloud / GTIG & Mandiant: ARMORY CASTLE Exploits vSphere](https://cloud.google.com/blog/topics/threat-intelligence/armory-castle-exploits-vsphere)
+- [VMware VMSA-2026-0009 Questions & Answers](https://github.com/vmware/vcf-security-and-compliance-guidelines/blob/main/security-advisories/vmsa-2026-0009/README.md)
+- [MITRE CVE API: CVE-2026-123890](https://cveawg.mitre.org/api/cve/CVE-2026-123890)
+- [CISA KEV: CVE-2026-123890](https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-123890)
+- [SecurityWeek: Warp Panda atfı ve istismar zaman çizelgesi (ikincil)](https://www.securityweek.com/newly-patched-vmware-vcenter-flaw-exploited-as-zero-day-by-chinese-apt/)
+
+---
+
 # WhatsApp iOS açığı: cck.dat içinde düz metin Noise anahtarı iddiası
 
 - Kaynak: https://fosstr.com/blog/whatsapp-ios-noise-anahtari-cve-2026-128974/
@@ -150,6 +1066,231 @@ Bu açık gerçek bir iOS mesaj işleme hatasıdır; ama Noise anahtarı, `cck.d
 - [MITRE CVE API: CVE-2026-23866](https://cveawg.mitre.org/api/cve/CVE-2026-23866)
 - [WhatsApp Security Advisories 2026](https://www.whatsapp.com/security/advisories/2026)
 - [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
+
+---
+
+# WhatsApp’ın üç yeni CVE’si: IP sızıntısı, SQL injection ve VCEK zinciri
+
+- Kaynak: https://fosstr.com/blog/whatsapp-uclu-acik-cve-2026-11-20/
+- Tür: Yazı
+- Tarih: 2026-11-20
+- Etiketler: security, whatsapp, android, ios, cve, privacy
+- Özet: 20 Kasım 2026'da yayımlanan üç resmi WhatsApp CVE'si: reklam yanıtıyla IP sızıntısı, order details SQL injection ve Meta AI sertifika zinciri. Skorlar, sürümler ve istismar durumu.
+
+20 Kasım 2026'da WhatsApp, aynı gün yayımlanan üç güvenlik açığı duyurusuyla gündeme geldi. Üçü de resmi CVE kaydına, satıcı advisory'sine ve NVD girişine sahip; yani sürüm aralıkları ve skorlar net. Bunlar, 18 Kasım'da duyurulan ve hâlâ redakte edilmiş resmi kaydı olan **CVE-2026-128974** iddiasından tamamen ayrı vakalardır.
+
+Üç açığın ortak noktası şu: hiçbiri uçtan uca şifrelemeyi (E2EE) kırmıyor, hiçbiri "zero-click hesap ele geçirme" değil. Biri dolandırıcılık kampanyasıyla ilişkili olabilecek düşük etkili bir IP sızıntısı, biri yerel dosya silmeye ve tek bitlik yan kanal sızıntısına yol açan SQL injection, biri de Meta'nın gizli hesaplama altyapısına güvenen istemcilerin sertifika doğrulamasındaki bir hata.
+
+## Kısa özet
+
+| CVE | Sınıf / etki | CVSS 3.1 (CNA) | Etkilenen sürümler | İstismar durumu |
+|---|---|---|---|---|
+| CVE-2026-23871 | Ad-reply URL doğrulaması eksikliği, IP sızıntısı | 3.5 Low, `AV:N/AC:L/PR:L/UI:R/S:U/C:L/I:N/A:N` | Android ve Business Android 2.20.198.3 ≤ sürüm < 2.26.17.4 | Spam mesajlarla kötüye kullanılmış olabilir; ölçek bilinmiyor |
+| CVE-2026-102769 | SQL injection, yerel dosya silme, 1 bitlik yan kanal | 6.8 Medium, `AV:N/AC:L/PR:L/UI:R/S:U/C:L/I:H/A:L/E:F/RL:O/RC:C` | Android ve Business Android 2.22.3.7 ≤ sürüm < 2.26.35.74 | Vahşi istismar kanıtı yok |
+| CVE-2026-44908 | Sertifika zinciri doğrulama hatası (CWE-296), VCEK | 4.8 Medium, `AV:N/AC:H/PR:H/UI:R/S:U/C:H/I:L/A:N` | iOS, Android, Business ve Mac Desktop için farklı alt sınırlar | Şeffaflık defteri istismar olmadığını gösteriyor |
+
+NVD kayıtlarının üçü de `Received` durumunda; yani tabloda CNA (Facebook / Meta) skorları yer alıyor, NVD'nin kendi yeniden skorlaması yok. 20 Kasım 2026 itibarıyla katalog sürümü `2026.11.20` olan **CISA KEV listesinde bu üç CVE bulunmuyor**.
+
+![WhatsApp'ın üç yeni CVE'si şeması](/diagrams/whatsapp-uclu-acik-cve-2026-11-20.svg)
+
+## 1. CVE-2026-23871: reklam yanıtı IP adresini açığa çıkarabiliyor
+
+Resmi advisory'ye göre, Click to WhatsApp reklamlarına verilen yanıtlarda kullanılan harici URL'ler eksik doğrulanıyor. Saldırgan, özel hazırlanmış bir ad-reply mesajı bir sohbet akışında görüntülendiğinde saldırgan kontrolündeki bir URL'den medya gönderirse, hedef cihazın IP bilgisi saldırgana sızdırılabiliyor.
+
+Etkilenen ürünler **WhatsApp for Android** ve **WhatsApp Business for Android**; etkilenen aralık 2.20.198.3'ten 2.26.17.4'e kadar. Düzeltme sürümü **2.26.17.4**. Açığı WhatsApp güvenlik ekibi bulmuş; CVSS vektöründeki `PR:L` ve `UI:R`, saldırganın bir ölçüde ayrıcalığa ve kurbanın etkileşimine ihtiyaç duyduğunu gösteriyor.
+
+Advisory şu cümleyi de içeriyor: sorun "belirli spam mesajlarıyla birlikte kötüye kullanılmış olabilir". SecurityWeek'e konuşan bir WhatsApp sözcüsü daha da açık konuşuyor: "Ekibimiz bu sorunu bir dolandırıcılık kampanyasını bozarken buldu; bir dolandırıcının spam mesajını daha inandırıcı göstermek için kullandığını düşünüyoruz."
+
+Bu ifade, sınırlı da olsa bir kötüye kullanım şüphesini resmi hale getiriyor. Ancak WhatsApp etkilenen kullanıcı sayısını ya da kampanyanın başarısını açıklamadı. Sızdırılan veri IP bilgisiyle sınırlı; mesaj içeriği, hesap erişimi veya cihaz kontrolü söz konusu değil.
+
+## 2. CVE-2026-102769: "order details" mesajıyla SQL injection
+
+Bu açık, resmi olmayan bir istemciden gelen özel hazırlanmış bir **order details** (sipariş ayrıntıları) mesajına alıcı dokunduğunda tetikleniyor. SQL injection, cihazda yerel olarak saklanan WhatsApp dosyalarının silinmesine yol açabiliyor. Bundan ayrı ve daha dar bir etki olarak, mesajın geldiği anda kullanıcı çevrimiçiyse, kasıtlı çökme teslim makbuzu zamanlama yan kanalı üzerinden sohbet veritabanı hakkında saldırganın sorduğu **tek bit**lik bir bilgi sızdırılabiliyor.
+
+Etkilenen aralık 2.22.3.7 ≤ sürüm < 2.26.35.74; düzeltme **2.26.35.74**. Hem WhatsApp hem WhatsApp Business for Android etkileniyor. SATICI skoru 6.8 Medium; vektördeki `E:F/RL:O/RC:C` temporal alanları, işlevsel exploit mevcudiyeti, resmi düzeltme ve doğrulanmış rapor anlamına geliyor. Bu alanlar temel etkiyi değiştirmez, ama "kanıtlanmış bir kod var" notudur.
+
+Şunu net ayırmak gerekiyor: dosya silme etkisi `I:H`, gizlilik etkisi ise yalnızca `C:L` ve tek bitlik. Bu, "tüm sohbetler sızdırıldı" iddiasını desteklemez. WhatsApp ve SecurityWeek'e göre açığı Meta bug bounty programı üzerinden bir dış araştırmacı bildirdi ve şirket vahşi istismar kanıtı görmediğini yazdı.
+
+## 3. CVE-2026-44908: VCEK sertifikası ve Meta AI güven zinciri
+
+Bu açık mesaj işlemeyle değil, WhatsApp istemcilerinin **Meta AI gizli hesaplama (confidential computing) arka ucuna** güvenmek için kullandığı uzaktan kanıtlama (remote attestation) doğrulayıcısıyla ilgili. Sertifika zincirinin doğru izlenmemesi nedeniyle, Meta altyapısı içinde konumlanmış bir aktör, donanım üreticisinin anahtarıyla imzalanmamış bir VCEK sertifikası sunarak donanım kök güvenini atlayabilirdi.
+
+VCEK (Versioned Chip Endorsement Key), AMD SEV-SNP tabanlı gizli sanal makinelerde donanımın gerçekliğini ve yama seviyesini kanıtlayan çip özgü anahtardır. Meta'nın Private Processing teknik belgesinde doğrulama zinciri VCEK → ASK → ARK şeklinde tanımlanır; istemci, donanım kök anahtarını sabit güven çapası olarak kullanır.
+
+Satıcı advisory'sindeki kritik nokta istismarın ön koşulu: böyle bir sertifikanın kullanılabilmesi için önce WhatsApp Private Processing'in kullandığı **üçüncü taraf ikili şeffaflık defterine** (binary transparency ledger) yayımlanması gerekiyor. WhatsApp'ın kontrolüne göre defterde yayımlanan her VCEK sertifikası donanım kök güvenine zincirleniyor; şirket bunu "istismar olmadığının doğrulanması" olarak açıklıyor.
+
+Etkilenen sürümler platforma göre değişiyor: iOS 2.26.24.72 öncesi; Business iOS ve Mac Desktop 2.26.23.72 öncesi; Android 2.26.23.74 öncesi; Business Android 2.26.23.70 öncesi. Bu nedenle tek bir "tüm platformlar için düzeltme sürümü" yok. Açığın etki alanı Meta AI ile ilgili sunucu tarafı güven modeli; E2EE mesaj şifrelemesinin kırıldığı anlamına gelmiyor.
+
+## 4. Önceki redakte kayıtla karıştırılmamalı
+
+Bu üç CVE, 18 Kasım 2026'da yayımlanan **CVE-2026-128974** ile aynı kapsamda değil. 128974 için MITRE ve NVD açıklama alanı hâlâ `temporary redacted`, ürün ve satıcı alanları `tbc`; `cck.dat` ve Noise statik anahtarı iddiaları ikincil kaynaklardan geliyor ve resmi kayıtla doğrulanmıyor.
+
+Bugünkü üç açık ise tam tersi durumda: resmi advisory metni var, CNA skoru var, etkilenen sürüm aralığı var ve düzeltme sürümü belli. "WhatsApp'ın üç yeni CVE'si" başlığı bu üç resmi kaydı anlatır; 128974'ün redakte edilmiş kaydını değil.
+
+İkisi arasında teknik bir benzerlik de yok: 128974 iddiası yerel/anahtar depolama ile ilgili, bugünkü üç açık sırasıyla URL doğrulama, SQL sorgu oluşturma ve sertifika zinciri doğrulama hataları.
+
+## 5. İstismar ve KEV durumu
+
+| CVE | resmi istismar ifadesi | KEV |
+|---|---|---|
+| 23871 | "Belirli spam mesajlarıyla kötüye kullanılmış olabilir"; sözcü dolandırıcılık kampanyası diyor | Yok |
+| 102769 | "We have not seen evidence of exploitation in the wild" | Yok |
+| 44908 | Şeffaflık defteri kayıtları istismar olmadığını gösteriyor | Yok |
+
+"KEV'de" ifadesi bu üç açık için kullanılamaz. CISA'nın 20 Kasım 2026 kataloğunda (sürüm `2026.11.20`) üç CVE numarası da yer almıyor. Ters yönden de bir iddia üretmek doğru değil: KEV'de olmamak, bir açığın hiç kötüye kullanılmadığını kanıtlamaz; sadece CISA'nın kanıt eşiğini geçmediğini gösterir.
+
+## 6. Ne yapmalı?
+
+1. **Android uygulamasını güncelleyin.** 23871 için 2.26.17.4, 102769 için 2.26.35.74 alt sınır; mağaza güncellemelerini otomatik tutun.
+2. **Tüm platformları ayrı ayrı kontrol edin.** 44908 için iOS, Android, Business ve Mac sürümleri farklı; tek bir sürüm numarası aramayın.
+3. **Gelen reklam yanıtı mesajlarına dikkat edin.** Bilinmeyen kaynaktan gelen, medya yükleyen spam mesajları raporlayın; IP sızıntısı sessiz bir olaydır.
+4. **Unofficial istemci kullanımını gözden geçirin.** 102769'un tetikleyicisi resmi olmayan bir istemciden gelen "order details" mesajı.
+5. **Yanlış başlıklarla yayımlamayın.** "E2EE kırıldı" ya da "zero-click RCE" ifadeleri bu advisory'lerde karşılığını bulmaz.
+6. **Kurumsal ortamda envanter çıkarın.** Hangi cihazlarda hangi WhatsApp sürümü olduğunu bilmek, düzeltme doğrulamasını mümkün kılar.
+
+## 7. Ne yazmamalı?
+
+- "WhatsApp E2EE'si kırıldı" — hiçbir advisory bunu söylemiyor.
+- "Üçü de aktif istismar ediliyor" — yalnızca 23871 için sınırlı spam kötüye kullanım şüphesi var; diğerlerinde kanıt yok.
+- "CVE-2026-102769 tüm sohbet veritabanını sızdırıyor" — etki tek bitlik yan kanal ve yerel dosya silme.
+- "VCEK sertifikası çalındı" — defter kayıtları aksini gösteriyor; zincir bozulmadı.
+- "CISA KEV'e eklendi" — üç CVE de 20 Kasım kataloğunda yok.
+- "CVE-2026-128974 ile aynı açık" — redakte kayıt, farklı mekanizma ve farklı kanıt durumu.
+
+## Durum
+
+20 Kasım 2026 itibarıyla üç açık için de düzeltme sürümü mevcut. En yüksek skor 6.8 Medium; en somut kötüye kullanım sinyali ise 3.5 Low skorlu IP sızıntısında. Bu yüzden haberde "kritik WhatsApp açığı" yerine sürüm ve istismar ayrıntıları öne çıkarılmalı.
+
+## Bu seriden
+
+- [WhatsApp iOS açığı: cck.dat içinde düz metin Noise anahtarı iddiası](/blog/whatsapp-ios-noise-anahtari-cve-2026-128974)
+- [Neden her şey 2shell oluyor?](/blog/neden-her-sey-2shell-oluyor)
+- [Ruby2Shell: case conversion taşması](/blog/ruby2shell-cve-2026-132825)
+
+## Kaynaklar
+
+- [WhatsApp Security Advisories 2026](https://www.whatsapp.com/security/advisories/2026)
+- [NVD: CVE-2026-23871](https://nvd.nist.gov/vuln/detail/cve-2026-23871)
+- [NVD: CVE-2026-102769](https://nvd.nist.gov/vuln/detail/cve-2026-102769)
+- [NVD: CVE-2026-44908](https://nvd.nist.gov/vuln/detail/cve-2026-44908)
+- [CVE Program: CVE-2026-102769](https://www.cve.org/CVERecord?id=CVE-2026-102769)
+- [SecurityWeek: WhatsApp Fixes Flaw Uncovered While Disrupting Scam Campaign](https://www.securityweek.com/whatsapp-fixes-flaw-uncovered-while-disrupting-scam-campaign/)
+- [The Hacker News: WhatsApp Patches 3 Security Flaws](https://thehackernews.com/2026/11/whatsapp-patches-3-security-flaws.html)
+- [Meta: Private Processing for WhatsApp technical whitepaper](https://ai.meta.com/static-resource/private-processing-technical-whitepaper)
+- [CISA Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
+
+---
+
+# FastUnlock: kilit ekranında Narrator ile sınırlı kod çalıştırma
+
+- Kaynak: https://fosstr.com/blog/windows-fastunlock-narrator/
+- Tür: Yazı
+- Tarih: 2026-11-20
+- Etiketler: security, windows, zero-day, physical-access, narrator
+- Özet: FastUnlock, fiziksel erişim ve Narrator kullanarak Windows kilit ekranında sınırlı WSIAccount bağlamında kod çalıştırıyor. BitLocker şifresini kırmıyor; durum ve önlemler.
+
+19 Kasım 2026'da, Chaotic Eclipse / MSNightmare / Nightmare Eclipse takma adlarını kullanan bir araştırmacı **FastUnlock** adlı Windows kilit ekranı atlatma tekniğini yayımladı. Aynı gün ThreatLocker Threat Intelligence ekibi tekniği test edip doğruladı. Sonuç: fiziksel erişimi olan bir kişi, oturum açmadan kilit ekranında sınırlı yetkili bir hesap bağlamında kod çalıştırabiliyor.
+
+Bu bir uzaktan istismar değil; şifre kırma da değil. Kilit ekranı, Windows'un kendi erişilebilirlik aracı ve hesap kurtarma akışı üzerinden aşılıyor. Microsoft'tan henüz yama veya resmi advisory yok, kamuya açık bir CVE kaydı bulunmuyor ve gerçek bir saldırıda kullanıldığına dair kanıt yok.
+
+## Kısa özet
+
+| Alan | Bilinen durum |
+|---|---|
+| Ad | FastUnlock, Windows Narrator lock screen bypass |
+| Keşif / yayın | 19 Kasım 2026, araştırmacının GitHub deposu |
+| Bağımsız doğrulama | ThreatLocker, 19 Kasım 2026'da aynı gün test etti |
+| Ön koşul | Fiziksel erişim; kilit ekranındaki kurtarma akışından erişilebilen bir Microsoft hesabı |
+| Yöntem | Yerleşik Narrator ekran okuyucu ile kilit ekranı arayüzünde gezinme |
+| Elde edilen hesap | WSIAccount; yönetici değil |
+| Yama | Yok; Microsoft advisory'si veya CVE kaydı yok |
+| İstismar kanıtı | Vahşi kullanım bildirimi yok |
+| BitLocker | Şifre kırılmaz, anahtar ele geçirilmez; TPM otomatik açma zaten diski açmış olur |
+
+![FastUnlock kilit ekranı atlatma şeması](/diagrams/windows-fastunlock-narrator.svg)
+
+## 1. Kaynakların ayrımı: birincil iddia ve bağımsız test
+
+Tekniğin ilk anlatımı araştırmacının GitHub reposunda yer alıyor. Bu, iddianın birincil kaynağı; ancak kısa bir yazı ve video içeriyor. Araştırmacı, sorunun Narrator'ın kilitli hesap bağlamında arayüzü yönetme biçiminde olduğunu ve başarılı istismarın kilit ekranı hesabı olan `WsiAccount` bağlamında kod çalıştırdığını yazıyor.
+
+ThreatLocker'ın 19 Kasım tarihli yazısı bağımsız testi anlatıyor; bu yüzden teknik sonuçlar için en net kaynak. ThreatLocker, kilit ekranından Ayarlar uygulamasına ulaşıldığını ve WSIAccount kullanıcısı olarak bir program çalıştırılabildiğini doğruladı. Şirket ayrıca bu hesabın **yönetici olmadığını** açıkça belirtiyor.
+
+The Hacker News ve Security Affairs gibi ikincil kaynaklar, araştırmacının takma adlarını ve açıklama takvimini tekrarlıyor. Bunlar olayın duyurulmasını takip etmek için yararlı, ancak teknik iddianın dayanağı GitHub reposu ve ThreatLocker testi.
+
+## 2. Saldırı zinciri nasıl işliyor?
+
+ThreatLocker'ın listelediği ön koşullar kısa:
+
+- Makineye fiziksel erişim.
+- Kilit ekranındaki hesap kurtarma akışından erişilebilen bir Microsoft hesabı.
+- Caps Lock ve ok tuşlarıyla Narrator gezinmesi.
+
+Akış, kilit ekranındaki "PIN'i unuttum" ya da parola sıfırlama seçeneğiyle başlıyor. Microsoft hesabı kurtarma ekranında `Win+U` ile yerleşik ekran okuyucu Narrator açılıyor. Araştırmacının anlatımına göre Narrator, normalde görünmemesi gereken bir arka plan penceresine odaklanıyor; Caps Lock + ok tuşları ve Enter ile bu pencereden Ayarlar'a geçiliyor.
+
+ThreatLocker testinde fiziksel klavyeyle yazmanın mümkün olmadığını, gerekiyorsa ekran klavyesinin açılabileceğini belirtiyor. Kodun makineye nasıl taşınacağı değişken; testte harici bir sürücü kullanılmış, araştırmacı da USB üzerinden çalıştırma senaryosunu anlatıyor.
+
+Bu nedenle "tek tuşla bilgisayar ele geçirme" tarifleri yanlış. Zincir, kurtarma akışı, ekran okuyucu odak hatası ve kilit ekranı oturumuna ait düşük yetkili hesap bağlamının birleşimine dayanıyor.
+
+## 3. Yetki sınırı: WSIAccount yönetici değil
+
+En çok karıştırılan nokta bu. ThreatLocker'ın testinde ulaşılan hesap **WSIAccount**, yani Windows kilit ekranını barındıran sınırlı hesap. Bu hesap yönetici değil; dolayısıyla teknik, doğrudan domain yöneticiliği veya SYSTEM yetkisi anlamına gelmiyor.
+
+Sınırlı hesap yine de gerçek bir risk: kilit ekranında oturum açmadan dosya sisteminde işlem yapabilmek, yerel veriye erişmek ve kurban oturum açtığında kalıcı bir şey bırakmak için bir başlangıç noktası oluşturur. Microsoft'un kendi kilit ekranı güven modeli, tam da bu tür bir erişimi engellemeyi amaçlar.
+
+Bazı ikincil raporlar, belirli koşullarda yeni yönetici hesabı oluşturulabildiğini yazıyor. Bu iddia ThreatLocker testinin kapsamı dışında; kaynak olarak ikincil ve doğrulanmamış sayılmalı.
+
+## 4. BitLocker neden engel olmuyor?
+
+Birçok Windows cihazda BitLocker, TPM ile birlikte kullanılır ve diski açılışta otomatik açar. Yani kilit ekranı göründüğünde sürücü zaten çözülmüş ve dosyalar okunabilir durumdadır. FastUnlock tam bu noktada devreye girer.
+
+Bu, BitLocker'ın şifrelemesini kırmak anlamına gelmez. Teknik, kurtarma anahtarını ya da şifreleme anahtarını ele geçirmez; yalnızca disk zaten açılmış bir sistemde kilit ekranı katmanını atlar. "BitLocker kırıldı" başlığı bu yüzden yanlıştır.
+
+Ön boot PIN kullanan cihazlarda durum farklıdır: cihaz kapatıldıysa veya hazırda bekliyorsa PIN, disk açılmadan ve Windows başlamadan istenir. ThreatLocker'ın notu da bu yönde. Ancak PIN, zaten açık ve kilit ekranında olan bir makineyi korumaz.
+
+## 5. Kapsam ve belirsizlikler
+
+Araştırmacı tekniği Windows 11 26H2'nin Kasım 2026 yama seviyesinde test ettiğini ve denediği makinelerde tutarlı çalıştığını yazıyor. Windows 10'u test etmediğini de kendisi belirtiyor.
+
+Şu an elimizde **resmi bir etkilenen sürüm listesi yok**. Bu yüzden "tüm Windows sürümleri etkileniyor" ya da "yalnızca 26H2 etkileniyor" demek mümkün değil. Koşulları karşılayan her makine potansiyel olarak etkilenen kabul edilmeli.
+
+Araştırmacı, video demosunda son USB çalıştırma adımını göstermediğini, elinde bellek olmadığını yazıyor. Bu, zincirin ilk bölümünün gösterildiği, son adımın ise araştırmacının deneyimine dayandığı anlamına gelir. ThreatLocker'ın bağımsız testi bu boşluğu kısmen kapatıyor.
+
+## 6. Ne yapmalı?
+
+1. **Fiziksel erişimi azaltın.** Dizüstü bilgisayarlar, ortak masalar ve tezgâh arkası cihazlar kontrolsüz bırakılmamalı.
+2. **Kilit ekranını tek başına güvenlik sınırı saymayın.** Cihaz sahibi olmadan erişilebilen bir makine risk altında kabul edilmeli.
+3. **Kurtarma seçeneklerini gözden geçirin.** Kilit ekranından erişilebilen Microsoft hesabı kurtarma akışlarını ve MDM ayarlarınızı denetleyin.
+4. **BitLocker PIN'i değerlendirin.** Özellikle taşınabilir cihazlarda TPM-only otomatik açma yerine ön boot PIN, kapalı cihazı korur.
+5. **Kapattın veya hazırda bekletin.** Cihaz kontrolünüzden çıkacaksa kilit ekranı yerine kapatma ya da hibernation daha güvenli.
+6. **Erişilebilirlik araçlarını politika ile yönetin.** Narrator'ı ihtiyaç duymayan yönetilen cihazlarda engellemek geçici bir azaltma olabilir; ekran okuyucu kullanan kullanıcıları kesmemeye dikkat edin.
+7. **Microsoft advisory'sini takip edin.** Yama yayımlandığında sürümü doğrulayın; şu an "fix var" denemez.
+
+## 7. Ne yazmamalı?
+
+- "BitLocker kırıldı" — anahtar ele geçirilmiyor, disk zaten açık.
+- "Uzaktan sıfır tıklamalı RCE" — fiziksel erişim şart.
+- "Yönetici yetkisi ele geçirildi" — ThreatLocker sınırlı WSIAccount diyor.
+- "KEV'de, aktif istismar ediliyor" — CVE yok, KEV kaydı yok, vahşi kullanım kanıtı yok.
+- "Microsoft yama yayınladı" — henüz resmi düzeltme yok.
+- "Tüm Windows cihazları etkilendi" — resmi etkilenen sürüm listesi yok ve her makine koşulları sağlamıyor.
+
+## Durum
+
+20 Kasım 2026 itibarıyla FastUnlock, bağımsız olarak doğrulanmış ama yamasız bir fiziksel erişim tekniği. Risk, cihazın başında durabilen bir aktöre ve kurtarma akışından erişilebilen Microsoft hesabına bağlı. En pragmatik önlemler fiziksel güvenlik, cihaz politikası ve uygun cihazlarda BitLocker PIN.
+
+## Bu seriden
+
+- [WhatsApp iOS açığı: cck.dat içinde düz metin Noise anahtarı iddiası](/blog/whatsapp-ios-noise-anahtari-cve-2026-128974)
+- [Neden her şey 2shell oluyor?](/blog/neden-her-sey-2shell-oluyor)
+- [Ruby2Shell: case conversion taşması](/blog/ruby2shell-cve-2026-132825)
+
+## Kaynaklar
+
+- [MSNightmare/FastUnlock GitHub deposu](https://github.com/msnightmare/fastunlock)
+- [ThreatLocker: Proof of Concept for FastUnlock](https://www.threatlocker.com/blog/proof-of-concept-for-fastunlock-windows-lock-screen-bypass-from-nightmare-eclipse)
+- [The Hacker News: New Unpatched Windows 0-Day FastUnlock](https://thehackernews.com/2026/11/new-unpatched-windows-0-day-fastunlock.html)
+- [Security Affairs: Chaotic Eclipse Releases FastUnlock](https://securityaffairs.com/203537/hacking/chaotic-eclipse-releases-fastunlock-a-new-windows-zero-day-vulnerability.html)
+- [Cybernews: Windows 11 lock screen bypass via Narrator](https://cybernews.com/security/nightmare-eclipse-windows-lock-screen-bypass/)
 
 ---
 
