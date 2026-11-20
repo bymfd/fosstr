@@ -17,6 +17,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Yazılar
 
+- [WhatsApp iOS açığı: cck.dat içinde düz metin Noise anahtarı iddiası](https://fosstr.com/blog/whatsapp-ios-noise-anahtari-cve-2026-128974/) — CVE-2026-128974 yayımlandı ama resmi kayıt hâlâ redakte. Noise anahtarı, cck.dat ve hesap taklidi iddialarını doğrulanmış verilerden ayıran ilk analiz.
 - [Apache Roller (CVE-2026-129448): XML-RPC üzerinden kimlik doğrulamasız RCE aktif olarak istismar ediliyor](https://fosstr.com/blog/apache-roller-cve-2026-129448/) — Apache Roller XML-RPC endpoint’inde kimlik doğrulamadan önce deserialize edilen veri uzaktan kod çalıştırıyor: CVE-2026-129448 teknik analizi ve acil önlemler.
 - [cPanel WP Toolkit proxy açığı: kimlik doğrulamasız RCE ve yama sürümleri](https://fosstr.com/blog/cpanel-wptk-proxy-rce/) — cPanel & WHM WP Toolkit proxy açığı: kimlik doğrulamasız uzaktan kod çalıştırma, etkilenen sürümler, yama ve geçici wptk.proxypass önlemi.
 - [Neden her şey 2shell oluyor?](https://fosstr.com/blog/neden-her-sey-2shell-oluyor/) — Her bug 2shell olmaz; ama auth öncesi native parser/runtime hataları zincirlenince shell çıkar. Pazarlama etiketi ile gerçek örüntüyü ayıran saha rehberi.
@@ -52,10 +53,10 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Tags
 
-- [security](https://fosstr.com/blog/tags/security/) — 17 içerik
+- [security](https://fosstr.com/blog/tags/security/) — 18 içerik
 - [open-source](https://fosstr.com/blog/tags/open-source/) — 14 içerik
+- [cve](https://fosstr.com/blog/tags/cve/) — 8 içerik
 - [linux](https://fosstr.com/blog/tags/linux/) — 8 içerik
-- [cve](https://fosstr.com/blog/tags/cve/) — 7 içerik
 - [rce](https://fosstr.com/blog/tags/rce/) — 6 içerik
 - [ai](https://fosstr.com/blog/tags/ai/) — 5 içerik
 - [kernel](https://fosstr.com/blog/tags/kernel/) — 4 içerik
@@ -67,6 +68,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [apache](https://fosstr.com/blog/tags/apache/) — 2 içerik
 - [arch](https://fosstr.com/blog/tags/arch/) — 2 içerik
 - [http2](https://fosstr.com/blog/tags/http2/) — 2 içerik
+- [ios](https://fosstr.com/blog/tags/ios/) — 2 içerik
 - [kubernetes](https://fosstr.com/blog/tags/kubernetes/) — 2 içerik
 - [ai-agents](https://fosstr.com/blog/tags/ai-agents/) — 1 içerik
 - [anthropic](https://fosstr.com/blog/tags/anthropic/) — 1 içerik
@@ -92,13 +94,13 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [donanim](https://fosstr.com/blog/tags/donanim/) — 1 içerik
 - [dos](https://fosstr.com/blog/tags/dos/) — 1 içerik
 - [eglence](https://fosstr.com/blog/tags/eglence/) — 1 içerik
+- [encryption](https://fosstr.com/blog/tags/encryption/) — 1 içerik
 - [ethics](https://fosstr.com/blog/tags/ethics/) — 1 içerik
 - [fan-control](https://fosstr.com/blog/tags/fan-control/) — 1 içerik
 - [fbi](https://fosstr.com/blog/tags/fbi/) — 1 içerik
 - [github](https://fosstr.com/blog/tags/github/) — 1 içerik
 - [gpustack](https://fosstr.com/blog/tags/gpustack/) — 1 içerik
 - [hacker-news](https://fosstr.com/blog/tags/hacker-news/) — 1 içerik
-- [ios](https://fosstr.com/blog/tags/ios/) — 1 içerik
 - [jailbreak](https://fosstr.com/blog/tags/jailbreak/) — 1 içerik
 - [java](https://fosstr.com/blog/tags/java/) — 1 içerik
 - [link-hijacking](https://fosstr.com/blog/tags/link-hijacking/) — 1 içerik
@@ -110,6 +112,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [memory-corruption](https://fosstr.com/blog/tags/memory-corruption/) — 1 içerik
 - [menu-bar](https://fosstr.com/blog/tags/menu-bar/) — 1 içerik
 - [meta](https://fosstr.com/blog/tags/meta/) — 1 içerik
+- [mobile](https://fosstr.com/blog/tags/mobile/) — 1 içerik
 - [nginx](https://fosstr.com/blog/tags/nginx/) — 1 içerik
 - [nodejs](https://fosstr.com/blog/tags/nodejs/) — 1 içerik
 - [noel](https://fosstr.com/blog/tags/noel/) — 1 içerik
@@ -139,6 +142,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [tls](https://fosstr.com/blog/tags/tls/) — 1 içerik
 - [unit42](https://fosstr.com/blog/tags/unit42/) — 1 içerik
 - [wayland](https://fosstr.com/blog/tags/wayland/) — 1 içerik
+- [whatsapp](https://fosstr.com/blog/tags/whatsapp/) — 1 içerik
 - [wordpress](https://fosstr.com/blog/tags/wordpress/) — 1 içerik
 - [xfs](https://fosstr.com/blog/tags/xfs/) — 1 içerik
 - [zoned](https://fosstr.com/blog/tags/zoned/) — 1 içerik
