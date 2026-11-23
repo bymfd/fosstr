@@ -17,6 +17,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Yazılar
 
+- [SSHole CVE-2026-123158: musl libc ve parola dogrulama atlatma](https://fosstr.com/blog/openssh-musl-sshole-cve-2026-123158/) — OpenSSH 10.6p2 oncesi surumlerde musl libc ve PAM kapali sshd uzun parola ile giris atlatiyor. CVE-2026-123158, KEV alanlari, GreyNoise saha verisi ve duzeltme adimlari.
 - [EnterpriseDB PEM: ajan ayrıcalıklarını genişleten üç açık](https://fosstr.com/blog/edb-pem-agent-cves/) — Postgres Enterprise Manager 10.6.1 öncesi için CVE-2026-132658, CVE-2026-132659 ve CVE-2026-132660. EDB bildirimleri, CVSS kaynağı ve NVD durumu.
 - [Flowintel CVE-2026-133648: MISP ve posta bağlantılarında TLS doğrulaması kapalı](https://fosstr.com/blog/flowintel-tls-cve-2026-133648/) — Flowintel 4.1.0 öncesinde MISP API ve SMTP/IMAP TLS doğrulaması yok. CVE-2026-133648, CVSS kaynağı, SSVC alanları ve düzeltme Commiti.
 - [Puppet CVE-2026-115731: KEV listesindeki rapor işleme açığı](https://fosstr.com/blog/puppet-report-cve-2026-115731/) — Puppet Server rapor işleme kodunda güvenilmeyen veri deserializasyonu. CVE-2026-115731, KEV durumu, CVSS kaynak farkı ve düzeltme sürümleri.
@@ -67,14 +68,14 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Tags
 
-- [security](https://fosstr.com/blog/tags/security/) — 32 içerik
-- [cve](https://fosstr.com/blog/tags/cve/) — 21 içerik
+- [security](https://fosstr.com/blog/tags/security/) — 33 içerik
+- [cve](https://fosstr.com/blog/tags/cve/) — 22 içerik
 - [open-source](https://fosstr.com/blog/tags/open-source/) — 14 içerik
 - [rce](https://fosstr.com/blog/tags/rce/) — 10 içerik
 - [linux](https://fosstr.com/blog/tags/linux/) — 9 içerik
 - [ai](https://fosstr.com/blog/tags/ai/) — 5 içerik
+- [kev](https://fosstr.com/blog/tags/kev/) — 5 içerik
 - [kernel](https://fosstr.com/blog/tags/kernel/) — 4 içerik
-- [kev](https://fosstr.com/blog/tags/kev/) — 4 içerik
 - [apache](https://fosstr.com/blog/tags/apache/) — 3 içerik
 - [ios](https://fosstr.com/blog/tags/ios/) — 3 içerik
 - [llm](https://fosstr.com/blog/tags/llm/) — 3 içerik
@@ -93,11 +94,13 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [whatsapp](https://fosstr.com/blog/tags/whatsapp/) — 2 içerik
 - [zero-day](https://fosstr.com/blog/tags/zero-day/) — 2 içerik
 - [ai-agents](https://fosstr.com/blog/tags/ai-agents/) — 1 içerik
+- [alpine](https://fosstr.com/blog/tags/alpine/) — 1 içerik
 - [android](https://fosstr.com/blog/tags/android/) — 1 içerik
 - [anthropic](https://fosstr.com/blog/tags/anthropic/) — 1 içerik
 - [apple](https://fosstr.com/blog/tags/apple/) — 1 içerik
 - [arduino](https://fosstr.com/blog/tags/arduino/) — 1 içerik
 - [asus](https://fosstr.com/blog/tags/asus/) — 1 içerik
+- [auth-bypass](https://fosstr.com/blog/tags/auth-bypass/) — 1 içerik
 - [automation](https://fosstr.com/blog/tags/automation/) — 1 içerik
 - [axis](https://fosstr.com/blog/tags/axis/) — 1 içerik
 - [bash](https://fosstr.com/blog/tags/bash/) — 1 içerik
@@ -151,6 +154,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [misp](https://fosstr.com/blog/tags/misp/) — 1 içerik
 - [mitm](https://fosstr.com/blog/tags/mitm/) — 1 içerik
 - [mobile](https://fosstr.com/blog/tags/mobile/) — 1 içerik
+- [musl](https://fosstr.com/blog/tags/musl/) — 1 içerik
 - [narrator](https://fosstr.com/blog/tags/narrator/) — 1 içerik
 - [netweaver](https://fosstr.com/blog/tags/netweaver/) — 1 içerik
 - [nginx](https://fosstr.com/blog/tags/nginx/) — 1 içerik
@@ -160,6 +164,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [nts](https://fosstr.com/blog/tags/nts/) — 1 içerik
 - [nvidia](https://fosstr.com/blog/tags/nvidia/) — 1 içerik
 - [openai](https://fosstr.com/blog/tags/openai/) — 1 içerik
+- [openssh](https://fosstr.com/blog/tags/openssh/) — 1 içerik
 - [patent](https://fosstr.com/blog/tags/patent/) — 1 içerik
 - [pem](https://fosstr.com/blog/tags/pem/) — 1 içerik
 - [perforce](https://fosstr.com/blog/tags/perforce/) — 1 içerik
