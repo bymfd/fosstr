@@ -13,6 +13,245 @@ Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her 
 
 ---
 
+# ManageEngine DDI Central: iki komut enjeksiyonu ve 6500 yamasi
+
+- Kaynak: https://fosstr.com/blog/manageengine-ddi-central-cves/
+- Tür: Yazı
+- Tarih: 2026-11-24
+- Etiketler: security, manageengine, ddi, cve, command-injection, windows
+- Özet: DDI Central 6500 oncesinde IPv6 scope kimlikleri ve bloklu domain degerleri PowerShell komutuna karisiyor. CVE-2026-95643 ve 95645, satıcı duyurulari, NVD durumu ve KEV olmamasi.
+
+ManageEngine, 18 Kasım 2026'da DDI Central için iki komut enjeksiyonu kaydı yayınladı: CVE-2026-95643 ve CVE-2026-95645. Her ikisi de 17 Eylül 2026'da build 6500 ile düzeltilmiş, ancak CVE kayıtları iki ay sonra açıldı. Satıcı duyuruları güvenliği "High" olarak işaretlerken N-able benzeri CNA metriği burada 9.1 Critical; NVD kayıtları `Awaiting Analysis` ve SSVC `exploitation: none`. Yani yamak acil, ama "aktif istismar var" iddiası bu kayıtlarla desteklenmiyor.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-95643 (`/ipam/telnet/`) ve CVE-2026-95645 (`clear_blocked_domains`) |
+| Ürün | ManageEngine DDI Central, 6.3.1 / build 6301 ve altı (NVD: 6500 öncesi) |
+| Düzeltme | Build 6500, satıcıya göre 17 Eylül 2026 |
+| Zayıflık | CWE-78 (OS komut enjeksiyonu), CNA ikincil sınıflandırması |
+| CVSS v3.1 | İkisi de 9.1 Critical, `AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H` — Zohocorp CNA, NVD analizi değil |
+| NVD durumu | İkisi de Awaiting Analysis; NVD skoru yok |
+| SSVC (CISA) | İkisi de exploitation: none, automatable: no, technicalImpact: total |
+| KEV | İki CVE de CISA KEV JSON'unda yok (24 Kasım kontrolü) |
+| Satıcı değerlendirmesi | Duyurularda "High"; CNA metriği "Critical" |
+
+![ManageEngine DDI Central komut enjeksiyonu zinciri](/diagrams/manageengine-ddi-central-cves.svg)
+
+## Teknik görünüm
+
+CVE-2026-95643, DDI Central'ın `/ipam/telnet/` bağlantı özelliğinde. Satıcı duyurusuna göre IPv6 adreslerindeki scope kimliği (zone identifier) mevcut IP doğrulamasından geçebiliyor ve yönetilen Windows düğümde çalıştırılan PowerShell komutuna gömülüyor. Karakter doğrulaması yetersiz olduğu için özel hazırlanmış bir değer PowerShell dize bağlamından çıkabiliyor. Düzeltme kapsam kimliklerini doğrulayıp güvenli olmayanları reddediyor, komut girdilerine ek allow-list uyguluyor ve port değerlerini işlemeden önce tamsayıya çeviriyor. Satıcı bu kontrollerin komut yürütme katmanında yapıldığını, dolayısıyla özelliği kullanan tüm çağrıyı koruduğunu yazıyor.
+
+CVE-2026-95645, Windows DDI Agent'ın bloklu domain yönetimindeki `clear_blocked_domains` işlevinde. Bloklama politikasından gelen domain değerleri Windows'ta işlenmeden önce yeterince doğrulanmıyor; özel hazırlanmış girdi, domain verisi yerine sistem komutunun parçası olarak yorumlanabiliyor. Düzeltme JSON yükündeki domain değerlerini işlemeden önce doğruluyor, geçersiz olanları hata ile reddediyor ve `clear_blocked_domains` çağrısını yalnızca DDI Central uygulama sunucusunun başlatabildiği şekilde kısıtlıyor. Agent sunucuları işlevi kendi başlarına tetikleyemiyor.
+
+Etkinin sınırı, komutların çalıştığı Windows hizmet hesabının yetkileri. Satıcı her iki duyuruda da sonucu RCE olarak sınıflandırıyor; ancak NVD vektörleri `PR:H` diyor, yani yüksek ayrıcalıklı kimlik doğrulamalı kullanıcı gerekiyor. Duyuru 95645 için "bu işlevi çağırabilen saldırgan", 95643 için "etkilenen telnet bağlantı özelliğine erişimi olan kullanıcı" ifadesini kullanıyor. Bu, internetten kimlik doğrulamasız erişim iddiası değil.
+
+Kayıtlar arasında üç tutarsızlık var ve bunları gizlemek yanlış olur. Birincisi, satıcı duyurusu etkilenen sürümü "6.3.1 / build 6301 ve altı" diye yazıyor, NVD ise "6500 öncesi" diyor. İkincisi, satıcı güvenlik güncellemeleri listesi ve 95643 duyurusunun başlığı bu CVE'i "Linux Node Agent'ta kimlik doğrulamasız GSS-TSIG keytab güncellemesi" olarak etiketliyor; aynı sayfanın ayrıntı bölümü ise Windows düğümde PowerShell komut enjeksiyonunu anlatıyor. Üçüncüsü, satıcı duyuruları "High", Zohocorp CNA vektörü 9.1 "Critical" diyor; NVD her iki kaydı da `Awaiting Analysis` tutuyor ve kendi skorunu üretmedi. 24 Kasım 2026'daki KEV JSON kontrolünde iki CVE de listede yer almıyordu.
+
+## Ne yapmalı?
+
+1. **Konsolu ve agent'ları build 6500 veya üzerine yükseltin.** Satıcı, DDI Central Console ve ilgili Node Agent / Windows DDI Agent örneklerinin servis paketiyle güncellenmesini istiyor.
+2. **Erişimi daraltın.** `/ipam/telnet/` özelliğine ve bloklu domain politikası yönetimine erişebilen hesapları denetleyin; yönetim dışı kullanıcıları çıkarın.
+3. **Windows hizmet hesabını gözden geçirin.** DDI Agent ve telnet işlemlerinin çalıştığı hesabın yetkilerini azaltın; enjeksiyonun erişebileceği kaynakları sınırlayın.
+4. **PowerShell günlüklerini arayın.** Yönetilen Windows düğümlerde alışılmadık PowerShell çağrıları, IPv6 scope kimliği içeren telnet işlemleri ve `clear_blocked_domains` kullanımını arayın.
+5. **KEV beklemeyin.** CVE'ler KEV'de olmasa da düzeltme Eylül 2026'da yayınlandı; yama programını buna göre önceliklendirin.
+
+## Ne yapmamalı?
+
+- "Kimlik doğrulamasız RCE" başlığı atmayın. NVD vektörleri `PR:H` diyor; satıcı listesindeki GSS-TSIG başlığı 95643'ün ayrıntı metniyle çelişiyor.
+- "Aktif istismar görüldü" demeyin. SSVC `exploitation: none`, KEV kaydı yok, satıcı duyuruları kötüye kullanım bildirmiyor.
+- "9.1'i NVD verdi" yazmayın. Skor Zohocorp CNA'nın ikincil metriği; NVD `Awaiting Analysis`.
+- "Ransomware doğrulandı" iddiası eklemeyin. Böyle bir alan veya kayıt yok.
+- "Tüm ManageEngine ürünleri etkilendi" demeyin. Duyurular yalnızca DDI Central'ı kapsıyor.
+- "Linux düğümde kod çalıştı" demeyin. Ayrıntı metni komutların yönetilen Windows düğümde çalıştığını söylüyor.
+- Satıcı "High" derken "kritik değil" sonucu çıkarmayın. CNA metriği 9.1 ve NVD daha analiz etmedi; iki etiket aynı kaydın farklı ölçekleri.
+- Düzeltme tarihini ifşa tarihi sanmayın. Build 6500, 17 Eylül'de yayınlandı; CVE kayıtları 18 Kasım'da açıldı.
+
+## Durum
+
+24 Kasım 2026 itibarıyla bu iki açık **satıcı duyuruları ve NVD kayıtlarıyla doğrulanmış, KEV'de değil**. ManageEngine'in CVE-2026-95643 ve CVE-2026-95645 duyuruları, NVD kayıtları (`Awaiting Analysis`, CWE-78, Zohocorp CNA CVSS v3.1 9.1, CISA SSVC `exploitation: none`/`automatable: no`/`technicalImpact: total`) ve 24 Kasım KEV JSON kontrolü birbirini destekliyor. Belirsizlikler: satıcı "build 6301 ve altı", NVD "6500 öncesi" diyor; 95643 başlığı ile ayrıntı metni farklı açıklıyor; satıcı "High", CNA "Critical"; NVD analizi yok; saha kanıtı, aktör veya etkilenen kurum bilgisi yok; hangi Windows hesabının kullanıldığı dağıtıma göre değişiyor. "Aktif istismar", "kimlik doğrulamasız RCE" veya "ransomware doğrulandı" başlıkları bu kayıtlarla desteklenmiyor.
+
+## Bu seriden
+
+- [IBM Guardium CVE-2026-84236](/blog/ibm-guardium-cve-2026-84236)
+- [VMware vCenter CVE-2026-123890](/blog/vmware-vcenter-cve-2026-123890)
+- [SonicWall CVE-2026-19868](/blog/sonicwall-gen6-cve-2026-19868)
+
+## Kaynaklar
+
+- [ManageEngine: CVE-2026-95643 duyurusu](https://www.manageengine.com/dns-dhcp-ipam/security-updates/cve-2026-95643.html)
+- [ManageEngine: CVE-2026-95645 duyurusu](https://www.manageengine.com/dns-dhcp-ipam/security-updates/cve-2026-95645.html)
+- [ManageEngine DDI Central güvenlik güncellemeleri listesi](https://www.manageengine.com/dns-dhcp-ipam/security-updates/security-updates.html)
+- [NVD - CVE-2026-95643](https://nvd.nist.gov/vuln/detail/CVE-2026-95643)
+- [NVD - CVE-2026-95645](https://nvd.nist.gov/vuln/detail/CVE-2026-95645)
+- [CISA KEV JSON feed'i (sürüm 2026.11.23)](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+
+---
+
+# MONAI Label CVE-2026-133968: datastore yazma siniri ve RCE riski
+
+- Kaynak: https://fosstr.com/blog/monailabel-cve-2026-133968/
+- Tür: Yazı
+- Tarih: 2026-11-24
+- Etiketler: security, monailabel, cve, kev, path-traversal, rce, ai
+- Özet: MONAI Label 0.8.5 ve oncesinde PUT /datastore/image image parametresi dizin disina yaziyor. CVE-2026-133968, KEV alanlari, AWS saha bulgulari ve 0.8.6 duzeltmesi.
+
+MONAI Label, 22 Kasım 2026'da 0.8.6 sürümünü "güvenlik sürümü" olarak yayınladı. Aynı açık 23 Kasım'da CISA'nın KEV kataloğuna CVE-2026-133968 altında eklendi; federal kurumlar için son tarih 26 Kasım. Açık, tıbbi görüntüleme AI sunucusunun dosya yükleme uç noktalarında dizin dışına yazmaya dayanıyor. AWS Threat Intelligence'ın 20 Kasım'daki yazısı, aynı tip bir açığın Eylül 2026'da saha da bulunduğunu anlatıyor; ancak AWS blogu ürünü adlandırmıyor. Bu ayrımı korumak, yazının iddiasını belirliyor.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-133968 (GHSA-qc22-rmgc-vg94) |
+| Ürün | `monailabel` (PyPI), 0.8.5 ve öncesi; düzeltme 0.8.6 |
+| Zayıflık | NVD ve KEV: CWE-24; GHSA: CWE-22 — kayıtlar arasında fark var |
+| CVSS v3.1 | 9.8 Critical, `AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` — `cve@mitre.org` ikincil CNA metriği, NVD analizi değil |
+| NVD durumu | Received; NVD'nin kendi analizi veya skoru yok |
+| SSVC (CISA) | exploitation: active, automatable: yes, technicalImpact: total |
+| KEV | 2026-11-23 eklenme, 2026-11-26 son tarih, forensic triage Yes, ransomware Unknown |
+| Varsayılan erişim | `MONAI_LABEL_AUTH_ENABLE=False`; kimlik doğrulama kapalı |
+| Saha iddiası | AWS: Eylül 2026'da tıbbi görüntüleme uygulamasında yol geçişi, kabuk erişimi; ürün adı blogda yazmıyor |
+
+![MONAI Label CVE-2026-133968 yol geçişi ve yazma zinciri](/diagrams/monailabel-cve-2026-133968.svg)
+
+## Teknik görünüm
+
+NVD kaydı sorunu tek cümleyle özetliyor: 0.8.6 öncesi `monailabel`, `PUT /datastore/image` isteğindeki `image` parametresiyle dizin geçişine ve sonuçta uzaktan kod çalıştırmaya izin veriyor. GHSA duyurusu mekanizmayı açıyor. `image` sorgu parametresi doğrulanmadan görüntü kimliği olarak kullanılıyor; `LocalDatastore.add_image()` bu kimliğe dosya uzantısını ekleyip datastore görüntü dizinine bağlıyor ve `shutil.copy()` ile yazıyor. Çözülen yolun datastore içinde kaldığı hiçbir yerde kontrol edilmiyor. `../../../tmp/x` gibi bir değer, yüklenen içeriği MONAI Label sürecinin yazabildiği herhangi bir yere yazdırıyor.
+
+İkinci uç nokta aynı hatayı paylaşıyor. `PUT /datastore/label` yolunda `LocalDatastore.save_label()`, hedefi görüntü kimliği ve etiket etiketinden (label tag) benzer biçimde kuruyor. Yani yalnızca görüntü kimliği değil, etiket etiketi de saldırgan kontrolündeki bir yol bileşeni. Keyfi dosya yazımı, uygulama kodunun üzerine yazılarak kod çalıştırmaya, `.ssh/authorized_keys` veya cron girdileriyle kalıcılığa, yapılandırma dosyalarının bozulmasıyla hizmet reddine dönüşebiliyor. Bu bir olasılık listesi; GHSA hangi dosyanın yazıldığını veya hangi kurumun etkilendiğini belirtmiyor.
+
+Erişim koşulu kritik. GHSA'ya göre kimlik doğrulama varsayılan olarak kapalı (`MONAI_LABEL_AUTH_ENABLE=False`), bu yüzden sunucuya ağdan erişebilen her istemci uç noktaya ulaşabiliyor. Kimlik doğrulama açıldığında bile `ANNOTATOR` rolü yeterli; yönetici ayrıcalığı gerekmiyor. Birincil kayıtlar belirli bir port numarası veya dinleme adresi vermiyor; "ağdan erişilebilen HTTP uç noktası" dışında bir saldırı yüzeyi bilgisi yok.
+
+Düzeltme iki katmanlı. GHSA, #1915 numaralı çekme isteğinin 19 Ekim 2026'da birleştirildiğini ve 0.8.6 ile yayınlandığını belirtiyor. Yama, `add_image()` ve `save_label()` içinde hedef yolları çözüp datastore görüntü/etiket dizinlerinin dışına çıkanları reddediyor; Windows'ta farklı sürücülerde `commonpath` hata verdiğinde de aynı red uygulanıyor. `/datastore/image` uç noktası görüntü kimliğini temel dosya adına indiriyor, boş veya nokta ile başlayan değerleri HTTP 400 ile reddediyor. PR açıklamasında yeni birim testleri ve 174 geçen test, 2 bilinen başarısızlık (xfail) raporlanıyor.
+
+0.8.6 notları ikinci bir yol geçişini de kapatıyor: `PUT /session/?uncompress=true` yüklenen tar arşivlerinin üye adlarını kontrol etmeden açıyordu ve oturum kimlikleri yol olarak kullanılıyordu (#1942). Yeni sürüm bağlantı veya aygıt dosyası içeren arşivleri reddediyor, bozuk/desteklenmeyen arşivlere HTTP 400 döndürüyor. Bu açık da 0.8.5 ve öncesini etkiliyor ve varsayılan kimlik doğrulama kapalıyken aynı erişim koşuluna sahip. Sürüm ayrıca Python 3.9 ve 3.10 desteğini kaldırıyor; 0.8.6 için Python 3.11 veya üzeri gerekiyor.
+
+## Satıcı bildirimi ile saha kanıtı
+
+GHSA duyurusu 18 Kasım 2026'da yayınlandı ve o an "CVE ID: No known CVE" diyordu; zayıflığı CWE-22 olarak sınıflandırıyordu. NVD kaydı 20 Kasım'da CVE-2026-133968 altında yayınlandı, KEV de CWE-24 kullanıyor. Yani duyurudaki "CVE yok" cümlesi bugün geçerli değil; CWE farkı ise kayıtlar arasında duruyor. NVD kaydı hâlâ `Received` durumunda: 9.8 skor `cve@mitre.org` kaynaklı ikincil CNA metriği, NVD analizi değil. CISA SSVC alanları ayrı okundu: `exploitation: active`, `automatable: yes`, `technicalImpact: total`. KEV kaydında `forensicTriage: Yes` alanı gerçekten Yes; `requiredAction` içindeki genel "Forensics Triage Requirements" metninden çıkarılmış bir varsayım değil. `knownRansomwareCampaignUse` ise `Unknown`.
+
+AWS Security Blog'un 20 Kasım 2026 tarihli yazısı saha tarafını anlatıyor. Amazon Threat Intelligence, 10 Eylül'de kimlik doğrulamasız, herkese açık bir Cairn örneği bulmuş; 8 Eylül'den itibaren yaklaşık 48 saat süren ve Doğu Asya üniversitelerini hedefleyen bir kampanyanın izleri görülebilmiş. Ajanlar açık kaynaklı bir tıbbi görüntüleme AI uygulamasında yükleme uç noktasındaki dosya adı parametresini denemiş, yol geçişini bulmuş ve API'yi haritalamadan keyfi dosya yazımına yaklaşık 11 dakikada ulaşmış. Sonraki bir oturumda `sitecustomize.py` içine Python ters kabuk yükü yazılmış, eğitim API'si yeni bir Python süreci başlatmış ve bu süreç root olarak ters kabuk kurmuş. AWS, bulunan açığın o an için sıfır gün olduğunu yüksek güvenle değerlendiriyor; aktörün Çin bağlantılı olduğunu ise orta güvenle söylüyor. Aynı blogda Redis ve GPU sunucusu operasyonlarının başarısız olduğu, ikinci üniversite ağındaki kullanımın ise çıkarım (infer) olarak sunulduğu açıkça yazıyor.
+
+AWS blogu ürün adını vermiyor. NVD kaydı bu blogu referans olarak listeliyor, GHSA ise bildirimi `@aws-sec-vdp` için AWS VDP'sine bağlıyor ve özgün raporun MONAI projesinde GHSA-cxx7-378q-5622 altında yapıldığını yazıyor. Blogdaki uygulamanın MONAI Label olduğu sonucu bu kayıt zincirinden gelen bir çıkarım; AWS'in kendi cümlesinde bu eşleştirme yer almıyor. Aynı şekilde CVE kaydındaki "Eylül 2026'dan beri saha da istismar edildi" ifadesi, NVD analizinden değil CVE kaydının açıklamasından geliyor.
+
+## Ne yapmalı?
+
+1. **0.8.5 veya öncesindeki tüm MONAI Label sunucularını 0.8.6'ya yükseltin.** `pip install -U monailabel==0.8.6` veya `docker pull projectmonai/monailabel:0.8.6` kullanın. Python sürümünü de 3.11 veya üzerine çekin.
+2. **Yama öncesi erişimi kapatın.** Sunucuyu güvenilmeyen ağlara açmayın; `MONAI_LABEL_AUTH_ENABLE=True` yapın ve `ANNOTATOR` rolünü yalnızca güvenilen kullanıcılara verin.
+3. **Yazma iznini daraltın.** Süreci ayrıcalıksız bir kullanıcıyla çalıştırın ve yazma erişimini datastore diziniyle sınırlayın. Bu, yol geçişi olsa bile `.ssh`, cron veya uygulama kodu yazımını engeller.
+4. **Eski sunucuları inceleyerek geri alın.** 0.8.5 veya öncesi güvenilmeyen bir ağdan erişilebiliyorsa, 0.8.6 notlarının önerdiği gibi beklenmeyen dosya değişikliklerini, yeni kullanıcıları ve ters kabuk izlerini arayın; sonra servise alın.
+5. **İki uç noktayı da denetleyin.** Yalnızca `/datastore/image` değil, `/datastore/label` ve `/session/?uncompress=true` çağrılarını da günlüklerde arayın. AWS'in yayınladığı Eylül 2026 göstergeleri `142[.]4.98.145` ve `142[.]4.107.34`.
+
+## Ne yapmamalı?
+
+- "AI kendi başına sıfır gün buldu" başlığını kesinlik olarak yazmayın. Bu, AWS'in yüksek güvenle yaptığı bir değerlendirme; blog aktör atfını orta güvenle veriyor ve ürünü adlandırmıyor.
+- "Tüm üniversiteler ele geçirildi" demeyin. AWS, Redis ve GPU operasyonlarının başarısız olduğunu, ikinci ağdaki kullanımın çıkarım olduğunu yazıyor.
+- "0.8.5 her koşulda RCE verir" demeyin. Yazım yeri sürecin izinlerine bağlı; GHSA keyfi yazımı RCE olasılığı olarak tarif ediyor, kesin sonuç olarak değil.
+- "9.8'i NVD verdi" yazmayın. Skor `cve@mitre.org` ikincil CNA metriği; NVD kaydı `Received` ve kendi analizini üretmedi.
+- "CVE yok" demeyin. GHSA bunu 18 Kasım'da yazmıştı; NVD 20 Kasım'da CVE-2026-133968'u yayınladı. Aynı şekilde CWE-22/CWE-24 farkını gizlemeyin.
+- Ransomware iddiası eklemeyin; KEV alanı `Unknown`.
+- "Port belli, şu adresten geliyor" demeyin. Birincil kayıtlar port veya dinleme adresi vermiyor.
+- Zero-click RCE başlığı atmayın. Koşul, kimlik doğrulamasız varsayılan yapılandırmayla ağdan erişilebilen bir sunucu; kullanıcı etkileşimi gerekmiyor ama erişim koşulu var.
+
+## Durum
+
+24 Kasım 2026 itibarıyla bu açık **birincil kayıtlarla doğrulanmış ve KEV'de**. NVD kaydı (`Received`, CVE-2026-133968, ikincil CNA CVSS 9.8, CISA SSVC `exploitation: active`), CISA KEV kaydı ve JSON feed'i (`dateAdded: 2026-11-23`, `dueDate: 2026-11-26`, `forensicTriage: Yes`, `knownRansomwareCampaignUse: Unknown`), GHSA-qc22-rmgc-vg94, #1915, 0.8.6 sürüm notları ve AWS Security Blog birbirini destekliyor. Belirsizlikler: NVD analizi yok; CWE sınıflandırması kayıtlara göre değişiyor; GHSA 18 Kasım'da CVE olmadığını yazıyordu; AWS blogu ürünü adlandırmıyor ve saha eşleştirmesi kayıt zincirinden çıkarılıyor; aktör atfı orta güven; ikinci ağdaki kullanım AWS tarafından çıkarım olarak etiketli; port veya dinleme adresi kamuya açık birincil kayıtta yok; hangi kurumların etkilendiği adlandırılmıyor. "E2EE kırıldı", "BitLocker kırıldı" veya "ransomware doğrulandı" türü başlıklar bu kayıtlarla desteklenmiyor.
+
+## Bu seriden
+
+- [Cairn ve otonom AI saldırıları](/blog/cairn-otonom-ai-saldirilari)
+- [GPUStack CVE-2026-102895](/blog/gpustack-cve-2026-102895)
+- [Apache Axis 1.x CVE-2026-90436](/blog/apache-axis-cve-2026-90436)
+
+## Kaynaklar
+
+- [NVD - CVE-2026-133968](https://nvd.nist.gov/vuln/detail/CVE-2026-133968)
+- [CISA KEV kaydı](https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-133968)
+- [CISA KEV JSON feed'i (sürüm 2026.11.23)](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+- [MONAI Label: GHSA-qc22-rmgc-vg94](https://github.com/Project-MONAI/MONAILabel/security/advisories/GHSA-qc22-rmgc-vg94)
+- [MONAI Label #1915: confine datastore write paths](https://github.com/Project-MONAI/MONAILabel/pull/1915)
+- [MONAI Label 0.8.6 sürüm notları](https://github.com/Project-MONAI/MONAILabel/releases/tag/0.8.6)
+- [Özgün MONAI bildirimi: GHSA-cxx7-378q-5622](https://github.com/Project-MONAI/MONAI/security/advisories/GHSA-cxx7-378q-5622)
+- [AWS Security Blog: Cairn ajanları ve sıfır gün bulgusu](https://aws.amazon.com/blogs/security/chinese-nexus-actors-cairn-ai-agents-found-a-zero-day-on-their-own/)
+- [CISA BOD 26-04 uygulama rehberi](https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk)
+
+---
+
+# N-able MailAssure CVE-2026-134624: LDAP senkronizasyonunda SSRF
+
+- Kaynak: https://fosstr.com/blog/nable-mailassure-cve-2026-134624/
+- Tür: Yazı
+- Tarih: 2026-11-24
+- Etiketler: security, nable, mailassure, spamexperts, cve, kev, ssrf
+- Özet: MailAssure 20261121.1943 oncesi, relay yapilandirildiginda LDAP baglanti kontrolunu sinirlandirmiyor. CVE-2026-134624, KEV alanlari, CVSS v4.0 kaynagi ve belirsizlikler.
+
+CISA, 23 Kasım 2026'da N-able MailAssure (SpamExperts) için CVE-2026-134624'ü KEV kataloğuna ekledi; federal kurumlar için son tarih 26 Kasım. NVD kaydı bir gün önce yayınlanmıştı ve hâlâ `Received` durumunda. Açık, e-posta güvenlik ürününün LDAP senkronizasyon bağlantı kontrolünde sunucunun hangi iç adrese bağlanacağını sınırlandırmamasına dayanıyor. Bu yazı, kayıtlarda gerçekten olanı ve olmayanı ayırıyor: doğrulanmış KEV kaydı var, ancak satıcı duyurusunun içeriği KEV notundaki bağlantıdan bağımsız okunamadı.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-134624 |
+| Ürün | N-able MailAssure (SpamExperts), `20261121.1943` öncesi build'ler |
+| Zayıflık | CWE-918 (SSRF), N-able CNA ikincil sınıflandırması |
+| CVSS v4.0 | 9.3 Critical, `AV:N/AC:L/AT:N/PR:H/UI:N/VC:H/VI:H/VA:N/SC:H/SI:H/SA:N` — N-able CNA, NVD analizi değil |
+| NVD durumu | Received; NVD skoru veya v3.1 metriği yok |
+| SSVC (CISA) | exploitation: active, automatable: no, technicalImpact: total |
+| KEV | 2026-11-23 eklenme, 2026-11-26 son tarih, forensic triage Yes, ransomware Unknown |
+| Ön koşul | Kimlik doğrulamalı API kullanıcısı ve yapılandırılmış relay |
+| Okunamayan kaynak | KEV notundaki N-able duyuru bağlantısı JavaScript portalı; içeriği bağımsız doğrulanmadı |
+
+![N-able MailAssure CVE-2026-134624 SSRF akışı](/diagrams/nable-mailassure-cve-2026-134624.svg)
+
+## Teknik görünüm
+
+NVD açıklaması mekanizmayı net biçimde tarif ediyor: MailAssure, bir relay yapılandırıldığında LDAP senkronizasyonu için yaptığı bağlantı kontrolünün hedefini sınırlandırmıyor. Kimlik doğrulamalı bir API kullanıcısı, sunucunun keyfi iç host ve portlara bağlanmasını sağlayabiliyor; bağlantının kurulup kurulmadığından erişilebilirlik haritası çıkarabiliyor ve iç servislere özel hazırlanmış veri gönderebiliyor. Yani etki, dışa açık bir RCE değil, sunucuyu bir iç ağ probu ve veri taşıyıcısı olarak kullanma.
+
+Sürüm numarası bir tarih damgası: `20261121.1943`. NVD, etkilenen aralığı `0` ile bu build arasında `custom` olarak veriyor; satıcı duyurusunun kapsamı bağımsız okunamadığı için build numarasının ötesine geçen bir sürüm tablosu kayıtlarda yok. CVSS v4.0 vektöründe ayrıcalık gereksinimi `PR:H` (yüksek ayrıcalıklı API kullanıcısı), kullanıcı etkileşimi yok, kullanılabilirlik etkisi `VA:N`. `SC:H` ve `SI:H` alanları, etkinin MailAssure'un kendi güvenlik sınırı dışındaki sistemlere de yayılabileceğini söylüyor; bu da SSRF'in mantığıyla uyumlu.
+
+CVSS skorunun kaynağı önemli: 9.3, N-able CNA'nın ikincil v4.0 metriği. NVD kaydı `Received` durumunda ve kendi skorunu üretmedi; kayıtta v3.1 metriği de yok. CISA SSVC alanları ayrı okundu: `exploitation: active`, `automatable: no`, `technicalImpact: total`. KEV kaydında `dateAdded: 2026-11-23`, `dueDate: 2026-11-26`, `forensicTriage: Yes`, `knownRansomwareCampaignUse: Unknown` değerleri doğrudan okundu. `requiredAction` içindeki genel "Forensics Triage Requirements" metni, `forensicTriage` alanının Yes olduğu anlamına gelmiyor; alanın kendisi Yes.
+
+KEV notu satıcı duyurusu olarak `https://me.n-able.com/s/security-advisory/aArVy0000002mrlKAA` adresini veriyor. Bu adres bir Salesforce müşteri portalı; istekte içerik yerine JavaScript yükleyici dönüyor. Dolayısıyla satıcının kendi ifadelerini (örneğin kötüye kullanım bilgisi olup olmadığını) bağımsız olarak okumadık. Buradaki teknik anlatım NVD kaydına ve KEV alanlarına dayanıyor; satıcı tarafının sessizliğini "istismar yok" olarak yorumlamıyoruz. Ayrıca hangi iç portların hedeflendiği, hangi protokollerin kullanıldığı, sızma kanıtının ne olduğu ve kimin istismar ettiği kamuya açık birincil kayıtta yazmıyor.
+
+## Ne yapmalı?
+
+1. **Build'i yükseltin.** MailAssure dağıtımlarını `20261121.1943` veya üzerine alın; sürümü yamadan sonra doğrulayın.
+2. **API yetkilerini daraltın.** Relay yapılandırma ve LDAP senkronizasyonu ayarlarını değiştirebilen API hesaplarını sayın; yalnızca yönetim gerektiren hesaplara bırakın.
+3. **Çıkış trafiğini sınırlayın.** MailAssure sunucusunun LDAP senkronizasyonundan kaynaklanan iç ağ bağlantılarını bilinen dizin sunucularıyla sınırlandırın; keyfi iç host/port denemelerini engelleyin.
+4. **Günlükleri arayın.** Sunucudan alışılmadık iç IP ve portlara yapılan bağlantıları, LDAP sorgularını ve yeni API anahtarı kullanımlarını arayın.
+5. **KEV takvimini uygulayın.** 26 Kasım son tarihi ve `forensicTriage: Yes` alanı nedeniyle yama sonrası adli incelemeyi atlamayın.
+
+## Ne yapmamalı?
+
+- Kimlik doğrulamasız RCE demeyin. NVD açıklaması kimlik doğrulamalı API kullanıcısı şartını koyuyor, CVSS vektörü `PR:H` diyor.
+- "İç sistemler ele geçirildi" demeyin. Kayıtlar keyfi bağlantı ve veri gönderme yeteneğini tarif ediyor; başarılı bir sonraki adım kanıtı yok.
+- "9.3'ü NVD verdi" yazmayın. Skor N-able CNA'nın v4.0 metriği; NVD `Received` ve kendi skorunu üretmedi.
+- Ransomware iddiası eklemeyin; KEV alanı `Unknown`.
+- PoC veya exploit yayıldı iddiası eklemeyin; birincil kayıtlarda böyle bir alan yok.
+- Satıcının "kötüye kullanım bilgisi yok" dediğini varsaymayın. Duyuru portalı okunamadı; sessizlik kanıt değil.
+- Port listesi uydurmayın. Hangi iç servislerin hedeflendiği kayıtlarda yazmıyor.
+
+## Durum
+
+24 Kasım 2026 itibarıyla bu açık **NVD kaydı ve CISA KEV ile doğrulanmış**, ancak satıcı duyurusunun içeriği bağımsız okunamamış. NVD kaydı (`Received`, CWE-918, N-able CNA CVSS v4.0 9.3, CISA SSVC `exploitation: active`), KEV JSON'u (`dateAdded: 2026-11-23`, `dueDate: 2026-11-26`, `forensicTriage: Yes`, `knownRansomwareCampaignUse: Unknown`) ve KEV notundaki satıcı bağlantısı birbirini destekliyor. Belirsizlikler: KEV notundaki portal JavaScript ile yüklendiği için satıcı metni okunamadı; NVD analizi yok; istismarın zamanı, yöntemi, aktörü ve etkilenen kurumlar kamuya açık kayıtta yok; hedef port veya protokol bilgisi yok; v3.1 skoru bulunmuyor. "Tüm e-posta gateways ele geçirildi", "zero-click RCE" veya "ransomware doğrulandı" başlıkları bu kayıtlarla desteklenmiyor.
+
+## Bu seriden
+
+- [Apache Roller CVE-2026-129448](/blog/apache-roller-cve-2026-129448)
+- [Flowintel CVE-2026-133648](/blog/flowintel-tls-cve-2026-133648)
+- [MONAI Label CVE-2026-133968](/blog/monailabel-cve-2026-133968)
+
+## Kaynaklar
+
+- [NVD - CVE-2026-134624](https://nvd.nist.gov/vuln/detail/CVE-2026-134624)
+- [CISA KEV kaydı](https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-134624)
+- [CISA KEV JSON feed'i (sürüm 2026.11.23)](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+- [N-able güvenlik duyurusu (KEV notunda verilen adres, portal)](https://me.n-able.com/s/security-advisory/aArVy0000002mrlKAA)
+- [CISA BOD 26-04 uygulama rehberi](https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk)
+
+---
+
 # SSHole CVE-2026-123158: musl libc ve parola dogrulama atlatma
 
 - Kaynak: https://fosstr.com/blog/openssh-musl-sshole-cve-2026-123158/
