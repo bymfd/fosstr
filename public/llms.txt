@@ -17,6 +17,9 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Yazılar
 
+- [CISA BOD 26-04: CVSS etiketi yerine SSVC ve sure](https://fosstr.com/blog/cisa-bod-26-04-ssvc/) — CISA BOD 26-04 uygulama rehberi FCEB ajanslarinda CVSS critical-high etiketlerini SSVC, maruziyet ve otomasyon ile degistiriyor. Forensic triage ve KEV due date mantigi.
+- [Dependabot 8 Aralikta sessiz repo larda duruyor](https://fosstr.com/blog/dependabot-inactive-repositories/) — GitHub 8 Aralik 2026dan itibaren bir yil push olmayan repo larda Dependabot uyarilarini kapatacak. Uyarilar silinmiyor, arsivleniyor ve her push ile geri geliyor.
+- [GitHub security advisory izinleri GA: maintainer admin olmadan da calisabilir](https://fosstr.com/blog/github-security-advisory-permissions/) — GitHub 20 Kasim 2026da custom repository rollerine dort security advisory izni ekledi. ASEI bildirimi ve ozel raporlar artik repo admini olmadan yonetilebiliyor; sinirlar net.
 - [ManageEngine DDI Central: iki komut enjeksiyonu ve 6500 yamasi](https://fosstr.com/blog/manageengine-ddi-central-cves/) — DDI Central 6500 oncesinde IPv6 scope kimlikleri ve bloklu domain degerleri PowerShell komutuna karisiyor. CVE-2026-95643 ve 95645, satıcı duyurulari, NVD durumu ve KEV olmamasi.
 - [MONAI Label CVE-2026-133968: datastore yazma siniri ve RCE riski](https://fosstr.com/blog/monailabel-cve-2026-133968/) — MONAI Label 0.8.5 ve oncesinde PUT /datastore/image image parametresi dizin disina yaziyor. CVE-2026-133968, KEV alanlari, AWS saha bulgulari ve 0.8.6 duzeltmesi.
 - [N-able MailAssure CVE-2026-134624: LDAP senkronizasyonunda SSRF](https://fosstr.com/blog/nable-mailassure-cve-2026-134624/) — MailAssure 20261121.1943 oncesi, relay yapilandirildiginda LDAP baglanti kontrolunu sinirlandirmiyor. CVE-2026-134624, KEV alanlari, CVSS v4.0 kaynagi ve belirsizlikler.
@@ -71,15 +74,16 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Tags
 
-- [security](https://fosstr.com/blog/tags/security/) — 36 içerik
+- [security](https://fosstr.com/blog/tags/security/) — 39 içerik
 - [cve](https://fosstr.com/blog/tags/cve/) — 25 içerik
-- [open-source](https://fosstr.com/blog/tags/open-source/) — 14 içerik
+- [open-source](https://fosstr.com/blog/tags/open-source/) — 16 içerik
 - [rce](https://fosstr.com/blog/tags/rce/) — 11 içerik
 - [linux](https://fosstr.com/blog/tags/linux/) — 9 içerik
 - [kev](https://fosstr.com/blog/tags/kev/) — 7 içerik
 - [ai](https://fosstr.com/blog/tags/ai/) — 6 içerik
 - [kernel](https://fosstr.com/blog/tags/kernel/) — 4 içerik
 - [apache](https://fosstr.com/blog/tags/apache/) — 3 içerik
+- [github](https://fosstr.com/blog/tags/github/) — 3 içerik
 - [ios](https://fosstr.com/blog/tags/ios/) — 3 içerik
 - [llm](https://fosstr.com/blog/tags/llm/) — 3 içerik
 - [tech-industry](https://fosstr.com/blog/tags/tech-industry/) — 3 içerik
@@ -92,11 +96,14 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [http2](https://fosstr.com/blog/tags/http2/) — 2 içerik
 - [java](https://fosstr.com/blog/tags/java/) — 2 içerik
 - [kubernetes](https://fosstr.com/blog/tags/kubernetes/) — 2 içerik
+- [maintainers](https://fosstr.com/blog/tags/maintainers/) — 2 içerik
 - [privacy](https://fosstr.com/blog/tags/privacy/) — 2 içerik
+- [supply-chain](https://fosstr.com/blog/tags/supply-chain/) — 2 içerik
 - [tls](https://fosstr.com/blog/tags/tls/) — 2 içerik
 - [whatsapp](https://fosstr.com/blog/tags/whatsapp/) — 2 içerik
 - [windows](https://fosstr.com/blog/tags/windows/) — 2 içerik
 - [zero-day](https://fosstr.com/blog/tags/zero-day/) — 2 içerik
+- [advisory](https://fosstr.com/blog/tags/advisory/) — 1 içerik
 - [ai-agents](https://fosstr.com/blog/tags/ai-agents/) — 1 içerik
 - [alpine](https://fosstr.com/blog/tags/alpine/) — 1 içerik
 - [android](https://fosstr.com/blog/tags/android/) — 1 içerik
@@ -110,8 +117,10 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [bash](https://fosstr.com/blog/tags/bash/) — 1 içerik
 - [bisiklet](https://fosstr.com/blog/tags/bisiklet/) — 1 içerik
 - [bitly](https://fosstr.com/blog/tags/bitly/) — 1 içerik
+- [bod](https://fosstr.com/blog/tags/bod/) — 1 içerik
 - [bulten](https://fosstr.com/blog/tags/bulten/) — 1 içerik
 - [china](https://fosstr.com/blog/tags/china/) — 1 içerik
+- [cisa](https://fosstr.com/blog/tags/cisa/) — 1 içerik
 - [cisco](https://fosstr.com/blog/tags/cisco/) — 1 içerik
 - [cncf](https://fosstr.com/blog/tags/cncf/) — 1 içerik
 - [command-injection](https://fosstr.com/blog/tags/command-injection/) — 1 içerik
@@ -122,6 +131,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [data-breach](https://fosstr.com/blog/tags/data-breach/) — 1 içerik
 - [ddi](https://fosstr.com/blog/tags/ddi/) — 1 içerik
 - [deepseek](https://fosstr.com/blog/tags/deepseek/) — 1 içerik
+- [dependabot](https://fosstr.com/blog/tags/dependabot/) — 1 içerik
 - [desktop](https://fosstr.com/blog/tags/desktop/) — 1 içerik
 - [displaylink](https://fosstr.com/blog/tags/displaylink/) — 1 içerik
 - [diy](https://fosstr.com/blog/tags/diy/) — 1 içerik
@@ -138,7 +148,6 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [fbi](https://fosstr.com/blog/tags/fbi/) — 1 içerik
 - [firewall](https://fosstr.com/blog/tags/firewall/) — 1 içerik
 - [flowintel](https://fosstr.com/blog/tags/flowintel/) — 1 içerik
-- [github](https://fosstr.com/blog/tags/github/) — 1 içerik
 - [gpustack](https://fosstr.com/blog/tags/gpustack/) — 1 içerik
 - [guardium](https://fosstr.com/blog/tags/guardium/) — 1 içerik
 - [hacker-news](https://fosstr.com/blog/tags/hacker-news/) — 1 içerik
@@ -151,7 +160,6 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [local-ai](https://fosstr.com/blog/tags/local-ai/) — 1 içerik
 - [macos](https://fosstr.com/blog/tags/macos/) — 1 içerik
 - [mailassure](https://fosstr.com/blog/tags/mailassure/) — 1 içerik
-- [maintainers](https://fosstr.com/blog/tags/maintainers/) — 1 içerik
 - [manageengine](https://fosstr.com/blog/tags/manageengine/) — 1 içerik
 - [masaüstü](https://fosstr.com/blog/tags/masaustu/) — 1 içerik
 - [mekatronik](https://fosstr.com/blog/tags/mekatronik/) — 1 içerik
@@ -201,6 +209,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [spamexperts](https://fosstr.com/blog/tags/spamexperts/) — 1 içerik
 - [spring](https://fosstr.com/blog/tags/spring/) — 1 içerik
 - [ssrf](https://fosstr.com/blog/tags/ssrf/) — 1 içerik
+- [ssvc](https://fosstr.com/blog/tags/ssvc/) — 1 içerik
 - [storage](https://fosstr.com/blog/tags/storage/) — 1 içerik
 - [swift](https://fosstr.com/blog/tags/swift/) — 1 içerik
 - [tcp](https://fosstr.com/blog/tags/tcp/) — 1 içerik
@@ -210,6 +219,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [vcenter](https://fosstr.com/blog/tags/vcenter/) — 1 içerik
 - [virtualization](https://fosstr.com/blog/tags/virtualization/) — 1 içerik
 - [vmware](https://fosstr.com/blog/tags/vmware/) — 1 içerik
+- [vulnerability-management](https://fosstr.com/blog/tags/vulnerability-management/) — 1 içerik
 - [wayland](https://fosstr.com/blog/tags/wayland/) — 1 içerik
 - [wordpress](https://fosstr.com/blog/tags/wordpress/) — 1 içerik
 - [xfs](https://fosstr.com/blog/tags/xfs/) — 1 içerik

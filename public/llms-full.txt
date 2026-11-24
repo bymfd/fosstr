@@ -13,6 +13,213 @@ Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her 
 
 ---
 
+# CISA BOD 26-04: CVSS etiketi yerine SSVC ve sure
+
+- Kaynak: https://fosstr.com/blog/cisa-bod-26-04-ssvc/
+- Tür: Yazı
+- Tarih: 2026-11-24
+- Etiketler: security, cisa, bod, ssvc, vulnerability-management
+- Özet: CISA BOD 26-04 uygulama rehberi FCEB ajanslarinda CVSS critical-high etiketlerini SSVC, maruziyet ve otomasyon ile degistiriyor. Forensic triage ve KEV due date mantigi.
+
+CISA'nın BOD 26-04 uygulama rehberi 10 Haziran 2026'da yayınlandı ve 25 Ağustos 2026'da güncellendi. Yeni değil, ama son haftalardaki KEV kayıtlarındaki "forensic triage Yes" ve kısa son tarihlerin nereden geldiğini anlamak için kritik. Direktif, BOD 19-02 ve BOD 22-01'i yürürlükten kaldırıyor; FCEB ajansları için CVSS kullanım zorunluluğunu kaldırıyor ve yerine SSVC decision point'lerini, varlık maruziyetini ve adli üçlaj adımlarını koyuyor.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| Kaynak | CISA BOD 26-04 implementation guidance |
+| Yayın / güncelleme | 10 Haziran 2026 / 25 Ağustos 2026 |
+| Kaldırılan | BOD 19-02 ve BOD 22-01; FCEB'de CVSS zorunluluğu |
+| Yeni girdiler | Publicly exposed, automatable, technical impact, KEV durumu |
+| Açık örnek | Maruz + total impact + automatable ise 3 günlük yama süresi |
+| Adli üçlaj | 2 saat içinde kapsam; 2-24 saat kanıt; 24-48 saat analiz; 48-72 saat karar |
+| Kapsam | FCEB ajansları; özel sektör için bağlayıcı değil |
+| Yanlış okuma | "KEV'de = şu an aktif istismar" değil |
+
+![BOD 26-04 SSVC ve adli üçlaj akışı](/diagrams/cisa-bod-26-04-ssvc.svg)
+
+## Teknik görünüm
+
+Rehber, "publicly exposed" tanımını geniş tutuyor: ajansın sahip olduğu veya yönettiği bir varlık, fiziksel veya mantıksal konumuna bakılmaksızın public network üzerinden kimlik doğrulamamış veya güvenilmeyen taraflarca erişilebiliyorsa maruz sayılıyor. "Technical impact: total" için verilen sezgisel örnekler: saldırgan keyfi yazılım kurup çalıştırabiliyor, bileşenin tüm eylemlerini tetikleyebiliyor, tam ayrıcalıklı hesap elde ediyor veya CVSS gizlilik ve bütünlük etkileri ikisi de High. "Automatable" için örnek, güvenilir biçimde RCE elde eden herkese açık bir PoC'un varlığı.
+
+KEV katalog kriterleri de ayrı yazıyor: CVE ID atanmış olması, sahada aktif istismara dair güvenilir kanıt, net bir yama veya hafifletme olması ve ABD hükümet sistemleri için önemli risk taşıması. CISA, KEV eklemesinin "şu anda aktif istismar görülüyor" anlamına gelmediğini; PoC'nin zorunlu olmadığını ve eski veya EOL ürünlerdeki açıkların da eklenebileceğini belirtiyor. Bu, son günlerdeki 3 günlük teslim tarihlerinin "yeni bir saldırı dalgası" demek olmadığını gösteriyor.
+
+Süreler tek bir CVSS skorundan değil, SSVC alanlarından ve varlık bağlamından hesaplanıyor. Rehberin verdiği örnekte varlık public exposed, technical impact total ve automatable yes ise KEV due date 3 günlük yama süresine karşılık geliyor. Karar ajans tarafında varlık bazında veriliyor; CISA, KEV catalog due date hesaplamasında elindeki veriyi kullanıyor ama nihai maruziyet değerlendirmesi ajansta.
+
+Adli üçlaj altı adımda tanımlı. Kapsam belirleme HEDEF olarak KEV eklenmesinden sonraki ilk iki saat; uçucu veriyi koruma ve kritik yama 2-24 saat; containment 6-24 saat; kanıt analizi 24-48 saat; yükseltme raporu 48-72 saat. CISA bu süreleri "tavsiye edilen en iyi uygulama" olarak etiketliyor; zorunlu olan şey uygun bir forensic triage analizinin yapılması. Sıra önemli: mümkünse kanıt toplanmadan yama atmayın, erken containment kritik delilleri yok edebiliyor ve containment saldırganı tetiklemeyecek biçimde yürütülmeli.
+
+Rehber ayrıca bulgu yok / doğrulandı / şüpheli olmak üzere üç sonuç tanımlıyor. Bulgu yoksa yüksek izleme ve normal yama; doğrulanırsa CISA Incident Reporting System'e bildirim ve tam olay müdahalesine geçiş; şüpheliyse IOC ve anomali çalışmasına devam. Cloud tarafında sorumluluk paylaşılıyor: on-prem ve IaaS'ta ajans tam sorumlu; PaaS'ta ajans kimlik, operasyon, guest OS/veri/içerik ve audit logging'den, CSP ağ güvenliğinden; SaaS'ta CSP web uygulaması, kimlik, operasyon ve ağdan, ajans erişim/kimlik doğrulama, guest OS/veri/içerik ve audit logging'den sorumlu.
+
+## Ne yapmalı?
+
+1. **CVSS skor listesini bırakın.** FCEB kapsamındaki ekibinizde önceliklendirmeyi SSVC alanları, maruziyet ve varlık kritikliğiyle yeniden kurun.
+2. **Adli üçlaj planı yazın.** KEV eklenmesi geldiğinde kimin kanıt toplayacağı, hangi out-of-band kanalın kullanılacağı ve kimin yükseltme kararı verdiği önceden tanımlı olsun.
+3. **Kanıtı yamadan önce alın.** Uçucu veriyi (bellek, cache, registry, uçuş halindeki veri) önce toplayın; yama sonrası delil kaybını kaydedin.
+4. **Maruziyet etiketlerini CDM'de güncelleyin.** Çeyrekta bir veya CISA istediğinde public IP'leri ve domain'leri bildirin; scanning trafiğini engellemeyin.
+5. **Cloud SLA'larını gözden geçirin.** FedRAMP'te VDR/VER kurallarının 7 Aralık 2026'da zorunlu olacağını ve sorumluluk ayrımını sözleşmelere yansıtın.
+
+## Ne yapmamalı?
+
+- "KEV'ye girdi = şu an aktif istismar" demeyin. Rehber açıkça aksini söylüyor; kriterler geçmişteki güvenilir kanıtı da kapsıyor.
+- "PoC yoksa KEV'ye giremez" demeyin. PoC zorunlu değil.
+- "CVSS 9.8 ise önce o" demeyin. Direktif CVSS use zorunluluğunu kaldırıyor; skor tek başına risk kararı değil.
+- "Özel sektör için yasal süre" demeyin. BOD 26-04 FCEB ajanslarına yönelik; diğer kurumlar için rehber niteliği taşır.
+- "Önce yama, sonra kanıt" demeyin. Rehber, mümkün olduğunda kanıt toplamayı önce istiyor; erken containment delilleri yok edebiliyor.
+- "Tüm bulgular doğrulandı sayılır" demeyin. Üç ayrı sonuç var: no evidence, confirmed, suspected.
+- "Cloud tamamen CSP'nin işi" demeyin. SaaS'ta bile erişim, guest OS/veri ve audit logging ajansın sorumluluğunda.
+
+## Durum
+
+24 Kasım 2026 itibarıyla bu rehber **CISA'nın kendi sitesinden doğrulanmış**; bir CVE değil, FCEB ajanslarına yönelik uygulama kılavuzu. Yayın 10 Haziran 2026, güncelleme 25 Ağustos 2026. Doğrulanan bilgiler: BOD 19-02 ve 22-01'in yürürlükten kaldırılması, CVSS zorunluluğunun kalkması, SSVC decision point tanımları, KEV katalog kriterleri, 3 günlük örnek, altı adımlı forensic triage ve üç sonuç kategorisi, cloud sorumluluk paylaşımı ve FedRAMP 7 Aralık 2026 tarihi. Belirsizlikler: tam remediation timeline tablosu bu sayfada özetlenmemiş; ajans içi risk kararları ve HVA muafiyetleri kuruma özel; rehber zaman çizelgelerini zorunlu değil tavsiye olarak etiketliyor. "KEV = anlık istismar", "CVSS artık kullanılmayacak" veya "herkes için yasal 3 gün" başlıkları bu kayıtla desteklenmiyor.
+
+## Bu seriden
+
+- [SonicWall CVE-2026-19868](/blog/sonicwall-gen6-cve-2026-19868)
+- [VMware vCenter CVE-2026-123890](/blog/vmware-vcenter-cve-2026-123890)
+- [N-able MailAssure CVE-2026-134624](/blog/nable-mailassure-cve-2026-134624)
+
+## Kaynaklar
+
+- [CISA: BOD 26-04 Implementation Guidance for Prioritizing Security Updates Based on Risk](https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk)
+
+---
+
+# Dependabot 8 Aralikta sessiz repo larda duruyor
+
+- Kaynak: https://fosstr.com/blog/dependabot-inactive-repositories/
+- Tür: Yazı
+- Tarih: 2026-11-24
+- Etiketler: security, github, dependabot, supply-chain, open-source
+- Özet: GitHub 8 Aralik 2026dan itibaren bir yil push olmayan repo larda Dependabot uyarilarini kapatacak. Uyarilar silinmiyor, arsivleniyor ve her push ile geri geliyor.
+
+GitHub, 10 Kasım 2026 changelog'unda Dependabot uyarılarının 8 Aralık 2026'dan itibaren "son bir yılda etkinlik olmayan" çoğu depoda kapatılacağını duyurdu. Bu bir güvenlik açığı değil; uyarı üretiminin kapsamını değiştiren bir ürün kararı. Önemli ayrıntı şu: mevcut uyarılar silinmiyor, arşivleniyor; depoya yapılacak herhangi bir push uyarıları yeniden açıyor ve bir yıllık sayacı sıfırlıyor.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| Değişiklik | Etkin olmayan depolarda Dependabot alerts kapanıyor |
+| Geçerlilik | 8 Aralık 2026 |
+| "Etkinlik" tanımı | Herhangi bir branch/tag'a push, repo oluşturma, Dependabot uyarılarını açma |
+| Mevcut uyarılar | Arşivleniyor, silinmiyor, geri yüklenebiliyor |
+| Geri açma | Herhangi bir push veya repo ayarlarından açma |
+| İstisna | Zorunlu security configuration veya kurum politikası engelse kapanmıyor |
+| Kapsam | github.com'un tüm planları ve data residency'li GitHub Enterprise Cloud |
+| Kapsam dışı | GitHub Enterprise Server |
+
+![Dependabot uyarı yaşam döngüsü](/diagrams/dependabot-inactive-repositories.svg)
+
+## Teknik görünüm
+
+GitHub'ın verdiği gerekçe, güvenlik açığı keşfinin ve uyarı hacminin hızla artması; amacı aktif geliştirilen depolarda Dependabot'u hızlı ve güvenilir tutmak. Karar "çoğu depo" ifadesiyle yazılmış, çünkü iki istisna var. Zorunlu security configuration ile Dependabot uyarılarını açan depolarda uyarılar kapanmıyor. Ayrıca kurumunda Dependabot uyarılarını açıp kapatmayı repo yöneticilerinin kararına bırakmayan bir politika varsa, o depolar da atlanıyor.
+
+Etkinlik tanımı dar ve mekanik. GitHub yalnızca üç durumu sayıyor: herhangi bir branch veya tag'a push yapmak, depoyu oluşturmak, Dependabot uyarılarını açmak. Duyuruda issue, pull request, yorum veya yıldız gibi etkinlikler sayılmıyor. Yani bir depoda son bir yılda kod push'u yoksa, başka tür hareket olsa bile kapsama girebiliyor.
+
+Uyarıların kapanması veri kaybı değil. GitHub mevcut uyarıların arşivlendiğini ve istenildiğinde geri yüklenebileceğini yazıyor. Depoya yapılacak herhangi bir push uyarıları otomatik olarak yeniden açıyor ve bir yıllık süreyi baştan başlatıyor. Repo ayarlarından elle açmak da aynı sonucu veriyor. Veri residency kullanan kurumlar için arşivlenen uyarılar kurumun diğer verileriyle aynı bölgede tutuluyor.
+
+Kapsam net: github.com üzerindeki tüm planlar ve GitHub Enterprise Cloud data residency. GitHub Enterprise Server bu değişiklikten etkilenmiyor. Duyuru Dependabot version updates veya dependency graph davranışında bir değişiklik anlatmıyor; yalnızca alerts kapanıyor. Bu ayrımı korumak önemli, çünkü "Dependabot kapandı" başlığı yanlış bir izlenim verir.
+
+## Ne yapmalı?
+
+1. **Depo envanterini çıkarın.** 8 Aralık öncesinde son push tarihi bir yıldan eski olan depoları listeleyin; arşivlenmiş kabul edilen depolarla aktif ama sessiz depoları ayırın.
+2. **Aktif kabul edilen depolara tek push atın.** Bakımı süren ama bir yıldır push olmayan depoya küçük bir değişiklik göndermek uyarıları geri açar ve sayacı sıfırlar.
+3. **Zorunlu security configuration kullanın.** Kurumda repo yöneticilerinin uyarıları kapatmasını istemiyorsanız, uyarıları açan zorunlu bir security configuration uygulayın.
+4. **Arşivleri kontrol edin.** 8 Aralık sonrası bir depoda çalışmaya başlarken uyarıların otomatik geri geldiğini doğrulayın; eski uyarıları yeniden keşfetmeyin.
+5. **Kurum politikasını gözden geçirin.** GHES dışındaki filo için Dependabot alerts politikanızı ve data residency gereksinimlerinizi kaydedin.
+
+## Ne yapmamalı?
+
+- "Uyarılar silindi" demeyin. GitHub arşivlendiğini ve geri yüklenebileceğini yazıyor.
+- "Dependabot tamamen kapatılıyor" demeyin. Değişiklik alerts kapsamı; version updates veya dependency graph için açıklama yok.
+- "Tüm depolar etkileniyor" demeyin. Duyuru "çoğu depo" diyor ve iki istisna tanımlıyor; GHES tamamen dışarıda.
+- "Issue veya PR açmak yeterli" demeyin. Etkinlik listesinde yalnızca push, repo oluşturma ve uyarıları açma var.
+- "Geri açmak için yeniden kurulum gerekir" demeyin. Herhangi bir push veya ayar değişikliği yeterli.
+- "Bu bir güvenlik açığı" demeyin. Kaynak bir ürün davranış duyurusu; CVE veya exploit içermiyor.
+
+## Durum
+
+24 Kasım 2026 itibarıyla bu değişiklik **GitHub'ın changelog kaydıyla doğrulanmış**, CVE içermeyen bir ürün kararı. Doğrulanan bilgiler: 8 Aralık 2026 geçerlilik tarihi, üç maddelik etkinlik tanımı, uyarıların arşivlenip silinmemesi, push ile otomatik geri açılma, iki istisna, github.com/GHE Cloud kapsamı ve GHES dışlama. Belirsizlikler: "çoğu depo" ifadesinin kesin sınırı duyuruda yok; arşivlenen uyarıların arşivde ne kadar süre tutulduğu belirtilmiyor; Dependabot version updates ve dependency graph için ayrı bir davranış açıklanmıyor; data residency dışı GHE Cloud dağıtımları için ayrı bir not yok. "Uyarılar kalıcı olarak silindi", "Dependabot kapanıyor" veya "GHES de etkileniyor" başlıkları bu kayıtla desteklenmiyor.
+
+## Bu seriden
+
+- [Brotli 2shell: pip-audit ve Dependabot kör noktası](/blog/broccoli2shell-brotli-acigi)
+- [Flowintel CVE-2026-133648](/blog/flowintel-tls-cve-2026-133648)
+- [Apache Axis 1.x CVE-2026-90436](/blog/apache-axis-cve-2026-90436)
+
+## Kaynaklar
+
+- [GitHub Changelog: Dependabot alerts will pause on inactive repositories](https://github.blog/changelog/2026-11-10-dependabot-alerts-will-pause-on-inactive-repositories/)
+
+---
+
+# GitHub security advisory izinleri GA: maintainer admin olmadan da calisabilir
+
+- Kaynak: https://fosstr.com/blog/github-security-advisory-permissions/
+- Tür: Yazı
+- Tarih: 2026-11-24
+- Etiketler: security, github, open-source, maintainers, advisory, supply-chain
+- Özet: GitHub 20 Kasim 2026da custom repository rollerine dort security advisory izni ekledi. ASEI bildirimi ve ozel raporlar artik repo admini olmadan yonetilebiliyor; sinirlar net.
+
+GitHub, 20 Kasım 2026'da güvenlik danışmanlığı (security advisory) izinlerini genel kullanıma açtı. Bu bir CVE veya yeni bir açık değil; açık kaynak projelerinde koordinatlı açık yönetiminin kimler tarafından yürütülebileceğini değiştiren bir yetki güncellemesi. Artık bir kişiyi repo yöneticisi ya da organizasyon geneli security manager yapmadan, yalnızca ilgili depoda taslak advisory görebilme, özel güvenlik raporunu kabul etme ve advisory yayınlama yetkisi verebilirsiniz. GitHub'ın duyurusu sınırları da açıkça yazıyor: geçici özel fork'tan birleştirme hâlâ admin istiyor.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| Değişiklik | Security advisory izinleri custom repository rollerinde GA |
+| Duyuru tarihi | 20 Kasım 2026, GitHub Changelog |
+| Yeni izinler | View; Create/Edit/Manage; Accept reports & close/reopen; Publish & request CVEs |
+| Kapsam | Repository security advisories ve private vulnerability reports |
+| Atama | Kullanıcı ve takımlara, yalnızca ihtiyaç duyulan depolarda |
+| Plan | Custom repository rollerini destekleyen planlar; GitHub Enterprise Cloud dahil |
+| Kalan admin işi | Geçici özel fork'tan merge; fork silme; gizli yorumlarda write gereksinimi |
+| Tür | Süreç/ürün güncellemesi, CVE değil |
+
+![GitHub security advisory izin akışı](/diagrams/github-security-advisory-permissions.svg)
+
+## Teknik görünüm
+
+GitHub, dört izni özel bir hiyerarşiyle tanımlıyor. `View security advisories`, taslak advisory'leri, durumlarını ve yorumları görmeyi sağlıyor. `Create, Edit, and Manage security advisories`, görüntülemenin üzerine advisory oluşturma ve düzenleme, yorum yapma, iş birlikçileri yönetme ve geçici özel fork oluşturma yetkilerini ekliyor. `Accept private vulnerability reports and close or reopen security advisories`, özel raporları kabul etme ve advisory'leri kapatıp yeniden açma için View veya Create/Edit/Manage iznini gerektiriyor. `Publish security advisories and request CVEs` da aynı temel izinlere dayanıyor ve yayın/CVE talebini kapsıyor.
+
+Pratik sonuç, rolün repo bazında verilebilmesi. GitHub, kullanıcılara ve takımlara yalnızca bakımını yaptıkları depolarda rol atamanızı öneriyor; böylece advisory bilgisi organizasyonun tamamına açılmıyor. İzinler hem repo security advisory'leri hem private vulnerability reports için geçerli. Yani bir bakımcı, organizasyon genelinde security manager olmadan kendi deposunun özel raporlarını görebiliyor.
+
+Sınırlar duyuruda net. Yeni izinlerden birine sahip olmak, geçici özel fork'tan gelen değişiklikleri birleştirme yetkisi vermiyor; merge için repo yöneticisi veya security manager gerekiyor. Bu izinlere sahip kişiler geçici özel fork'u silemiyor. Gizli yorumlar ise yalnızca Create/Edit/Manage iznine ek olarak depoda write yetkisi olanlarda görünüyor. Kısacası yeni roller açık yönetimin büyük kısmını kapsıyor ama son onay ve depo yazımı hâlâ ayrı yetkiler.
+
+GitHub, özelliğin custom repository rollerini destekleyen planlarda, GitHub Enterprise Cloud dahil kullanılabildiğini yazıyor. Duyuru GitHub Enterprise Server sürüm bilgisi vermiyor; dolayısıyla GHES tarafı için "var" veya "yok" demek kaynağın ötesine geçmek olur. Yine duyuru, CVE talebinin otomatik onaylandığını veya advisory'nin herkese açık hale geldiğini söylemiyor; yalnızca bu işlemleri tetikleyebilecek izinden bahsediyor.
+
+## Ne yapmalı?
+
+1. **Rolleri depo bazında haritalayın.** Hangi takımın hangi depolarda özel rapor aldığını ve taslak advisory yazdığını listeleyin; organizasyon geneli yetkileri gözden geçirin.
+2. **En az yetkiyle ayrın.** Çoğu bakımcıya View + Create/Edit/Manage; rapor kabulü gereken kişilere Accept; yayın ve CVE talebini yalnızca sürüm sorumlularına verin.
+3. **Admin hattını koruyun.** Geçici özel fork birleştirmeleri için en az bir repo yöneticisi veya security manager ataması bırakın; yeni izinler bunu değiştirmiyor.
+4. **Gizli yorum kuralını göz önünde bulundurun.** Create/Edit/Manage yetkisi tek başına gizli yorumları göstermiyor; o kişinin depoda write yetkisi de olmalı.
+5. **Eski yetkileri temizleyin.** Yalnızca advisory çalışması için verilmiş eski repo admin veya organization security manager rollerini, yeni custom role ile değiştirip kaldırın.
+
+## Ne yapmamalı?
+
+- "Tüm GitHub kullanıcıları advisory yayınlayabilir" demeyin. Özellik custom repository rolleri ve destekleyen planlarla sınırlı.
+- "Artık admin gerekmiyor" demeyin. Geçici özel fork'tan merge ve fork silme hâlâ yönetici/security manager işi.
+- "CVE talebi otomatik onaylanıyor" yazmayın. Duyuru yalnızca izin verildiğini söylüyor, onay sürecini değiştirdiğini söylemiyor.
+- "Özel raporlar herkese açıldı" demeyin. Değişen şey kimin erişebileceği; gizlilik kuralı korunuyor.
+- "GHES 3.x'te de aynı" demeyin. Kaynakta GHES sürüm bilgisi yok.
+- "Organization security manager rolü kaldırıldı" demeyin. Yalnızca bu iş için zorunlu olmaktan çıktığı anlatılıyor.
+
+## Durum
+
+24 Kasım 2026 itibarıyla bu değişiklik **GitHub'ın kendi changelog kaydıyla doğrulanmış**; bir CVE, exploit veya güvenlik olayı değil. Doğrulanan bilgiler: duyuru tarihi 20 Kasım 2026, dört yeni izin, izinlerin dependency ilişkisi, repo/takım bazında atama, private vulnerability reports kapsamı, plan notu ve üç sınır (merge, fork silme, gizli yorum + write). Belirsizlikler: GitHub Enterprise Server için sürüm veya tarih verilmemiş; plan matrisinin tamamı duyuruda yok; CVE onay akışının detayları ve özel raporuz advisory oluşturma kuralları bu kayıtta yer almıyor. "Yeni bir güvenlik açığı bulundu", "herkes advisory yayınlayabilir" veya "admin rolü tamamen kalktı" başlıkları bu kayıtla desteklenmiyor.
+
+## Bu seriden
+
+- [OpenShell ve CNCF ajan güvenliği](/blog/openshell-cncf-ajan-guvenligi)
+- [Açık kaynak AI katkısı ve yasaklar](/blog/acik-kaynak-ai-katkisi-yasaklari)
+- [Flowintel CVE-2026-133648](/blog/flowintel-tls-cve-2026-133648)
+
+## Kaynaklar
+
+- [GitHub Changelog: Security advisory permissions are now generally available](https://github.blog/changelog/2026-11-20-security-advisory-permissions-are-now-generally-available)
+
+---
+
 # ManageEngine DDI Central: iki komut enjeksiyonu ve 6500 yamasi
 
 - Kaynak: https://fosstr.com/blog/manageengine-ddi-central-cves/
