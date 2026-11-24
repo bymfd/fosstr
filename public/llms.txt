@@ -18,6 +18,8 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 ## Yazılar
 
 - [CISA BOD 26-04: CVSS etiketi yerine SSVC ve sure](https://fosstr.com/blog/cisa-bod-26-04-ssvc/) — CISA BOD 26-04 uygulama rehberi FCEB ajanslarinda CVSS critical-high etiketlerini SSVC, maruziyet ve otomasyon ile degistiriyor. Forensic triage ve KEV due date mantigi.
+- [Cyber Monday 2026: indirim degil guvenlik kontrolu](https://fosstr.com/blog/cyber-monday-2026-guvenlik/) — Cyber Monday 30 Kasim 2026. FTC arama reklamlari, sahte magaza ve odeme tuzaklari uyarilariyla guvenli alisveris kontrol listesi.
+- [Cyberleek, GTA 6 ve Leonida: sizintidan statik rekompilasyona](https://fosstr.com/blog/cyberleek-gta6-leonida/) — Cyberleek 209 GB Xbox build ve exe iddialari, Leonida statik rekompilasyon projesi, RDNA2 SPIR-V ve D3D12 Vulkan ilerlemesi. 24 Kasim 2026 durumu.
 - [Dependabot 8 Aralikta sessiz repo larda duruyor](https://fosstr.com/blog/dependabot-inactive-repositories/) — GitHub 8 Aralik 2026dan itibaren bir yil push olmayan repo larda Dependabot uyarilarini kapatacak. Uyarilar silinmiyor, arsivleniyor ve her push ile geri geliyor.
 - [GitHub security advisory izinleri GA: maintainer admin olmadan da calisabilir](https://fosstr.com/blog/github-security-advisory-permissions/) — GitHub 20 Kasim 2026da custom repository rollerine dort security advisory izni ekledi. ASEI bildirimi ve ozel raporlar artik repo admini olmadan yonetilebiliyor; sinirlar net.
 - [ManageEngine DDI Central: iki komut enjeksiyonu ve 6500 yamasi](https://fosstr.com/blog/manageengine-ddi-central-cves/) — DDI Central 6500 oncesinde IPv6 scope kimlikleri ve bloklu domain degerleri PowerShell komutuna karisiyor. CVE-2026-95643 ve 95645, satıcı duyurulari, NVD durumu ve KEV olmamasi.
@@ -74,9 +76,9 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Tags
 
-- [security](https://fosstr.com/blog/tags/security/) — 39 içerik
+- [security](https://fosstr.com/blog/tags/security/) — 41 içerik
 - [cve](https://fosstr.com/blog/tags/cve/) — 25 içerik
-- [open-source](https://fosstr.com/blog/tags/open-source/) — 16 içerik
+- [open-source](https://fosstr.com/blog/tags/open-source/) — 17 içerik
 - [rce](https://fosstr.com/blog/tags/rce/) — 11 içerik
 - [linux](https://fosstr.com/blog/tags/linux/) — 9 içerik
 - [kev](https://fosstr.com/blog/tags/kev/) — 7 içerik
@@ -127,6 +129,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [community](https://fosstr.com/blog/tags/community/) — 1 içerik
 - [cpanel](https://fosstr.com/blog/tags/cpanel/) — 1 içerik
 - [cpu](https://fosstr.com/blog/tags/cpu/) — 1 içerik
+- [cyber-monday](https://fosstr.com/blog/tags/cyber-monday/) — 1 içerik
 - [cybersecurity](https://fosstr.com/blog/tags/cybersecurity/) — 1 içerik
 - [data-breach](https://fosstr.com/blog/tags/data-breach/) — 1 içerik
 - [ddi](https://fosstr.com/blog/tags/ddi/) — 1 içerik
@@ -149,6 +152,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [firewall](https://fosstr.com/blog/tags/firewall/) — 1 içerik
 - [flowintel](https://fosstr.com/blog/tags/flowintel/) — 1 içerik
 - [gpustack](https://fosstr.com/blog/tags/gpustack/) — 1 içerik
+- [gta6](https://fosstr.com/blog/tags/gta6/) — 1 içerik
 - [guardium](https://fosstr.com/blog/tags/guardium/) — 1 içerik
 - [hacker-news](https://fosstr.com/blog/tags/hacker-news/) — 1 içerik
 - [hard-coded-credentials](https://fosstr.com/blog/tags/hard-coded-credentials/) — 1 içerik
@@ -181,12 +185,14 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [ntp](https://fosstr.com/blog/tags/ntp/) — 1 içerik
 - [nts](https://fosstr.com/blog/tags/nts/) — 1 içerik
 - [nvidia](https://fosstr.com/blog/tags/nvidia/) — 1 içerik
+- [online-shopping](https://fosstr.com/blog/tags/online-shopping/) — 1 içerik
 - [openai](https://fosstr.com/blog/tags/openai/) — 1 içerik
 - [openssh](https://fosstr.com/blog/tags/openssh/) — 1 içerik
 - [patent](https://fosstr.com/blog/tags/patent/) — 1 içerik
 - [path-traversal](https://fosstr.com/blog/tags/path-traversal/) — 1 içerik
 - [pem](https://fosstr.com/blog/tags/pem/) — 1 içerik
 - [perforce](https://fosstr.com/blog/tags/perforce/) — 1 içerik
+- [phishing](https://fosstr.com/blog/tags/phishing/) — 1 içerik
 - [physical-access](https://fosstr.com/blog/tags/physical-access/) — 1 içerik
 - [postgres](https://fosstr.com/blog/tags/postgres/) — 1 içerik
 - [privilege-escalation](https://fosstr.com/blog/tags/privilege-escalation/) — 1 içerik
@@ -197,9 +203,11 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [raid](https://fosstr.com/blog/tags/raid/) — 1 içerik
 - [rails](https://fosstr.com/blog/tags/rails/) — 1 içerik
 - [ransomware](https://fosstr.com/blog/tags/ransomware/) — 1 içerik
+- [reverse-engineering](https://fosstr.com/blog/tags/reverse-engineering/) — 1 içerik
 - [ruby](https://fosstr.com/blog/tags/ruby/) — 1 içerik
 - [rust](https://fosstr.com/blog/tags/rust/) — 1 içerik
 - [sap](https://fosstr.com/blog/tags/sap/) — 1 içerik
+- [scams](https://fosstr.com/blog/tags/scams/) — 1 içerik
 - [self-hosted](https://fosstr.com/blog/tags/self-hosted/) — 1 içerik
 - [shinyhunters](https://fosstr.com/blog/tags/shinyhunters/) — 1 içerik
 - [smc](https://fosstr.com/blog/tags/smc/) — 1 içerik
@@ -219,6 +227,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [vcenter](https://fosstr.com/blog/tags/vcenter/) — 1 içerik
 - [virtualization](https://fosstr.com/blog/tags/virtualization/) — 1 içerik
 - [vmware](https://fosstr.com/blog/tags/vmware/) — 1 içerik
+- [vulkan](https://fosstr.com/blog/tags/vulkan/) — 1 içerik
 - [vulnerability-management](https://fosstr.com/blog/tags/vulnerability-management/) — 1 içerik
 - [wayland](https://fosstr.com/blog/tags/wayland/) — 1 içerik
 - [wordpress](https://fosstr.com/blog/tags/wordpress/) — 1 içerik
