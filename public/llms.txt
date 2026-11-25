@@ -17,7 +17,11 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Yazılar
 
+- [AutoGPT CVE-2026-133462: paylasilan ajan MCP kimlik bilgilerinizi kullanabilir](https://fosstr.com/blog/autogpt-mcp-cve-2026-133462/) — MCPToolBlock otomatik arama hatasi, paylasilan ajan ve runner kimlik bilgileri; GHSA, NVD ve yama sürümleri.
+- [Drupal Core CVE-2026-132165: install.php ile site ele geçirme](https://fosstr.com/blog/drupal-installer-cve-2026-132165/) — SA-CORE-2026-017, KEV kaydı, yama sürümleri ve installer kilitleme adımları; NVD kaydı olmayan ama saha istismarı görülen açık.
 - [Idunno AntiCsrf CVE-2026-131914: tek POST ile deserialization ve yamansiz RCE](https://fosstr.com/blog/idunno-anticsrf-cve-2026-131914/) — Idunno.AntiCsrf 0.9.1 Beta ObjectStateFormatter DESERIALIZE sizintisi, KEV alanlari, Mandiant saha bulgulari ve kalici cozum.
+- [Optimizely CVE-2026-132224: cdn.optimizely.com üzerinden proje JavaScript enjeksiyonu](https://fosstr.com/blog/optimizely-projectjs-cve-2026-132224/) — Web Experimentation kayıt akışındaki hata, projectJS alanına saldırgan kodu soktu; KEV, CVSS kaynakları ve barındırılan servis sınırları.
+- [Symfony Mailer CVE-2026-133755: STARTTLS sonrası enjekte edilen yanıt](https://fosstr.com/blog/symfony-mailer-cve-2026-133755/) — EsmtpTransport require_tls sonrası cleartext yanıtları şifreli oturumdan gelmiş gibi okuyor; etkilenen sürümler, düzeltme ve sınır iddiaları.
 - [CISA BOD 26-04: CVSS etiketi yerine SSVC ve sure](https://fosstr.com/blog/cisa-bod-26-04-ssvc/) — CISA BOD 26-04 uygulama rehberi FCEB ajanslarinda CVSS critical-high etiketlerini SSVC, maruziyet ve otomasyon ile degistiriyor. Forensic triage ve KEV due date mantigi.
 - [Cyber Monday 2026: indirim degil guvenlik kontrolu](https://fosstr.com/blog/cyber-monday-2026-guvenlik/) — Cyber Monday 30 Kasim 2026. FTC arama reklamlari, sahte magaza ve odeme tuzaklari uyarilariyla guvenli alisveris kontrol listesi.
 - [Cyberleek, GTA 6 ve Leonida: sizintidan statik rekompilasyona](https://fosstr.com/blog/cyberleek-gta6-leonida/) — Cyberleek 209 GB Xbox build ve exe iddialari, Leonida statik rekompilasyon projesi, RDNA2 SPIR-V ve D3D12 Vulkan ilerlemesi. 24 Kasim 2026 durumu.
@@ -77,19 +81,20 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Tags
 
-- [security](https://fosstr.com/blog/tags/security/) — 42 içerik
-- [cve](https://fosstr.com/blog/tags/cve/) — 26 içerik
+- [security](https://fosstr.com/blog/tags/security/) — 46 içerik
+- [cve](https://fosstr.com/blog/tags/cve/) — 30 içerik
 - [open-source](https://fosstr.com/blog/tags/open-source/) — 17 içerik
-- [rce](https://fosstr.com/blog/tags/rce/) — 12 içerik
+- [rce](https://fosstr.com/blog/tags/rce/) — 13 içerik
+- [kev](https://fosstr.com/blog/tags/kev/) — 10 içerik
 - [linux](https://fosstr.com/blog/tags/linux/) — 9 içerik
-- [kev](https://fosstr.com/blog/tags/kev/) — 8 içerik
-- [ai](https://fosstr.com/blog/tags/ai/) — 6 içerik
+- [ai](https://fosstr.com/blog/tags/ai/) — 7 içerik
 - [kernel](https://fosstr.com/blog/tags/kernel/) — 4 içerik
 - [apache](https://fosstr.com/blog/tags/apache/) — 3 içerik
 - [deserialization](https://fosstr.com/blog/tags/deserialization/) — 3 içerik
 - [github](https://fosstr.com/blog/tags/github/) — 3 içerik
 - [ios](https://fosstr.com/blog/tags/ios/) — 3 içerik
 - [llm](https://fosstr.com/blog/tags/llm/) — 3 içerik
+- [supply-chain](https://fosstr.com/blog/tags/supply-chain/) — 3 içerik
 - [tech-industry](https://fosstr.com/blog/tags/tech-industry/) — 3 içerik
 - [teknoloji-haberleri](https://fosstr.com/blog/tags/teknoloji-haberleri/) — 3 içerik
 - [active-exploitation](https://fosstr.com/blog/tags/active-exploitation/) — 2 içerik
@@ -100,8 +105,8 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [java](https://fosstr.com/blog/tags/java/) — 2 içerik
 - [kubernetes](https://fosstr.com/blog/tags/kubernetes/) — 2 içerik
 - [maintainers](https://fosstr.com/blog/tags/maintainers/) — 2 içerik
+- [mitm](https://fosstr.com/blog/tags/mitm/) — 2 içerik
 - [privacy](https://fosstr.com/blog/tags/privacy/) — 2 içerik
-- [supply-chain](https://fosstr.com/blog/tags/supply-chain/) — 2 içerik
 - [tls](https://fosstr.com/blog/tags/tls/) — 2 içerik
 - [whatsapp](https://fosstr.com/blog/tags/whatsapp/) — 2 içerik
 - [windows](https://fosstr.com/blog/tags/windows/) — 2 içerik
@@ -116,6 +121,8 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [aspnet](https://fosstr.com/blog/tags/aspnet/) — 1 içerik
 - [asus](https://fosstr.com/blog/tags/asus/) — 1 içerik
 - [auth-bypass](https://fosstr.com/blog/tags/auth-bypass/) — 1 içerik
+- [authorization](https://fosstr.com/blog/tags/authorization/) — 1 içerik
+- [autogpt](https://fosstr.com/blog/tags/autogpt/) — 1 içerik
 - [automation](https://fosstr.com/blog/tags/automation/) — 1 içerik
 - [axis](https://fosstr.com/blog/tags/axis/) — 1 içerik
 - [bash](https://fosstr.com/blog/tags/bash/) — 1 içerik
@@ -123,14 +130,17 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [bitly](https://fosstr.com/blog/tags/bitly/) — 1 içerik
 - [bod](https://fosstr.com/blog/tags/bod/) — 1 içerik
 - [bulten](https://fosstr.com/blog/tags/bulten/) — 1 içerik
+- [cdn](https://fosstr.com/blog/tags/cdn/) — 1 içerik
 - [china](https://fosstr.com/blog/tags/china/) — 1 içerik
 - [cisa](https://fosstr.com/blog/tags/cisa/) — 1 içerik
 - [cisco](https://fosstr.com/blog/tags/cisco/) — 1 içerik
+- [cms](https://fosstr.com/blog/tags/cms/) — 1 içerik
 - [cncf](https://fosstr.com/blog/tags/cncf/) — 1 içerik
 - [command-injection](https://fosstr.com/blog/tags/command-injection/) — 1 içerik
 - [community](https://fosstr.com/blog/tags/community/) — 1 içerik
 - [cpanel](https://fosstr.com/blog/tags/cpanel/) — 1 içerik
 - [cpu](https://fosstr.com/blog/tags/cpu/) — 1 içerik
+- [credentials](https://fosstr.com/blog/tags/credentials/) — 1 içerik
 - [cyber-monday](https://fosstr.com/blog/tags/cyber-monday/) — 1 içerik
 - [cybersecurity](https://fosstr.com/blog/tags/cybersecurity/) — 1 içerik
 - [data-breach](https://fosstr.com/blog/tags/data-breach/) — 1 içerik
@@ -143,6 +153,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [donanim](https://fosstr.com/blog/tags/donanim/) — 1 içerik
 - [dos](https://fosstr.com/blog/tags/dos/) — 1 içerik
 - [dotnet](https://fosstr.com/blog/tags/dotnet/) — 1 içerik
+- [drupal](https://fosstr.com/blog/tags/drupal/) — 1 içerik
 - [edge](https://fosstr.com/blog/tags/edge/) — 1 içerik
 - [eglence](https://fosstr.com/blog/tags/eglence/) — 1 içerik
 - [encryption](https://fosstr.com/blog/tags/encryption/) — 1 içerik
@@ -160,7 +171,9 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [hacker-news](https://fosstr.com/blog/tags/hacker-news/) — 1 içerik
 - [hard-coded-credentials](https://fosstr.com/blog/tags/hard-coded-credentials/) — 1 içerik
 - [ibm](https://fosstr.com/blog/tags/ibm/) — 1 içerik
+- [installer](https://fosstr.com/blog/tags/installer/) — 1 içerik
 - [jailbreak](https://fosstr.com/blog/tags/jailbreak/) — 1 içerik
+- [javascript](https://fosstr.com/blog/tags/javascript/) — 1 içerik
 - [jndi](https://fosstr.com/blog/tags/jndi/) — 1 içerik
 - [kvm](https://fosstr.com/blog/tags/kvm/) — 1 içerik
 - [link-hijacking](https://fosstr.com/blog/tags/link-hijacking/) — 1 içerik
@@ -169,13 +182,13 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [mailassure](https://fosstr.com/blog/tags/mailassure/) — 1 içerik
 - [manageengine](https://fosstr.com/blog/tags/manageengine/) — 1 içerik
 - [masaüstü](https://fosstr.com/blog/tags/masaustu/) — 1 içerik
+- [mcp](https://fosstr.com/blog/tags/mcp/) — 1 içerik
 - [mekatronik](https://fosstr.com/blog/tags/mekatronik/) — 1 içerik
 - [memory-corruption](https://fosstr.com/blog/tags/memory-corruption/) — 1 içerik
 - [memory-safety](https://fosstr.com/blog/tags/memory-safety/) — 1 içerik
 - [menu-bar](https://fosstr.com/blog/tags/menu-bar/) — 1 içerik
 - [meta](https://fosstr.com/blog/tags/meta/) — 1 içerik
 - [misp](https://fosstr.com/blog/tags/misp/) — 1 içerik
-- [mitm](https://fosstr.com/blog/tags/mitm/) — 1 içerik
 - [mobile](https://fosstr.com/blog/tags/mobile/) — 1 içerik
 - [monailabel](https://fosstr.com/blog/tags/monailabel/) — 1 içerik
 - [musl](https://fosstr.com/blog/tags/musl/) — 1 içerik
@@ -196,6 +209,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [pem](https://fosstr.com/blog/tags/pem/) — 1 içerik
 - [perforce](https://fosstr.com/blog/tags/perforce/) — 1 içerik
 - [phishing](https://fosstr.com/blog/tags/phishing/) — 1 içerik
+- [php](https://fosstr.com/blog/tags/php/) — 1 içerik
 - [physical-access](https://fosstr.com/blog/tags/physical-access/) — 1 içerik
 - [postgres](https://fosstr.com/blog/tags/postgres/) — 1 içerik
 - [privilege-escalation](https://fosstr.com/blog/tags/privilege-escalation/) — 1 içerik
@@ -209,11 +223,13 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [reverse-engineering](https://fosstr.com/blog/tags/reverse-engineering/) — 1 içerik
 - [ruby](https://fosstr.com/blog/tags/ruby/) — 1 içerik
 - [rust](https://fosstr.com/blog/tags/rust/) — 1 içerik
+- [saas](https://fosstr.com/blog/tags/saas/) — 1 içerik
 - [sap](https://fosstr.com/blog/tags/sap/) — 1 içerik
 - [scams](https://fosstr.com/blog/tags/scams/) — 1 içerik
 - [self-hosted](https://fosstr.com/blog/tags/self-hosted/) — 1 içerik
 - [shinyhunters](https://fosstr.com/blog/tags/shinyhunters/) — 1 içerik
 - [smc](https://fosstr.com/blog/tags/smc/) — 1 içerik
+- [smtp](https://fosstr.com/blog/tags/smtp/) — 1 içerik
 - [soap](https://fosstr.com/blog/tags/soap/) — 1 içerik
 - [social-media](https://fosstr.com/blog/tags/social-media/) — 1 içerik
 - [sonicwall](https://fosstr.com/blog/tags/sonicwall/) — 1 içerik
@@ -221,8 +237,10 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [spring](https://fosstr.com/blog/tags/spring/) — 1 içerik
 - [ssrf](https://fosstr.com/blog/tags/ssrf/) — 1 içerik
 - [ssvc](https://fosstr.com/blog/tags/ssvc/) — 1 içerik
+- [starttls](https://fosstr.com/blog/tags/starttls/) — 1 içerik
 - [storage](https://fosstr.com/blog/tags/storage/) — 1 içerik
 - [swift](https://fosstr.com/blog/tags/swift/) — 1 içerik
+- [symfony](https://fosstr.com/blog/tags/symfony/) — 1 içerik
 - [tcp](https://fosstr.com/blog/tags/tcp/) — 1 içerik
 - [threat-intelligence](https://fosstr.com/blog/tags/threat-intelligence/) — 1 içerik
 - [time](https://fosstr.com/blog/tags/time/) — 1 içerik

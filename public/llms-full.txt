@@ -13,6 +13,166 @@ Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her 
 
 ---
 
+# AutoGPT CVE-2026-133462: paylasilan ajan MCP kimlik bilgilerinizi kullanabilir
+
+- Kaynak: https://fosstr.com/blog/autogpt-mcp-cve-2026-133462/
+- Tür: Yazı
+- Tarih: 2026-11-25
+- Etiketler: security, autogpt, cve, mcp, ai, authorization, credentials
+- Özet: MCPToolBlock otomatik arama hatasi, paylasilan ajan ve runner kimlik bilgileri; GHSA, NVD ve yama sürümleri.
+
+25 Kasım 2026'da NVD, AutoGPT için CVE-2026-133462 kaydını aldı. GHSA-rjgp-whm3-w5mj bildirimi, paylaşılan bir ajanın yazarının `MCPToolBlock` düğümüyle çalıştıran kullanıcının bağlı MCP sunucusu üzerinde işlem yapabildiğini yazıyor. Kritik nokta: token açığa çıkmıyor, ancak kimlik bilgisi seçilmemiş olsa bile otomatik eşleştirme çalışıyor. Aşağıda GHSA, NVD ve yama ayrıntıları var.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-133462 / GHSA-rjgp-whm3-w5mj |
+| Ürün | AutoGPT Platform (`autogpt-platform-beta`), `significantgravitas/autogpt` Docker imajı |
+| Etkilenen | Platform `>=0.6.49 <0.11.0`; Docker `>=0.7.1 <0.11.1` |
+| Yama | Platform `0.11.0`; Docker `0.11.1` |
+| Zayıflık | CWE-441 + CWE-863; MCP kimlik bilgisi otomatik araması ve yanlış yetkilendirme |
+| CVSS 3.1 | 8.7 High, `AV:N/AC:L/PR:L/UI:R/S:C/C:H/I:H/A:N` — GitHub CNA ikincil metriği |
+| NVD durumu | `Received`, yayımlanma 2026-11-25T00:17:10.413; NVD analizi veya SSVC yok |
+| KEV | KEV sorgusu sonuç döndürmedi; aktif istismar iddiası yok |
+| Koşul | Kullanıcı paylaşılan ajanı çalıştırmalı ve MCP sunucu bağlantısı mevcut olmalı |
+| Gizlilik | GitHub bildirimi tokenın açığa çıkmadığını yazıyor |
+
+![AutoGPT MCPToolBlock credential auto-lookup](/diagrams/autogpt-mcp-cve-2026-133462.svg)
+
+## Teknik görünüm
+
+GHSA bildirimi, `MCPToolBlock.run()` içindeki `backend/blocks/mcp/block.py` dosyasının boş `credentials` alanını kabul ettiğini yazıyor; bu tasarım gereği, çünkü bazı MCP sunucuları kimlik doğrulama istemeyebilir. Düğüm çalıştırmaya credential olmadan ulaştığında, blok çalıştıran kullanıcının kayıtlı MCP kimlik bilgileri arasında düğümün `server_url` değeriyle eşleşen en iyi adayı arıyor. Bu arama koşulsuz: kimlik bilgisinin bu düğüm veya çalıştırma için seçilip seçilmediği kontrol edilmiyor.
+
+İkinci boşluk executor'da: `backend/executor/manager.py` içindeki MCP dalı, düğüm girdisini yalnızca düğümün kayıtlı varsayılanlarından yeniden kuruyor. Kullanıcının çalıştırma başlangıcında seçtiği kimlik bilgisi, blok yürütülmeden önce atılıyor. Sonuç: paylaşılan ajandaki `MCPToolBlock` düğümü, yalnızca sunucu URL'sine göre seçilmiş bir kimlik bilgisiyle çalışıyor. Barındırılan MCP sunucularında bu URL herkese açık bir sabit.
+
+Etkinin kapsamı geniş: ajan yazarı, çalıştıranın MCP hesabındaki herhangi bir aracı istediği argümanlarla çağırabiliyor ve sonucu sıradan bir outbound blokla seçtiği bir sunucuya gönderebiliyor. Ancak bildirim tokenın kendisinin açığa çıkmadığını, boş credential alanının koruma sağlamadığını ve çalıştırma kaydında kullanılan credential görünmediğini yazıyor.
+
+Düzeltme otomatik aramayı kaldırıyor: yalnızca kullanıcının açıkça seçtiği kimlik bilgisi kullanılıyor, seçilen credential'ın kayıtlı sunucu adresi düğümün adresiyle uyuşmuyorsa iş reddediliyor ve executor değişikliği çalıştırma sırasında seçilen credential'ın bloğa ulaşmasını sağlıyor. Düzeltme commit'i `a10e5b2333aa2fbd2b385686e85605c24a7841d2`. Hata `f9f358c5263b` commit'iyle (PR #12011, 13 Şubat 2026) girdi ve `0.6.49` ile ilk kez yayımlandı.
+
+Zaman çizelgesi: 30 Ekim 2026 rapor, 31 Ekim üçleme, 1 Kasım düzeltme, 17 Kasım yayımlanma. NVD kaydı `Received`, GitHub CNA'nın CVSS 3.1 8.7 skoru var; NVD analizi, SSVC veya KEV yok. CWE-441 ve CWE-863 NVD'de birincil kaynak olarak listeleniyor.
+
+## Ne yapmalı?
+
+1. **Yamayın.** AutoGPT Platform için `0.11.0`, Docker imajı için `0.11.1` sürümüne geçin.
+2. **Paylaşılan ajanları gözden geçirin.** `MCPToolBlock` düğümü içeren ve bağlı bir MCP sunucusunu adlandıran ajanları yalnızca güvendiğiniz yazarlardan çalıştırın.
+3. **Bağlantıyı geçici olarak kesin.** Yama uygulanana kadar ilgili MCP credential'ını ayırın veya düğümü devre dışı bırakın.
+4. **MCP yetkilerini daraltın.** Okuma, yazma ve silme kapsamını ayrı credential'larla sınırlandırın; outbound blokların gittiği sunucuları loglayın.
+5. **Çalıştırma kayıtlarını inceleyin.** 30 Ekim-17 Kasım 2026 arasında paylaşılan ajan çalıştırmaları ve beklenmeyen MCP/sunucu istekleri arayın; credential döndürmeyi olay bulgularına göre yapın.
+
+## Ne yapmamalı?
+
+- "Token sızdırıldı" demeyin. GHSA açıkça tokenın açığa çıkmadığını yazıyor.
+- "Boş credential alanı güvenliydi" demeyin. Bildirim, boş bırakmanın koruma sağlamadığını ve kayıtta kullanılmış credential görünmediğini söylüyor.
+- "Zero-click RCE" demeyin. CVSS `PR:L`, `UI:R`; kullanıcının paylaşılan ajanı çalıştırması gerekiyor.
+- "Tüm AI ajanları etkilendi" demeyin. Etki AutoGPT'in sürüm aralıkları ve `MCPToolBlock` kullanımıyla sınırlı.
+- "Aktif istismar görüldü" demeyin. NVD `Received`; KEV kaydı yok; GHSA saha bulgusu bildirmiyor.
+- "8.7'yi NVD verdi" demeyin. 8.7 GitHub CNA'nın ikincil CVSS 3.1 metriği; NVD analizi yok.
+- "Credentialsız MCP sunucuları da tehlikede" demeyin. Bildirim, boş alanın tasarım gereği kabul edildiğini; sorunun otomatik eşleştirmede olduğunu yazıyor.
+
+## Durum
+
+25 Kasım 2026 itibarıyla açık **GHSA ve NVD kaydıyla doğrulanmış**, NVD analizi bekliyor. GHSA paylaşılan ajan senaryosunu, etkilenen platform/Docker sürümlerini, mekanizmayı, düzeltmeyi, geçici çözümü ve zaman çizelgesini içeriyor. NVD `vulnStatus: Received`, `published: 2026-11-25T00:17:10.413`, CVSS 3.1 8.7 GitHub CNA'dan, CWE-441 ve CWE-863 yine aynı kaynaktan. CISA KEV sorgusu sonuç döndürmedi.
+
+Belirsizlikler: NVD analizi veya SSVC seçenekleri yok; saha istismarı bildirilmedi; kurban veya kampanya adı yok; token açığa çıkma iddiası birincil kayıtla desteklenmiyor. Docker etki aralığı NVD'de `>=0.7.1 <0.11.1`, platform aralığı `>=0.6.49 <0.11.0` olarak veriliyor; iki ayrı sürüm etiketi karıştırılmamalı.
+
+## Bu seriden
+
+- [Cairn: otonom AI saldırıları](/blog/cairn-otonom-ai-saldirilari)
+- [GPUStack CVE-2026-102895](/blog/gpustack-cve-2026-102895)
+- [OpenShell: CNCF ajan güvenliği](/blog/openshell-cncf-ajan-guvenligi)
+
+## Kaynaklar
+
+- [GHSA-rjgp-whm3-w5mj bildirimi](https://github.com/Significant-Gravitas/AutoGPT/security/advisories/GHSA-rjgp-whm3-w5mj)
+- [NVD - CVE-2026-133462](https://nvd.nist.gov/vuln/detail/CVE-2026-133462)
+- [NVD API - CVE-2026-133462](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-133462)
+- [CVE kaydı - CVE-2026-133462](https://www.cve.org/CVERecord?id=CVE-2026-133462)
+- [Düzeltme commit'i a10e5b2](https://github.com/Significant-Gravitas/AutoGPT/commit/a10e5b2333aa2fbd2b385686e85605c24a7841d2)
+- [AutoGPT Platform 0.11.0 sürümü](https://github.com/Significant-Gravitas/AutoGPT/releases/tag/autogpt-platform-beta-v0.11.0)
+- [CISA KEV sorgusu - CVE-2026-133462](https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-133462)
+
+---
+
+# Drupal Core CVE-2026-132165: install.php ile site ele geçirme
+
+- Kaynak: https://fosstr.com/blog/drupal-installer-cve-2026-132165/
+- Tür: Yazı
+- Tarih: 2026-11-25
+- Etiketler: security, drupal, cve, kev, rce, cms, installer
+- Özet: SA-CORE-2026-017, KEV kaydı, yama sürümleri ve installer kilitleme adımları; NVD kaydı olmayan ama saha istismarı görülen açık.
+
+25 Kasım 2026 itibarıyla Drupal Core CVE-2026-132165, CISA KEV listesinde ve satıcı danışma notunda saha istismarı bildirilen bir açık. Kritik nokta, kurulumdan sonra geride kalan `install.php` üzerinden sitenin yeniden kurulmaya çalışılabilmesi. Aşağıda OSV/satıcı kaydı ve CISA alanları var; NVD API bu CVE için kayıt döndürmüyor, bu yüzden NVD skoru veya SSVC iddia edilmiyor.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-132165 / DRUPAL-CORE-2026-017 / SA-CORE-2026-017 |
+| Ürün | Drupal Core, `drupal/core` (Packagist) |
+| Zayıflık | CWE-636 (Fail Securely değil); KEV tanımı: "not failing securely", installer üzerinden RCE |
+| Etkilenen | `<10.6.22`, `>=11.0.0 <11.3.22`, `>=11.4.0 <11.4.13` |
+| Yama | `10.6.22`, `11.3.22`, `11.4.13` |
+| NVD durumu | NVD API `resultsPerPage: 0`; CVSS/SSVC yok |
+| KEV | 2026-11-24 eklenme, 2026-11-27 son tarih, `forensicTriage: Yes`, ransomware `Unknown` |
+| Saha durumu | Satıcı notu: 2026-11-19 19:00 UTC itibarıyla canlı sitelerde istismar |
+| Keşif | Anthropic OSS Scanner, ANT-2026-GMRPK0BU |
+| Saldırı yüzeyi | `install.php` uç noktası; belirli koşullar gerekiyor, birincil kayıt port belirtmiyor |
+
+![Drupal installer reinstall zinciri](/diagrams/drupal-installer-cve-2026-132165.svg)
+
+## Teknik görünüm
+
+Drupal Core, kurulum için `install.php` dosyasını paketle birlikte gönderiyor. Satıcı kaydının tarif ettiği koşullar altında saldırgan bu dosyayı kullanarak Drupal'ı yeniden kurmayı deneyebiliyor; sonuç site ele geçirme veya uzaktan kod çalıştırma olabiliyor. OSV kaydı, web sunucusu `settings.php` dosyasına yazamıyorsa veya izinlerini değiştiremiyorsa bazı istismar yollarının hafifletildiğini, ancak bunun tüm yolları kapsamadığını yazıyor.
+
+Bu yüzden iki katmanlı bir okuma gerekiyor: yama asıl çözüm, `settings.php` izinlerinin sıkılaştırılması ve installer'ın kilitlenmesi ek önlem. Drupal Security Team, kurulumdan sonra installer'ın güvenli hale getirilmesini ayrıca öneriyor. `Drupal Steward` kullanan siteler bilinen saldırı vektörlerine karşı korunuyor, ancak satıcı yine de yakın zamanda yama uygulanmasını istiyor.
+
+Sürüm aralığı üç ayrı kolda veriliyor: 10.x için `10.6.22` öncesi, 11.0-11.3 için `11.3.22` öncesi ve 11.4 için `11.4.13` öncesi. EOL sürümler için yama yok; varlık envanterinde sürümü netleştirmeden "etkilendi" veya "etkilenmedi" demek doğru değil.
+
+Satıcı notundaki güncelleme, istismarın canlı sitelerde 19 Kasım 2026 19:00 UTC kadar erken bir tarihten beri görüldüğünü söylüyor. Açık, Anthropic OSS Scanner tarafından ANT-2026-GMRPK0BU kimliğiyle bulundu. Birincil kayıtta PoC kodu, kurban listesi, kampanya adı, port veya dinleme adresi yok.
+
+## Ne yapmalı?
+
+1. **Hemen yamayın.** 10.x için `10.6.22`, 11.3.x için `11.3.22`, 11.4.x için `11.4.13` sürümüne geçin. EOL dallar için desteklenen bir dala taşıma planı yapın.
+2. **Installer'ı kilitleyin.** Kurulum tamamlandıktan sonra Drupal'ın "securing the installer" talimatını uygulayın; web sunucu seviyesinde `install.php` erişimini engelleyin.
+3. **`settings.php` izinlerini sıkılaştırın.** Web sunucusu hesabının dosyayı yazmasını veya izinlerini değiştirmesini engelleyin; bu tek başına yama yerine geçmez.
+4. **Önceliği KEV'e göre belirleyin.** CISA `forensicTriage: Yes` işaretli; Internet'e açık Drupal sitelerini önce tarayın ve delil koruma adımlarını uygulayın.
+5. **Logları tarayın.** 19 Kasım 2026 19:00 UTC sonrası `install.php` istekleri, beklenmeyen kurulum yanıtları ve yeni dosya/yetki değişiklikleri arayın. Şüphe varsa siteleri izole edip olay müdahalesi başlatın.
+
+## Ne yapmamalı?
+
+- "Tüm Drupal siteleri ele geçirildi" demeyin. Satıcı "belirli koşullar" diyor; her kurulum bu yola açık değil.
+- "CVE-2026-132165 için NVD 9.8 verdi" demeyin. NVD API kayıt döndürmedi; ortada NVD CVSS veya SSVC yok.
+- "Ransomware doğrulandı" demeyin. KEV alanı `Unknown`.
+- "Sadece `settings.php` salt-okunur yapmak yeterli" demeyin. Satıcı bazı yolların hafifletildiğini, tümünün engellendiğini söylemiyor.
+- "Drupal Steward varsa yama gerekmez" demeyin. Kayıt, bilinen vektörler için koruma diyor; ek vektörler olasılığına karşı yama isteniyor.
+- PoC veya kurban adı uydurmayın. Birincil kayıtlar bunları içermiyor.
+- Port veya ağ imzası uydurmayın; satıcı kaydı port belirtmiyor.
+
+## Durum
+
+25 Kasım 2026 itibarıyla bu açık **satıcı/OSV kaydı ve CISA KEV ile doğrulanmış**. OSV `DRUPAL-CORE-2026-017`, CVE eşlemesini `CVE-2026-132165` olarak veriyor, etkilenen aralıkları ve düzeltme sürümlerini listeliyor, saha istismar güncellemesini ve Anthropic OSS Scanner bulgusunu içeriyor. CISA KEV kaydı `dateAdded: 2026-11-24`, `dueDate: 2026-11-27`, `forensicTriage: Yes`, `knownRansomwareCampaignUse: Unknown` ve CWE-636 alanlarını taşıyor; aksiyon metni satıcı talimatlarını ve BOD 26-04 kapsamında adli üçlemeyi istiyor.
+
+Belirsizlikler: NVD API bu CVE için sonuç döndürmedi; dolayısıyla NVD skoru, NVD SSVC alanları veya NVD onaylı etki aralığı yok. Satıcı danışma sayfası erişim kısıtlaması (Client Challenge) nedeniyle doğrudan okunamadı; buradaki teknik ayrıntılar OSV Delegated Advisory kaydından geliyor. Web arama sonuçlarındaki "Highly critical 20/25" ifadesi kanıt olarak kullanılmadı. PoC, kurban adı, kampanya ve port bilgisi birincil kayıtlarda yer almıyor.
+
+## Bu seriden
+
+- [Apache Axis 1.x CVE-2026-90436](/blog/apache-axis-cve-2026-90436)
+- [Idunno AntiCsrf CVE-2026-131914](/blog/idunno-anticsrf-cve-2026-131914)
+- [CISA BOD 26-04 ve SSVC](/blog/cisa-bod-26-04-ssvc)
+
+## Kaynaklar
+
+- [OSV - DRUPAL-CORE-2026-017](https://api.osv.dev/v1/vulns/DRUPAL-CORE-2026-017)
+- [Drupal SA-CORE-2026-017](https://www.drupal.org/sa-core-2026-017)
+- [CISA KEV kaydı - CVE-2026-132165](https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-132165)
+- [CISA KEV JSON feed'i](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+- [CVE kaydı - CVE-2026-132165](https://www.cve.org/CVERecord?id=CVE-2026-132165)
+- [NVD API sorgusu - CVE-2026-132165](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-132165)
+- [Drupal installer güvenliği](https://www.drupal.org/docs/administering-a-drupal-site/security-in-drupal/securing-the-installer-installphp)
+
+---
+
 # Idunno AntiCsrf CVE-2026-131914: tek POST ile deserialization ve yamansiz RCE
 
 - Kaynak: https://fosstr.com/blog/idunno-anticsrf-cve-2026-131914/
@@ -92,6 +252,166 @@ Belirsizlikler: resmi yama yok; etkilenen kurumlar adlandırılmıyor; belirli b
 - [Mandiant MNDT-2026-0048 bildirimi](https://github.com/mandiant/Vulnerability-Disclosures/blob/master/2026/MNDT-2026-0048.md)
 - [CodePlex Archive - AntiCSRF](https://codeplexarchive.org/project/AntiCSRF)
 - [SecurityWeek: Attackers exploit unpatched Idunno AntiCsrf flaw (ikincil haber)](https://www.securityweek.com/hackers-exploit-unpatched-flaw-in-defunct-idunno-anticsrf-library/)
+
+---
+
+# Optimizely CVE-2026-132224: cdn.optimizely.com üzerinden proje JavaScript enjeksiyonu
+
+- Kaynak: https://fosstr.com/blog/optimizely-projectjs-cve-2026-132224/
+- Tür: Yazı
+- Tarih: 2026-11-25
+- Etiketler: security, cve, kev, supply-chain, javascript, cdn, saas
+- Özet: Web Experimentation kayıt akışındaki hata, projectJS alanına saldırgan kodu soktu; KEV, CVSS kaynakları ve barındırılan servis sınırları.
+
+25 Kasım 2026 itibarıyla CVE-2026-132224, Optimizely Web Experimentation için doğrulanmış ve CISA KEV'de olan bir bütünlük açığı. Hata, kayıt (signup) akışının kötüye kullanılmasıyla saldırganın `cdn.optimizely.com` varlıklarındaki `projectJS` alanına kod yerleştirmesine yol açtı. Kritik nokta: bu barındırılan bir servis; kullanıcıların uygulayacağı yerel yama yok. Aşağıda NVD, satıcı durum sayfası ve KEV alanları var.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-132224 |
+| Ürün | Optimizely Web Experimentation (barındırılan servis), `exclusively-hosted-service` etiketi |
+| Zayıflık | CWE-642 (Critical State Data harici kontrolü) |
+| NVD durumu | `Analyzed`; SSVC `exploitation: active`, `automatable: no`, `technicalImpact: total` |
+| CVSS 4.0 | 7.1 High, `AV:N/AC:H/AT:N/PR:L/UI:N/VC:N/VI:H/VA:N/SC:H/SI:H/SA:N` — MITRE CNA ikincil metriği |
+| CVSS 3.1 | 8.7 High, `AV:N/AC:L/PR:L/UI:R/S:C/C:H/I:H/A:N` — NVD birincil analizi |
+| KEV | 2026-11-24 eklenme, 2026-11-27 son tarih, `forensicTriage: Yes`, ransomware `Unknown` |
+| Olay tarihi | Satıcı: 16 Kasım 2026'da istismar edildi, aynı gün tespit edilip kapatıldı |
+| Etki | Saldırgan kontrolünde JavaScript, bazı müşteri projelerinin `projectJS` alanında |
+| Kapsam | Satıcı: müşterilerin %5'inden azı; yalnızca Web Experimentation |
+| Saldırı yüzeyi | `cdn.optimizely.com` üzerinden sunulan snippet; birincil kayıt port belirtmiyor |
+
+![Optimizely projectJS enjeksiyon zinciri](/diagrams/optimizely-projectjs-cve-2026-132224.svg)
+
+## Teknik görünüm
+
+NVD kaydı, 17 Kasım 2026 öncesindeki Optimizely Web Experimentation sürümünün kayıt akışını yanlış işlediğini ve bazı `cdn.optimizely.com` varlıklarının `projectJS` (Project JavaScript) alanında saldırgan kontrolünde kod bulunmasına yol açtığını yazıyor. CWE-642, kritik durum verisinin harici kontrolünü tarif ediyor; `cveTags` alanı açığı `exclusively-hosted-service` olarak işaretliyor.
+
+Satıcı olay sayfası zaman çizelgesini daha net veriyor: 16 Kasım 2026'da yetkisiz üçüncü taraf kayıt akışındaki açığı kullandı, hedef müşteri hesaplarındaki kullanıcıları taklit etti ve projelere kötü amaçlı JavaScript ekledi. Optimizely aynı gün tespit ettiğini, kötü amaçlı kodun dağıtımını engellediğini, açığı tespitten sonra üç saat içinde kapattığını ve etkilenen tüm projelerden kodu kaldırdığını bildiriyor. Satıcı ayrıca bunun bir kimlik bilgisi ihlali olmadığını, yalnızca Web Experimentation'ı etkilediğini ve müşterilerin %5'inden azının etkilendiğini yazıyor.
+
+Skorların kaynağı ayrı: 7.1 (CVSS 4.0) MITRE CNA'nın ikincil metriği, 8.7 (CVSS 3.1) NVD'nin birincil analizi. NVD SSVC seçenekleri `exploitation: active`, `automatable: no`, `technicalImpact: total`. CISA KEV kaydı 24 Kasım'da eklenme, 27 Kasım son tarih ve `forensicTriage: Yes` içeriyor.
+
+İkincil haberler yüzlerce site ve bazı büyük markalardan söz ediyor; NVD bunları "Press/Media Coverage" veya "Third Party Advisory" olarak etiketliyor. Bu yazı kurban adlarını birincil kayıt olarak saymıyor. Birincil kayıtta PoC, kurban listesi, kampanya adı veya port yok.
+
+## Ne yapmalı?
+
+1. **Web Experimentation kullanıp kullanmadığınızı netleştirin.** Satıcıya göre kullanmayan müşterilerin yapması gereken bir şey yok.
+2. **Satıcı bildirimini ve yönergelerini takip edin.** Etkilenen müşterilere doğrudan ulaşıldığını ve ek rehber verildiğini satıcı yazıyor; kendi CDN snippet'lerinizi ve `projectJS` alanlarını gözden geçirin.
+3. **Snippet bütünlüğünü izleyin.** `cdn.optimizely.com` kaynaklı beklenmeyen script değişikliklerini, yeni alan adlarına giden istekleri ve tarayıcı konsol hatalarını arayın.
+4. **CSP ile script kaynaklarını kısıtlayın.** Bu, barındırılan servisin kendi açığını kapatmaz; sızan bir snippet'in yürütülmesini zorlaştıran savunma katmanıdır.
+5. **Adli üçlemeyi KEV takvimine göre planlayın.** `forensicTriage: Yes` ve 27 Kasım son tarih var; 16-18 Kasım arası erişim ve değişiklik loglarını koruyun.
+
+## Ne yapmamalı?
+
+- "Tüm Optimizely müşterileri etkilendi" demeyin. Satıcı %5'ten az diyor ve etki Web Experimentation ile sınırlı.
+- "Kimlik bilgileri sızdırıldı" demeyin. Satıcı olay sayfası bunu açıkça reddediyor.
+- "7.1'i NVD verdi" demeyin. 7.1 MITRE CNA ikincil CVSS 4.0; NVD'nin birincil skoru CVSS 3.1 ile 8.7.
+- "Yamayı indirip kurun" demeyin. Bu bir barındırılan servis; CVE etiketi `exclusively-hosted-service`.
+- "Ransomware görüldü" demeyin. KEV alanı `Unknown`.
+- "CNN veya marka X kesin etkilendi" demeyin. Bu iddialar ikincil haberlere dayanıyor; birincil kayıt kurban adı vermiyor.
+- "Tarayıcı eklentisi engellediyse olay kapandı" demeyin. Engelleme NVD referanslarında üçüncü taraf hafifletme olarak geçiyor; satıcı bildirimi asıl kayıt.
+
+## Durum
+
+25 Kasım 2026 itibarıyla açık **NVD `Analyzed`, CISA KEV'de ve satıcı tarafından doğrulanmış**. NVD, MITRE CNA'dan CVSS 4.0 7.1 ve kendi analizinden CVSS 3.1 8.7 sunuyor; SSVC `active / no / total`. CISA KEV `dateAdded: 2026-11-24`, `dueDate: 2026-11-27`, `forensicTriage: Yes`, `knownRansomwareCampaignUse: Unknown` alanlarını taşıyor. Satıcı durum sayfası 16 Kasım istismarını, üç saat içinde kapatmayı, kodu kaldırmayı ve %5'ten az etkilenme oranını bildiriyor.
+
+Belirsizlikler: etkilenen müşterilerin kimliği birincil kayıtta yok; ikincil haberlerdeki kurban listeleri kanıt sayılmadı; olayda kullanılan JavaScript'in tam içeriği, özel port veya ağ imzası satıcı kaydında yok. Satıcı "kötü amaçlı kod kalmadı" diyor; bu, bağımsız doğrulama yerine satıcı beyanıdır.
+
+## Bu seriden
+
+- [Bitly: eski linklerin ele geçirilmesi](/blog/bitly-eski-linklerin-ele-gecirilmesi)
+- [GitHub Security Advisory izinleri](/blog/github-security-advisory-permissions)
+- [CISA BOD 26-04 ve SSVC](/blog/cisa-bod-26-04-ssvc)
+
+## Kaynaklar
+
+- [NVD - CVE-2026-132224](https://nvd.nist.gov/vuln/detail/CVE-2026-132224)
+- [NVD API - CVE-2026-132224](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-132224)
+- [CVE kaydı - CVE-2026-132224](https://www.cve.org/CVERecord?id=CVE-2026-132224)
+- [CISA KEV kaydı](https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-132224)
+- [Optimizely olay sayfası](https://status.optimizely.com/incidents/ftw0fh9wx43z)
+- [Optimizely Security Incident Report (PDF)](https://pages.optimizely.com/rs/947-RKE-048/images/Security%20Incident%20Report%20-%20Optimizely%20Web%20Experimentation%20-%20Nov%2017%202026.pdf)
+- [Brave adblock mitigation PR](https://github.com/brave/adblock-resources/pull/355)
+
+---
+
+# Symfony Mailer CVE-2026-133755: STARTTLS sonrası enjekte edilen yanıt
+
+- Kaynak: https://fosstr.com/blog/symfony-mailer-cve-2026-133755/
+- Tür: Yazı
+- Tarih: 2026-11-25
+- Etiketler: security, symfony, php, cve, smtp, starttls, mitm
+- Özet: EsmtpTransport require_tls sonrası cleartext yanıtları şifreli oturumdan gelmiş gibi okuyor; etkilenen sürümler, düzeltme ve sınır iddiaları.
+
+25 Kasım 2026'da Symfony, Mailer bileşeni için CVE-2026-133755'i yayımladı. Hata, `require_tls` ile korunan bir SMTP bağlantısında STARTTLS yanıtının hemen ardından saldırganın açık metin yanıt eklemesi ve bunun şifreli oturumdan gelmiş gibi okunması. NVD kaydı `Received`; KEV'de yok ve aktif istismar iddiası yok. Aşağıda satıcı bildirimi ve NVD alanları var.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-133755 |
+| Ürün | `symfony/mailer`, `symfony/symfony` (Packagist) |
+| Etkilenen | `>=7.3 <7.4.24`, `>=8 <8.1.12` |
+| Yama | `7.4.24`, `8.1.12` |
+| Zayıflık | CWE-924; STARTTLS sonrası yanıtların doğrulanmaması |
+| CVSS 4.0 | 6.3 Medium, `AV:N/AC:H/AT:P/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N` — Symfony CNA ikincil metriği |
+| NVD durumu | `Received`, yayımlanma 2026-11-25T10:17:13.140; NVD analizi veya SSVC yok |
+| KEV | KEV sorgusu sonuç döndürmedi; aktif istismar kanıtı yok |
+| Etki | AUTH atlanabilir veya gönderim, sunucu reddetse bile başarılı bildirilebilir |
+| Muaf yol | Örtülü TLS: `smtps://` veya port 465 |
+
+![Symfony Mailer STARTTLS yanıt enjeksiyonu](/diagrams/symfony-mailer-cve-2026-133755.svg)
+
+## Teknik görünüm
+
+Symfony 7.3'ten beri `EsmtpTransport` üzerindeki `require_tls` seçeneği, şifrelenmemiş bir bağlantı üzerinden ileti gönderilmesini reddediyor; bu, ağ konumundaki saldırganın STARTTLS'i sıyırmasını (strip) engelliyor. Satıcı bildirimi, hatanın tam bu noktadan sonra başladığını yazıyor: sunucunun STARTTLS'e verdiği `220` yanıtından sonra transport, o sırada daha fazla veri gelip gelmediğini kontrol etmeden TLS el sıkışmasını başlatıyor.
+
+Bağlantının ortasındaki saldırgan, `220` yanıtının hemen ardından açık metin yanıtlar ekleyebiliyor. Transport bunları şifreli oturumdan gelmiş gibi okuyor. Sonuç iki biçimde görülebiliyor: saldırgan `AUTH` adımını atlatabiliyor veya sunucu iletiyi reddetmesine karşın transport iletiyi gönderilmiş olarak bildirebiliyor.
+
+Örtülü TLS kullanan bağlantılar, yani `smtps://` veya port 465, etkilenmiyor. Symfony 8.1'den beri Amazon SES SMTP transport'u, 465 ve 2465 dışındaki portlarda `require_tls` seçeneğini kendiliğinden açıyor. Bu yüzden `ses+smtp://` DSN'leri, seçenek açıkça ayarlanmasa bile etki alanında.
+
+Düzeltme transport'un davranışını değiştiriyor: sunucu STARTTLS yanıtının ardından veri gönderirse TLS başlatılmıyor ve `TransportException` fırlatılıyor. Yamalar 7.4 dalında `426b0f4c90daf0a16ee4fa41a8fd19005bb172ec` commit'iyle yayınlandı ve 8.1/8.2'ye ileri taşındı. Bildirimde Nicolas Grekas hem rapor hem düzeltme için anılıyor.
+
+NVD kaydı `Received` durumunda; satıcı CNA'sının CVSS 4.0 6.3 skoru var, NVD'nin kendi analizi veya SSVC alanları yok. CISA KEV sorgusu bu CVE için sonuç döndürmedi. CVSS vektöründeki `VC:N`, `VI:L` alanları, birincil kaydın gizlilik kaybı iddia etmediğini ve bütünlük etkisini düşük olarak yazdığını gösteriyor.
+
+## Ne yapmalı?
+
+1. **Yamayın.** `symfony/mailer` ve `symfony/symfony` için `7.4.24` veya `8.1.12` sürümüne geçin.
+2. **Mümkünse örtülü TLS kullanın.** `smtps://` veya port 465, STARTTLS sonrası yanıt enjeksiyonu yolunu dışarıda bırakıyor.
+3. **`require_tls` ayarını doğrulayın.** Özellikle `ses+smtp://` DSN'lerinde 8.1'deki varsayılan davranışı ve kullandığınız portu kontrol edin.
+4. **Gönderim sonuçlarını sorgulayın.** Etkilenen sürümleri kullandığınız dönemde "gönderildi" yanıtına güveniyorsanız, sunucu tarafındaki gerçek teslim/ret kayıtlarıyla karşılaştırın.
+5. **Saldırganın ağ konumu varsayımıyla değerlendirin.** CVSS `AC:H`, saldırının koşullu olduğunu yazıyor; bu, uzaktan erişilebilir bir SMTP oturumunu hedefleyen bir senaryodur.
+
+## Ne yapmamalı?
+
+- "STARTTLS sıyırıldı" demeyin. `require_tls` zaten şifresiz gönderimi engelliyor; sorun `220` sonrası eklenen yanıtların okunması.
+- "E-posta içerikleri sızdırıldı" demeyin. NVD/Symfony vektörü `VC:N`, gizlilik etkisi yok.
+- "Aktif istismar görüldü" demeyin. NVD `Received`, SSVC yok, KEV kaydı yok; birincil bildirimde saha bulgusu yok.
+- "6.3'ü NVD verdi" demeyin. 6.3 Symfony CNA'nın ikincil CVSS 4.0 metriği; NVD analizi yok.
+- "Tüm PHP e-posta gönderimi etkilendi" demeyin. Etki `symfony/mailer` / `symfony/symfony` sürüm aralıklarıyla sınırlı.
+- "Port 465 güvenli değil" demeyin. Satıcı örtülü TLS bağlantılarını etkilenmeyenler arasında sayıyor.
+- Kurban, kampanya veya PoC uydurmayın; satıcı bildiriminde bunlar yok.
+
+## Durum
+
+25 Kasım 2026 itibarıyla açık **satıcı bildirimi ve NVD kaydıyla doğrulanmış**, ancak NVD analizi tamamlanmamış. Symfony bildirimi etkilenen sürümleri, yama sürümlerini, mekanizmayı, muaf TLS yolunu ve düzeltme commit'ini veriyor. NVD `vulnStatus: Received`, `published: 2026-11-25T10:17:13.140`, `lastModified` aynı zaman; CVSS 4.0 6.3 yalnızca Symfony CNA'dan geliyor. CWE-924 yine satıcı CNA kaydı. KEV sorgusu boş döndü.
+
+Belirsizlikler: NVD analizi yok, dolayısıyla NVD birincil skoru veya SSVC seçenekleri yok; saha istismarı bildirilmedi; kurban, kampanya veya PoC bilgisi yok. Satıcı, düzeltmenin 7.4 dalında yapılıp 8.1 ve 8.2'ye forward-port edildiğini yazıyor; 8.1.12 yama sürümü olarak listeleniyor.
+
+## Bu seriden
+
+- [FlowIntel TLS doğrulama hatası CVE-2026-133648](/blog/flowintel-tls-cve-2026-133648)
+- [Apache mod_http2 CVE-2026-119618](/blog/apache-mod-http2-cve-2026-119618)
+- [Idunno AntiCsrf CVE-2026-131914](/blog/idunno-anticsrf-cve-2026-131914)
+
+## Kaynaklar
+
+- [Symfony CVE-2026-133755 bildirimi](https://symfony.com/blog/cve-2026-133755-mailer-trusts-replies-that-a-man-in-the-middle-injects-right-after-starttls)
+- [Symfony GHSA-c6x5-258c-g3f5](https://github.com/symfony/symfony/security/advisories/GHSA-c6x5-258c-g3f5)
+- [Düzeltme commit'i 426b0f4](https://github.com/symfony/symfony/commit/426b0f4c90daf0a16ee4fa41a8fd19005bb172ec)
+- [NVD - CVE-2026-133755](https://nvd.nist.gov/vuln/detail/CVE-2026-133755)
+- [NVD API - CVE-2026-133755](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-133755)
+- [CVE kaydı - CVE-2026-133755](https://www.cve.org/CVERecord?id=CVE-2026-133755)
 
 ---
 
