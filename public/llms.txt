@@ -17,6 +17,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Yazılar
 
+- [Idunno AntiCsrf CVE-2026-131914: tek POST ile deserialization ve yamansiz RCE](https://fosstr.com/blog/idunno-anticsrf-cve-2026-131914/) — Idunno.AntiCsrf 0.9.1 Beta ObjectStateFormatter DESERIALIZE sizintisi, KEV alanlari, Mandiant saha bulgulari ve kalici cozum.
 - [CISA BOD 26-04: CVSS etiketi yerine SSVC ve sure](https://fosstr.com/blog/cisa-bod-26-04-ssvc/) — CISA BOD 26-04 uygulama rehberi FCEB ajanslarinda CVSS critical-high etiketlerini SSVC, maruziyet ve otomasyon ile degistiriyor. Forensic triage ve KEV due date mantigi.
 - [Cyber Monday 2026: indirim degil guvenlik kontrolu](https://fosstr.com/blog/cyber-monday-2026-guvenlik/) — Cyber Monday 30 Kasim 2026. FTC arama reklamlari, sahte magaza ve odeme tuzaklari uyarilariyla guvenli alisveris kontrol listesi.
 - [Cyberleek, GTA 6 ve Leonida: sizintidan statik rekompilasyona](https://fosstr.com/blog/cyberleek-gta6-leonida/) — Cyberleek 209 GB Xbox build ve exe iddialari, Leonida statik rekompilasyon projesi, RDNA2 SPIR-V ve D3D12 Vulkan ilerlemesi. 24 Kasim 2026 durumu.
@@ -76,15 +77,16 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 
 ## Tags
 
-- [security](https://fosstr.com/blog/tags/security/) — 41 içerik
-- [cve](https://fosstr.com/blog/tags/cve/) — 25 içerik
+- [security](https://fosstr.com/blog/tags/security/) — 42 içerik
+- [cve](https://fosstr.com/blog/tags/cve/) — 26 içerik
 - [open-source](https://fosstr.com/blog/tags/open-source/) — 17 içerik
-- [rce](https://fosstr.com/blog/tags/rce/) — 11 içerik
+- [rce](https://fosstr.com/blog/tags/rce/) — 12 içerik
 - [linux](https://fosstr.com/blog/tags/linux/) — 9 içerik
-- [kev](https://fosstr.com/blog/tags/kev/) — 7 içerik
+- [kev](https://fosstr.com/blog/tags/kev/) — 8 içerik
 - [ai](https://fosstr.com/blog/tags/ai/) — 6 içerik
 - [kernel](https://fosstr.com/blog/tags/kernel/) — 4 içerik
 - [apache](https://fosstr.com/blog/tags/apache/) — 3 içerik
+- [deserialization](https://fosstr.com/blog/tags/deserialization/) — 3 içerik
 - [github](https://fosstr.com/blog/tags/github/) — 3 içerik
 - [ios](https://fosstr.com/blog/tags/ios/) — 3 içerik
 - [llm](https://fosstr.com/blog/tags/llm/) — 3 içerik
@@ -94,7 +96,6 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [agents](https://fosstr.com/blog/tags/agents/) — 2 içerik
 - [ai-models](https://fosstr.com/blog/tags/ai-models/) — 2 içerik
 - [arch](https://fosstr.com/blog/tags/arch/) — 2 içerik
-- [deserialization](https://fosstr.com/blog/tags/deserialization/) — 2 içerik
 - [http2](https://fosstr.com/blog/tags/http2/) — 2 içerik
 - [java](https://fosstr.com/blog/tags/java/) — 2 içerik
 - [kubernetes](https://fosstr.com/blog/tags/kubernetes/) — 2 içerik
@@ -112,6 +113,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [anthropic](https://fosstr.com/blog/tags/anthropic/) — 1 içerik
 - [apple](https://fosstr.com/blog/tags/apple/) — 1 içerik
 - [arduino](https://fosstr.com/blog/tags/arduino/) — 1 içerik
+- [aspnet](https://fosstr.com/blog/tags/aspnet/) — 1 içerik
 - [asus](https://fosstr.com/blog/tags/asus/) — 1 içerik
 - [auth-bypass](https://fosstr.com/blog/tags/auth-bypass/) — 1 içerik
 - [automation](https://fosstr.com/blog/tags/automation/) — 1 içerik
@@ -140,6 +142,7 @@ fosstr; yazılım, siber güvenlik, yapay zeka ve sistem programlama üzerine T�
 - [diy](https://fosstr.com/blog/tags/diy/) — 1 içerik
 - [donanim](https://fosstr.com/blog/tags/donanim/) — 1 içerik
 - [dos](https://fosstr.com/blog/tags/dos/) — 1 içerik
+- [dotnet](https://fosstr.com/blog/tags/dotnet/) — 1 içerik
 - [edge](https://fosstr.com/blog/tags/edge/) — 1 içerik
 - [eglence](https://fosstr.com/blog/tags/eglence/) — 1 içerik
 - [encryption](https://fosstr.com/blog/tags/encryption/) — 1 içerik
