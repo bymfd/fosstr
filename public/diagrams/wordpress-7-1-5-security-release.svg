@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="500" viewBox="0 0 1000 500" role="img" aria-label="20 security fixes and backports">
+
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#07070b"/><stop offset="0.55" stop-color="#0c0c14"/><stop offset="1" stop-color="#11101a"/></linearGradient>
+<linearGradient id="card" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#171722"/><stop offset="1" stop-color="#0d0d15"/></linearGradient>
+<pattern id="g" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M25 0H0V25" fill="none" stroke="#17171f" stroke-width="1"/></pattern>
+<pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse"><path d="M0 3.5H4" stroke="#ffffff" stroke-opacity="0.018" stroke-width="1"/></pattern>
+<radialGradient id="halo-accent"><stop offset="0" stop-color="#6e81e4" stop-opacity="0.28"/><stop offset="1" stop-color="#6e81e4" stop-opacity="0"/></radialGradient><radialGradient id="halo-good"><stop offset="0" stop-color="#4ade80" stop-opacity="0.28"/><stop offset="1" stop-color="#4ade80" stop-opacity="0"/></radialGradient><radialGradient id="halo-warn"><stop offset="0" stop-color="#f0b429" stop-opacity="0.28"/><stop offset="1" stop-color="#f0b429" stop-opacity="0"/></radialGradient><radialGradient id="halo-bad"><stop offset="0" stop-color="#ff6b6b" stop-opacity="0.28"/><stop offset="1" stop-color="#ff6b6b" stop-opacity="0"/></radialGradient>
+<marker id="a-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#6e81e4"/></marker><marker id="a-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#4ade80"/></marker><marker id="a-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#f0b429"/></marker><marker id="a-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#ff6b6b"/></marker>
+
+<rect width="1000" height="500" fill="url(#bg)"/><rect width="1000" height="500" fill="url(#g)"/><rect width="1000" height="500" fill="url(#scan)"/>
+<circle cx="195.44149544090033" cy="276.53624230530113" r="334.81710217893124" fill="url(#halo-accent)"/><circle cx="190.1824905630201" cy="247.41508413106203" r="280.3182902559638" fill="url(#halo-good)"/><circle cx="594.3311230652034" cy="239.59315896499902" r="200.3243885934353" fill="url(#halo-warn)"/><circle cx="550.7982267532498" cy="170.5938924010843" r="188.94683558493853" fill="url(#halo-bad)"/>
+<text x="28" y="38" fill="#6e81e4" font-size="14" letter-spacing="3" font-family="monospace">WORDPRESS 7.1.5</text>
+<text x="28" y="72" fill="#fafafa" font-size="24" font-family="system-ui, sans-serif">20 security fixes and backports</text>
+<line x1="230" y1="198" x2="285" y2="198" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<g><rect x="197.8" y="188" width="119.4" height="20" rx="10" fill="#08080b" fill-opacity="0.9" stroke="#6e81e4" stroke-opacity="0.65"/><text x="257.5" y="202" text-anchor="middle" fill="#6e81e4" font-size="11" font-family="monospace">same-site request</text></g>
+<line x1="490" y1="198" x2="545" y2="198" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<line x1="750" y1="198" x2="805" y2="198" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<g><rect x="745.7" y="188" width="63.6" height="20" rx="10" fill="#08080b" fill-opacity="0.9" stroke="#6e81e4" stroke-opacity="0.65"/><text x="777.5" y="202" text-anchor="middle" fill="#6e81e4" font-size="11" font-family="monospace">possible</text></g>
+<line x1="230" y1="364" x2="285" y2="364" stroke="#6e81e4" stroke-width="2" marker-end="url(#a-accent)" opacity="0.85"/>
+<g><rect x="200.9" y="354" width="113.2" height="20" rx="10" fill="#08080b" fill-opacity="0.9" stroke="#6e81e4" stroke-opacity="0.65"/><text x="257.5" y="368" text-anchor="middle" fill="#6e81e4" font-size="11" font-family="monospace">separate records</text></g>
+<line x1="750" y1="364" x2="805" y2="364" stroke="#4ade80" stroke-width="2" marker-end="url(#a-good)" opacity="0.85"/>
+<g><rect x="736.4" y="354" width="82.2" height="20" rx="10" fill="#08080b" fill-opacity="0.9" stroke="#4ade80" stroke-opacity="0.65"/><text x="777.5" y="368" text-anchor="middle" fill="#4ade80" font-size="11" font-family="monospace">patch scope</text></g>
+<rect x="29" y="155" width="205" height="96" rx="8" fill="#000000" fill-opacity="0.28"/>
+<rect x="25" y="150" width="205" height="96" rx="8" fill="url(#card)" stroke="#f0b429" stroke-width="2"/>
+<rect x="25" y="150" width="5" height="96" rx="2" fill="#f0b429"/>
+<g opacity="0.24"><circle cx="212" cy="168" r="6.6000000000000005" fill="none" stroke="#f0b429" stroke-width="2"/><circle cx="212" cy="168" r="2" fill="#f0b429"/></g>
+<text x="39" y="174" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Template Part attrs</text>
+<text x="39" y="192" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">theme + slug set by</text>
+<text x="39" y="210" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">Author+</text>
+<rect x="289" y="155" width="205" height="96" rx="8" fill="#000000" fill-opacity="0.28"/>
+<rect x="285" y="150" width="205" height="96" rx="8" fill="url(#card)" stroke="#ff6b6b" stroke-width="2"/>
+<rect x="285" y="150" width="5" height="96" rx="2" fill="#ff6b6b"/>
+<g opacity="0.24"><circle cx="472" cy="168" r="6.6000000000000005" fill="none" stroke="#ff6b6b" stroke-width="2"/><circle cx="472" cy="168" r="2" fill="#ff6b6b"/></g>
+<text x="299" y="174" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Admin editor link</text>
+<text x="299" y="192" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">crafted link or redirect</text>
+<rect x="549" y="155" width="205" height="96" rx="8" fill="#000000" fill-opacity="0.28"/>
+<rect x="545" y="150" width="205" height="96" rx="8" fill="url(#card)" stroke="#ff6b6b" stroke-width="2"/>
+<rect x="545" y="150" width="5" height="96" rx="2" fill="#ff6b6b"/>
+<g opacity="0.24"><circle cx="732" cy="168" r="6.6000000000000005" fill="none" stroke="#ff6b6b" stroke-width="2"/><circle cx="732" cy="168" r="2" fill="#ff6b6b"/></g>
+<text x="559" y="174" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Admin account</text>
+<text x="559" y="192" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">created</text>
+<text x="559" y="210" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">plugin install path</text>
+<rect x="809" y="155" width="170" height="96" rx="8" fill="#000000" fill-opacity="0.28"/>
+<rect x="805" y="150" width="170" height="96" rx="8" fill="url(#card)" stroke="#ff6b6b" stroke-width="2"/>
+<rect x="805" y="150" width="5" height="96" rx="2" fill="#ff6b6b"/>
+<g opacity="0.24"><circle cx="957" cy="168" r="6.6000000000000005" fill="none" stroke="#ff6b6b" stroke-width="2"/><path d="M957 161.4 V174.6 M950.4 168 H963.6 M952.38 163.38 L961.62 172.62 M961.62 163.38 L952.38 172.62" fill="none" stroke="#ff6b6b" stroke-width="2"/></g>
+<text x="819" y="174" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Possible RCE</text>
+<text x="819" y="192" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">wordpress.org: could</text>
+<text x="819" y="210" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">lead</text>
+<rect x="29" y="325" width="205" height="88" rx="8" fill="#000000" fill-opacity="0.28"/>
+<rect x="25" y="320" width="205" height="88" rx="8" fill="url(#card)" stroke="#ff6b6b" stroke-width="2"/>
+<rect x="25" y="320" width="5" height="88" rx="2" fill="#ff6b6b"/>
+<g opacity="0.24"><circle cx="212" cy="338" r="6.6000000000000005" fill="none" stroke="#ff6b6b" stroke-width="2"/><circle cx="212" cy="338" r="2" fill="#ff6b6b"/></g>
+<text x="39" y="344" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Multisite escalation</text>
+<text x="39" y="362" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">site admin to Super</text>
+<text x="39" y="380" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">Admin</text>
+<rect x="289" y="325" width="205" height="88" rx="8" fill="#000000" fill-opacity="0.28"/>
+<rect x="285" y="320" width="205" height="88" rx="8" fill="url(#card)" stroke="#f0b429" stroke-width="2"/>
+<rect x="285" y="320" width="5" height="88" rx="2" fill="#f0b429"/>
+<g opacity="0.24"><circle cx="472" cy="338" r="6.6000000000000005" fill="none" stroke="#f0b429" stroke-width="2"/><circle cx="472" cy="338" r="2" fill="#f0b429"/></g>
+<text x="299" y="344" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">SQL / XSS / REST</text>
+<text x="299" y="362" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">plus info exposure</text>
+<rect x="549" y="325" width="205" height="88" rx="8" fill="#000000" fill-opacity="0.28"/>
+<rect x="545" y="320" width="205" height="88" rx="8" fill="url(#card)" stroke="#4ade80" stroke-width="2"/>
+<rect x="545" y="320" width="5" height="88" rx="2" fill="#4ade80"/>
+<g opacity="0.24"><circle cx="732" cy="338" r="6.6000000000000005" fill="none" stroke="#4ade80" stroke-width="2"/><circle cx="732" cy="338" r="2" fill="#4ade80"/></g>
+<text x="559" y="344" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">Backports to 4.7</text>
+<text x="559" y="362" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">4.6 and earlier</text>
+<text x="559" y="380" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">unsupported</text>
+<rect x="809" y="325" width="170" height="88" rx="8" fill="#000000" fill-opacity="0.28"/>
+<rect x="805" y="320" width="170" height="88" rx="8" fill="url(#card)" stroke="#4ade80" stroke-width="2"/>
+<rect x="805" y="320" width="5" height="88" rx="2" fill="#4ade80"/>
+<g opacity="0.24"><circle cx="957" cy="338" r="6.6000000000000005" fill="none" stroke="#4ade80" stroke-width="2"/><circle cx="957" cy="338" r="2" fill="#4ade80"/></g>
+<text x="819" y="344" fill="#fafafa" font-size="17" font-family="system-ui, sans-serif">No CVE / no KEV</text>
+<text x="819" y="362" fill="#aaa39f" font-size="14" font-family="system-ui, sans-serif">Patchstack secondary</text>
+<text x="28" y="464" fill="#aaa39f" font-size="13" font-family="system-ui, sans-serif">20 items Patchstack secondary: 18 database records + 2 hardening + 5 Gutenberg no PoC published</text>
+</svg>

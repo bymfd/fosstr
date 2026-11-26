@@ -13,6 +13,530 @@ Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her 
 
 ---
 
+# HPE AirWave CVE-2026-133971: web kimlik doğrulama atlatma
+
+- Kaynak: https://fosstr.com/blog/hpe-airwave-cve-2026-133971/
+- Tür: Yazı
+- Tarih: 2026-11-26
+- Etiketler: security, hpe, aruba, airwave, cve, authentication-bypass, command-injection
+- Özet: HPESBNW05186, CVE-2026-133971/133972/133973, CVSS 9.8, AirWave 8.3.0.8 yaması, VLAN ve firewall önlemi, KEV durumu.
+
+26 Kasım 2026 itibarıyla HPE Networking, AirWave yönetim yazılımı için HPESBNW05186 numaralı danışmayı 25 Kasım'da Final durumunda yayınladı. CVE-2026-133971 web yönetim arayüzünde kimlik doğrulama atlatma, CVE-2026-133972 API'de kimlik doğrulama atlatma, CVE-2026-133973 ise kimlik doğrulamasız işletim sistemi komut enjeksiyonu; üçü de CVSS 3.1 ile 9.8. Etkilenen sürüm aralığı AirWave 8.3.0.7 ve altı, yama 8.3.0.8 ve üstü. Aşağıda HPE CSAF metni, destek bülteni, NVD API kaydı ve CISA KEV kontrolü var; PoC, payload, kurban veya IOC uydurulmadı.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-133971; aynı danışmada CVE-2026-133972 ve CVE-2026-133973 |
+| Ürün | HPE Networking Management Software (AirWave) |
+| Danışma | HPESBNW05186, Final, revizyon 1, 25 Kasım 2026 |
+| Etkilenen | AirWave 8.3.0.7 ve altı; EoS sürümleri HPE tarafından değerlendirilmedi |
+| Yama | AirWave 8.3.0.8 ve üstü |
+| 133971 | Web yönetim arayüzünde kimlik doğrulama atlatma; yetkisiz yönetici erişimi |
+| 133972 | API kimlik doğrulama atlatma; ağ erişimi olan saldırgan yetkisiz işlem yapabilir |
+| 133973 | Web arayüzünde kimlik doğrulamasız OS komut enjeksiyonu |
+| CVSS | Üçü için de 9.8 CRITICAL, CVSS v3.1 |
+| Vektör | `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` |
+| NVD durumu | CVE-2026-133971: `Received`; 9.8 skoru HPE kaynaklı `Secondary` |
+| KEV | 26 Kasım 2026 KEV JSON ve katalog kontrolünde kayıt yok |
+| Keşif | HPE Networking iç güvenlik araştırması |
+| Geçici önlem | CLI ve web yönetim arayüzlerini ayrı L2 VLAN'a veya L3+ firewall politikasına bağlamak |
+| İstismar | HPE, yayın tarihi itibarıyla AirWave'ı hedefleyen exploit kodu bilmediğini yazıyor |
+
+![AirWave web ve API kimlik doğrulama atlatma şeması](/diagrams/hpe-airwave-cve-2026-133971.svg)
+
+## Teknik görünüm
+
+HPESBNW05186 üç ayrı kritik kaydı aynı üründe topluyor. CVE-2026-133971, web yönetim arayüzündeki kimlik doğrulama atlatma açığı; başarılı sömürü, kimlik doğrulanmamış uzaktaki saldırgana sistemde yetkisiz yönetici erişimi veriyor ve gizlilik ile bütünlüğü etkiliyor. CVE-2026-133972, API tarafındaki kimlik doğrulama atlatma; ağ erişimi olan saldırganın yetkisiz işlem yapabilmesine yol açıyor. CVE-2026-133973, web tabanlı yönetim arayüzünde kimlik doğrulamasız komut enjeksiyonu ve saldırgana alt işletim sisteminde keyfi komut çalıştırma imkanı veriyor. Üçünün de CVSS v3.1 vektörü `AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H`; yani ağ üzerinden, düşük karmaşıklıkla, hesap ve kullanıcı etkileşimi olmadan tam etki mümkün. Danışma bu üç açık için iç referans numaraları veriyor ancak endpoint, parametre veya payload tarif etmiyor.
+
+Bu ayrım önemli: 133971 ve 133972 kimlik doğrulama kontrolünü atlatıyor, 133973 doğrudan komut çalıştırma yüzeyi açıyor. Web ve API aynı yönetim düzlemini paylaşsa da üçü ayrı CVE kayıtları; birinin kapatıldığını varsaymak diğerlerini kapsamaz. HPE'nin çözümü tek bir sürümle geliyor: AirWave 8.3.0.8 ve üstü. Danışma ayrıca AirWave'a özel CVE-2026-133974/133975/133976/133977/133978/133979/133980 ve CVE-2026-95794/95795/95796/95797/95798 kayıtlarını ve OpenSSL ile eMudhra üçüncü taraf kayıtlarını içeriyor; bunlar bu yazının odaklandığı üç Critical kayıtla karıştırılmamalı.
+
+HPE'nin geçici önlemi erişim yüzeyini daraltmaya dayanıyor: CLI ve web tabanlı yönetim arayüzleri ayrı bir Layer 2 segmentine veya VLAN'a kısıtlanmalı ve/veya Layer 3 ve üzerinde firewall politikalarıyla kontrol edilmeli; kullanıcı etkinlikleri ve kaynak kullanımı için muhasebe kayıtları tutulmalı. Bu öneri sömürü olasılığını azaltır, açığı kapatmaz. Danışmanın EoM/EoS notu da net: Bakımı bitmiş sürümler aksi belirtilmedikçe etkilenmiş sayılıyor; HPE, EoS kurulumlarında maruziyeti değerlendirmediği için bu sistemler potansiyel etkili kabul edilmelidir.
+
+NVD API'de CVE-2026-133971 kaydı `Received` durumunda; 9.8 skoru HPE (`security-alert@hpe.com`) kaynaklı `Secondary` olarak işaretli ve NVD'nin kendi analitik skoru yok. CISA KEV JSON'da 26 Kasım itibarıyla bu CVE bulunmuyor. HPE, yayın tarihi itibarıyla listelenen açıklarla AirWave'ı özel olarak hedefleyen exploit kodu bilmediğini yazıyor; bu ifade bir istismar olmadığı iddiası değil, belirli bir tarihteki bilgi durumudur. Kayıtlarda PoC, IOC, kurban veya kampanya bilgisi yok.
+
+## Ne yapmalı?
+
+1. **Sürümü doğrulayın.** AirWave yönetim arayüzü veya CLI üzerinden kurulu sürümü okuyun. 8.3.0.7 veya altı etkilenmiş kabul edilir; EoS sürümleri potansiyel etkili sayılır.
+2. **8.3.0.8 veya üstüne yükseltin.** Yama HPE Networking Support Portal üzerinden dağıtılıyor. Danışma, açıkların kapsam ve etkisi nedeniyle yamayı güçlü şekilde öneriyor.
+3. **Yama gecikecekse yönetim arayüzünü ayırın.** CLI ve web arayüzünü ayrı L2 VLAN'a alın veya L3+ firewall politikalarıyla erişimi sınırlayın; oturum ve kaynak kullanımı loglarını açın.
+4. **Ağ maruziyetini gözden geçirin.** Yönetim arayüzünün güvenilmeyen ağlardan, VPN'lerden veya ortak segmentlerden erişilebilir olup olmadığını kontrol edin.
+5. **Yama öncesi dönemi inceleyin.** Yeni yönetici hesapları, beklenmeyen yapılandırma değişiklikleri ve olağandışı API veya CLI etkinliği için logları tarayın.
+6. **Geçici önlemi kalıcı sanmayın.** VLAN ve firewall kısıtı yamanın yerine geçmez; 8.3.0.8 yüklemesini planlayın.
+
+## Ne yapmamalı?
+
+- "AirWave aktif olarak istismar ediliyor" demeyin. KEV kaydı yok ve HPE yalnızca exploit kodu bilmediğini yazıyor.
+- "PoC yayınlandı" demeyin. Danışma, NVD kaydı veya KEV'de PoC veya IOC yok.
+- "NVD 9.8 skorunu onayladı" demeyin. Skor HPE kaynaklı `Secondary`; NVD durumu `Received`.
+- "133971, 133972 ve 133973 aynı açık" demeyin. Web, API ve komut enjeksiyonu ayrı CVE kayıtları.
+- "133973 için giriş gerekli" demeyin. Vektör `PR:N` diyor ve danışma kimlik doğrulamasız diyor.
+- "8.3.0.7 güvenli" demeyin. Etkilenen aralık 8.3.0.7 ve altı; yama 8.3.0.8.
+- "VLAN yamayı değiştirir" demeyin. HPE bunu yalnızca sömürü olasılığını azaltan geçici önlem olarak tanımlıyor.
+- "EoS sürümleri etkilenmez" demeyin. HPE bunları değerlendirmediği için potansiyel etkili kabul edilmeli.
+
+## Durum
+
+26 Kasım 2026 itibarıyla CVE-2026-133971, HPE Networking'in 25 Kasım'da Final olarak yayınladığı HPESBNW05186 ve NVD API kaydıyla doğrulanmış bir açık. Danışma, web kimlik doğrulama atlatmasını, API kimlik doğrulama atlatmasını ve kimlik doğrulamasız OS komut enjeksiyonunu ayrı kayıtlar olarak tanımlıyor; üçü için CVSS 3.1 taban skoru 9.8 ve aynı vektör veriliyor. Etkilenen aralık 8.3.0.7 ve altı, düzeltilmiş sürüm 8.3.0.8 ve üstü. NVD kaydı `Received`, skor HPE kaynaklı `Secondary`.
+
+CISA KEV JSON'un 2026.11.25 sürümü ve katalog sorgusu bu CVE için sonuç döndürmüyor. HPE'nin istismar kodu bilgisi yok ifadesi yayın tarihine bağlı; kayıtlarda kurban listesi, aktör, kampanya veya IOC yok. VLAN ve firewall önerisi erişimi azaltan bir önlem, yama değil. Bu yazı "sahada istismar var" veya "PoC mevcut" iddiası taşımıyor.
+
+## Bu seriden
+
+- [cPanel WP Toolkit proxy RCE](/blog/cpanel-wptk-proxy-rce)
+- [Drupal Core CVE-2026-132165](/blog/drupal-installer-cve-2026-132165)
+- [CISA BOD 26-04 ve SSVC](/blog/cisa-bod-26-04-ssvc)
+
+## Kaynaklar
+
+- [HPE Networking - HPESBNW05186 CSAF metni, 25 Kasım 2026](https://csaf.arubanetworking.hpe.com/2026/hpe_networking_-_hpesbnw05186.txt)
+- [HPE - HPESBNW05186 destek bülteni](https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbnw05186en_us&docLocale=en_US)
+- [NVD API - CVE-2026-133971](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-133971)
+- [CISA KEV JSON akışı, sürüm 2026.11.25](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+- [CISA KEV kataloğu - CVE-2026-133971 sorgusu, sonuç yok](https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-133971)
+
+---
+
+# Juniper Session Smart CVE-2026-103406: KEV listesinde root komut enjeksiyonu
+
+- Kaynak: https://fosstr.com/blog/juniper-session-smart-cve-2026-103406/
+- Tür: Yazı
+- Tarih: 2026-11-26
+- Etiketler: security, juniper, session-smart, cve, command-injection, cisa-kev
+- Özet: JSA112183, AutomatedProvisioner CWE-78, CVSS 9.8, 7.0.5/7.1.7/7.2.3, CISA KEV 25 Kasım, adli inceleme şartı.
+
+26 Kasım 2026 itibarıyla CVE-2026-103406, Juniper Session Smart Conductor'da AutomatedProvisioner bileşenindeki OS komut enjeksiyonu nedeniyle CISA KEV listesinde. Juniper bülteni JSA112183 28 Ekim'de yayınlandı; CVE kaydının Juniper CNA bölümü 24 Kasım'da SIRT'a en az bir kötü niyetli istismar bildirimi yapıldığını belirtecek şekilde güncellendi; üst düzey kayıt 26 Kasım'da CISA ADP güncellemesini de içeriyor. CISA kaydı 25 Kasım'da eklendi, 28 Kasım son tarihini veriyor ve adli inceleme istiyor. Aşağıda Juniper CVE kaydı, NVD API, CISA KEV JSON, katalog ve uyarı sayfası var; aktör, kurban sayısı veya müşteri sayısı uydurulmadı.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-103406 |
+| Ürün | Juniper Session Smart Conductor, AutomatedProvisioner; KEV kaydı Router'ı da adlandırıyor |
+| Zayıflık | CWE-78 OS komut enjeksiyonu; özel hazırlanmış Salt minion ID ile root olarak komut çalıştırma |
+| Danışma | JSA112183, 28 Ekim 2026; CNA kaydı 24 Kasım'da istismar notuyla güncellendi |
+| CVSS | 9.8 CRITICAL, CVSS 3.1, CNA Juniper |
+| Vektör | `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` |
+| Etkilenen | Conductor 7.0.5 öncesi; 7.1.0'dan 7.1.7 öncesi; 7.2.0'dan 7.2.3 öncesi |
+| Yama | 7.0.5, 7.1.7, 7.2.3 ve sonraki sürümler |
+| Workaround | Yok; CVE kaydı `No available workarounds exist for this issue` diyor |
+| NVD durumu | `Analyzed`; NIST skoru yok, 9.8 Juniper kaynaklı `Secondary` |
+| SSVC | CISA Coordinator: `exploitation: active`, `automatable: yes`, `technicalImpact: total` |
+| KEV | Eklenme 25 Kasım 2026, son tarih 28 Kasım 2026, adli inceleme `Yes`, ransomware `Unknown` |
+| İstismar | Juniper SIRT'a en az bir kötü niyetli istismar bildirimi |
+| Kapsam notu | CNA etkilenen ürün listesinde Conductor var; KEV ürün adı Conductor ve Router |
+
+![Session Smart Conductor Salt minion ID komut enjeksiyonu şeması](/diagrams/juniper-session-smart-cve-2026-103406.svg)
+
+## Teknik görünüm
+
+Juniper'in CNA kaydı açığı şöyle tanımlıyor: Session Smart Conductor'un AutomatedProvisioner bileşeninde OS komutuna özel karakterlerin uygun şekilde nötrlenmemesi, uzaktaki bir saldırganın özel hazırlanmış bir Salt minion ID aracılığıyla root olarak keyfi komut çalıştırmasına olanak tanıyor. CVE kaydının başlığı, kimlik doğrulanmamış saldırganın anahtar yönetimi sırasında keyfi komut çalıştırmasına işaret ediyor. Zayıflık CWE-78, yani OS Command Injection. CVSS 3.1 vektöründeki `PR:N` ve `UI:N`, hesap veya kullanıcı etkileşimi gerekmediğini; `C:H/I:H/A:H` ise tam etkiyi gösteriyor. Birincil kayıtlar komut metnini, istek akışını veya payload'ı yayınlamıyor; burada da uydurulmuyor.
+
+Juniper'in etkilenen sürüm listesi üç aralık veriyor: 7.0.5 öncesi, 7.1.0'dan 7.1.7 öncesi ve 7.2.0'dan 7.2.3 öncesi. Çözüm listesi 7.0.5, 7.1.7, 7.2.3 ve sonraki sürümler. Kayıt, `No available workarounds exist for this issue` diyor; yani yamaya geçmek tek desteklenen yöntem. JSA112183 aynı gün yayınlanan daha geniş bir bülten; bu yazının kapsamı yalnızca CVE-2026-103406.
+
+Ürün adlandırması dikkat gerektiriyor. CISA KEV kaydı ürünü "Juniper Session Smart Conductor and Session Smart Router" olarak adlandırıyor ve CISA'nın 25 Kasım uyarısında da bu iki ürün geçiyor. Juniper'in CNA kaydındaki etkilenen ürün alanı ise yalnızca Session Smart Conductor diyor ve etkilenen sürüm aralıklarını da Conductor için veriyor. Bu yüzden "Router bu CVE'den etkilendi" iddiasını yalnızca KEV ürün adına dayandırmak doğru değil. Pratik envanter açısından her iki ürünü de kontrol etmek, yama düzeylerini bültenin ilgili sürümlerine göre doğrulamak ve CISA kaydını kendi başına bir sürüm kanıtı saymamak en güvenli yaklaşım.
+
+İstismar durumu iki birincil kaynakta netleşiyor. Juniper'in CVE kaydındaki exploits alanı, SIRT'a en az bir kötü niyetli istismar örneği bildirildiğini ve müşterilerin mümkün olan en kısa sürede yama sürümüne geçmesini, bu arada hafifletme adımları almasını önerdiğini yazıyor. CISA, 25 Kasım'da KEV'e ekleme yaptı, 28 Kasım son tarihini belirledi, adli incelemeyi zorunlu işaretledi ve ransomware kullanımını `Unknown` olarak işaretledi. NVD kaydı `Analyzed` durumunda; kendi NIST skoru yok, Juniper'ın 9.8 skorunu `Secondary` olarak gösteriyor ve CISA SSVC alanlarını `active`, `yes`, `total` olarak taşıyor. Bu alanlar istismar kanıtı olduğunu söylüyor, ancak aktör, kurban, ilk istismar tarihi veya etkilenmiş sistem sayısı hakkında bilgi vermiyor.
+
+## Ne yapmalı?
+
+1. **Conductor sürümlerini envantere alın.** 7.0.5, 7.1.7 ve 7.2.3 eşiklerini kullanın; ara sürümler ve eski sürümler etkilenmiş sayılır.
+2. **Yamayı hemen uygulayın.** 7.0.5, 7.1.7 veya 7.2.3 ve sonrasına geçin. Juniper workaround olmadığını ve yükseltmenin en kısa sürede yapılmasını istediğini yazıyor.
+3. **Router envanterini de kontrol edin.** CISA KEV ürün adı Router'ı içeriyor; sürüm düzeylerini doğrulayın, ancak bu CVE'nin CNA kaydını Router için etkilendiği yönünde tek başına kanıt saymayın.
+4. **Adli incelemeyi planlayın.** KEV kaydı BOD 26-04 kapsamında adli inceleme istiyor. 28 Kasım son tarihi FCEB ajansları için bağlayıcı; diğer kurumlar için öncelik sinyalidir.
+5. **Erişimi geçici olarak daraltın.** Yönetim ve sağlama arayüzlerinin erişilebilirliğini sınırlamak makul bir önlemdir; ancak Juniper bunu bu CVE için workaround olarak listelemiyor.
+6. **28 Ekim öncesine uzanan logları inceleyin.** Beklenmeyen yönetici işlemleri, anahtar yönetimi olayları ve olağandışı oturumlar açısından bakın. Şüphe varsa olay müdahalesi başlatın.
+7. **EOL veya EOE sürümler için Juniper'a başvurun.** CVE kaydı bu sürümler hakkında değerlendirme içermiyor; destek kapsamını doğrulayın.
+
+## Ne yapmamalı?
+
+- "İstismar yok" demeyin. Juniper SIRT'a en az bir kötü niyetli istismar bildirimi var ve CISA KEV kaydı mevcut.
+- "CNA kaydı Router'ı etkilenen olarak listeledi" demeyin. Etkilenen ürün alanında Conductor var; Router adı KEV ürün alanında geçiyor.
+- "Aktörü biliyoruz" demeyin. Juniper ve CISA aktör, kurban veya kampanya adı yayınlamadı.
+- "Müşteri sayısı şu kadar" demeyin. Birincil kaynaklarda böyle bir sayı yok.
+- "Herkese açık PoC var" demeyin. CVE kaydı, NVD ve KEV'de PoC kanıtı yok.
+- "Workaround var" demeyin. CVE kaydı açıkça yok diyor.
+- "NVD 9.8 skorunu belirledi" demeyin. 9.8 Juniper CNA skoru; NVD `Analyzed` ve NIST skoru yok.
+- "Ransomware kampanyasında kullanıldı" demeyin. KEV bu alanı `Unknown` işaretliyor.
+- "28 Kasım tarihi her kurum için yasal zorunluluk" demeyin. BOD 26-04 FCEB ajanslarına uygulanır.
+
+## Durum
+
+26 Kasım 2026 itibarıyla CVE-2026-103406, Juniper'ın CNA CVE kaydı, NVD API, CISA KEV JSON ve CISA uyarısıyla doğrulanmış bir açık. Bülten JSA112183 28 Ekim'de yayınlandı; Juniper CNA kaydı 24 Kasım'da istismar bildirimiyle güncellendi; üst düzey kayıt 26 Kasım'da CISA ADP güncellemesini de içeriyor. Kayıt, Salt minion ID üzerinden root komut çalıştırmayı, üç etkilenen sürüm aralığını, üç düzeltilmiş sürümü ve workaround olmadığını açıkça yazıyor. NVD kaydı `Analyzed`, Juniper skorunu `Secondary` olarak gösteriyor ve CISA SSVC alanlarını taşıyor.
+
+KEV JSON 25 Kasım eklenme, 28 Kasım son tarih, adli inceleme `Yes` ve ransomware `Unknown` bilgilerini veriyor. CISA ürün adı Conductor ve Router'ı içerirken Juniper CNA kaydı etkilenen ürün olarak yalnızca Conductor'ı listeliyor; bu makale farkı olduğu gibi bırakıyor. Juniper portalı tarayıcıda oturum gerektirdiği için bülten metni doğrudan okunamadı; bülten kimliği, sürüm bilgileri ve istismar ifadesi Juniper'in CNA kaydı, NVD ve CISA kayıtlarıyla doğrulandı. Aktör, kurban sayısı, ilk istismar zamanı, müşteri sayısı veya PoC hakkında birincil kanıt yok.
+
+## Bu seriden
+
+- [CISA BOD 26-04 ve SSVC](/blog/cisa-bod-26-04-ssvc)
+- [cPanel WP Toolkit proxy RCE](/blog/cpanel-wptk-proxy-rce)
+- [Drupal Core CVE-2026-132165](/blog/drupal-installer-cve-2026-132165)
+
+## Kaynaklar
+
+- [Juniper - JSA112183, 28 Ekim 2026](https://supportportal.juniper.net/JSA112183)
+- [Juniper - CVE-2026-103406 CNA kaydı](https://cveawg.mitre.org/api/cve/CVE-2026-103406)
+- [NVD API - CVE-2026-103406](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-103406)
+- [CISA KEV JSON akışı, sürüm 2026.11.25](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+- [CISA KEV kataloğu - CVE-2026-103406](https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-103406)
+- [CISA - 25 Kasım 2026 KEV ekleme uyarısı](https://www.cisa.gov/news-events/alerts/2026/11/25/cisa-adds-10-known-exploited-vulnerabilities-catalog)
+
+---
+
+# Mitel MiCollab CVE-2026-133323: AWV komut enjeksiyonu ve KEV
+
+- Kaynak: https://fosstr.com/blog/mitel-micollab-cve-2026-133323/
+- Tür: Yazı
+- Tarih: 2026-11-26
+- Etiketler: security, mitel, micollab, cve, awv, command-injection, kev
+- Özet: MISA-2026-0012, MiCollab 10.3.0.18 ve öncesi, satıcı CVSS 10.0, NVD 9.8, KEV 25 Kasım ve yama adımları.
+
+26 Kasım 2026 itibarıyla Mitel'in MiCollab için yayımladığı MISA-2026-0012, Audio, Web and Video Conferencing (AWV) bileşeninde beş güvenlik açığını bir arada ele alıyor. Danışma 16 Kasım 2026'da ilk kez çıktı, 24 Kasım 2026'da revizyon 2.0 ile güncellendi. Bu yazının odağı CVE-2026-133323 (MTLVULN-1864): satıcının CVSS 3.1 ile 10.0 derecelendirdiği, kimlik doğrulamasız kör komut enjeksiyonu. CISA aynı CVE'yi 25 Kasım 2026'da KEV kataloğuna ekledi; 28 Kasım son tarih ve adli üçleme alanı Yes. Aşağıda Mitel danışması, NVD API kayıtları, CISA KEV uyarısı ve KEV JSON akışı var. Bu birincil kayıtlarla doğrulanmayan payload, kurban, aktör veya IOC eklenmedi.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-133323, MTLVULN-1864 |
+| Ürün | Mitel MiCollab, AWV bileşeni |
+| Etkilenen | 10.3 (10.3.0.18) ve öncesi |
+| Çözüm | Mitel danışmasının 10.3.0.18 için belirttiği yama (yönergeler KB000129195'de) veya daha sonraki sürüm |
+| Zayıflık | CWE-78, kör OS komut enjeksiyonu |
+| Satıcı CVSS | 10.0 CRITICAL, CVSS 3.1, `AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:H/A:H` |
+| NVD skoru | 9.8 CRITICAL, primary, `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` |
+| NVD durumu | 19 Kasım yayın, 26 Kasım değişiklik, `Modified` |
+| SSVC | CISA Coordinator: `exploitation: active`, `automatable: yes`, `technicalImpact: total` |
+| KEV | Eklenme 25 Kasım 2026, son tarih 28 Kasım 2026, `forensicTriage: Yes` |
+| Kardeş CVE | 133303 (9.0), 133311 (5.9), 133275 ve 133324 (5.3) |
+| Danışma | MISA-2026-0012, ilk 16 Kasım, güncelleme 24 Kasım, revizyon 2.0 |
+
+![Mitel MiCollab AWV komut enjeksiyonu şeması](/diagrams/mitel-micollab-cve-2026-133323.svg)
+
+## Teknik görünüm
+
+Mitel danışması beş açığı da aynı AWV bileşenine bağlıyor ve bunların birlikte istismar edilmesinin etkiyi önemli ölçüde artırabileceğini belirtiyor. CVE-2026-133323 için verilen tanım, parametre temizlemesinin yetersizliği nedeniyle kimlik doğrulamasız kör OS komut enjeksiyonu. "Kör" ifadesi komut çıktısının doğrudan görünmediği anlamına geliyor; satıcı yine de başarılı bir istismarın sistem bağlamında keyfi komut çalıştırabileceğini yazıyor. Satıcı vektöründe `S:C`, `C:N`, `I:H`, `A:H` var: etki kapsamı değişiyor, gizlilik etkisi yok, bütünlük ve erişilebilirlik etkisi yüksek. Dolayısıyla "veri sızdırıldı" iddiası bu vektörle desteklenmiyor.
+
+NVD API kaydı aynı CVE için iki farklı metrik taşıyor. MITRE kaynaklı secondary ölçüm, satıcıyla aynı olan 10.0 ve `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:H/A:H` vektörü. `nvd@nist.gov` kaynaklı primary ölçüm ise 9.8 ve `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H`. Fark scope ve gizlilik alanlarında. Bu yazı satıcı skorunu ana değer olarak kullanıyor, NVD skorunu ayrı gösteriyor; iki sayı aynı ölçüm değil. NVD kaydı 19 Kasım'da yayınlandı, 26 Kasım'da değiştirildi ve durumu `Modified`.
+
+Kardeş kayıtlar tek bir yama ile kapanıyor ama aynı açık değil. CVE-2026-133303 (MTLVULN-1862), önceden yerleştirilmiş kötü içerikle kimlik doğrulamasız XML enjeksiyonu; satıcı skoru 9.0, vektörü `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H`. CVE-2026-133311 (MTLVULN-1863), sistem tarafından üretilen rastgele bir tanımlayıcı veya önceden yerleştirilmiş içerik bilen saldırganın yetkisiz erişimi; 5.9, `AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N`. Danışma bu açığın yalnızca ilgili işlevle sınırlı olduğunu ve sistemde başka yerdeki dosyalara serbest erişim vermediğini açıkça yazıyor. CVE-2026-133275 (MTLVULN-1861) keyfi dosya yükleme, CVE-2026-133324 (MTLVULN-1877) kimlik doğrulama atlatma; ikisi de 5.3.
+
+CISA'nın 25 Kasım uyarısı, on yeni KEV kaydı arasında beş MiCollab CVE'sini de sayıyor ve eklemeyi aktif istismar kanıtına dayandırıyor. KEV JSON akışında `dateAdded` 25 Kasım 2026, `dueDate` 28 Kasım 2026; 133323 ve 133303 için `forensicTriage: Yes`, diğer üçü için `No`. 133311'in son tarihi 9 Aralık 2026. Beş kaydın tamamında `knownRansomwareCampaignUse: Unknown`. NVD'nin CISA Coordinator SSVC alanları 133323 için `exploitation: active`, `automatable: yes`, `technicalImpact: total` diyor. KEV, açığın bilinen biçimde istismar edildiğini söyler; saldırganı, kurbanı veya yayınlanmış bir PoC'u belirtmez.
+
+## Ne yapmalı?
+
+1. **Envanteri çıkarın.** MiCollab sürümünü ve AWV bileşeninin dışarıdan erişilebilir olup olmadığını doğrulayın. Danışma kapsamı 10.3 (10.3.0.18) ve öncesi; satıcı desteklenen sürümleri esas alıyor, destek sonu sürümleri değerlendirmiyor.
+2. **Satıcının çözümünü uygulayın.** Mitel, 10.3 (10.3.0.18) için yama yayınladı. Bu sürüme yükseltip yamayı KB000129195'deki yönergelerle uygulayın ya da daha sonraki bir sürüme geçin. KB makalesi bu incelemede doğrudan okunmadı; erişiminiz yoksa Mitel Yetkili Partnerine başvurun.
+3. **KEV takvimini dikkate alın.** CISA son tarihi 28 Kasım 2026 ve BOD 26-04 kapsamında adli üçleme istiyor. 133311 için son tarih 9 Aralık. Yama öncesi dönemi kapsayan logları koruyun; yalnızca yama uygulayıp eski kayıtları silmeyin.
+4. **Yama gecikecekse AWV erişimini kısıtlayın.** Mitel'in geçici önlemi bu. Bu bir risk azaltmadır, yamanın yerine geçmez; danışma "hafifletilebilir" diyor, "ortadan kalkar" demiyor.
+5. **Beş CVE'yi birlikte değerlendirin.** Tek patch beş kaydı da kapsıyor; yalnızca 133323'ü kapatmak diğer dört açığı bırakır. 133303'ün adli üçleme alanı da Yes.
+6. **Yama sonrası doğrulayın.** Sürümü ve yama durumunu yeniden okuyun, AWV erişimini gözden geçirin ve yama öncesi dönemde olağandışı komut çalıştırma, yeni dosya veya yeni oturum belirtileri varsa olay müdahalesi başlatın.
+
+## Ne yapmamalı?
+
+- "NVD 10.0 skorunu onayladı" demeyin. 10.0 satıcı/MITRE secondary ölçümü; NVD primary ölçümü 9.8.
+- "PoC yayınlandı" demeyin. Bu yazının kullandığı birincil kayıtlar payload veya exploit kodu içermiyor; KEV istismar bilgisi PoC anlamına gelmez.
+- "Veri sızdırıldı" demeyin. Satıcı vektörü `C:N` diyor; CISA kısa açıklaması komut çalıştırmadan bahsediyor.
+- "Saldırgan root yetkisi kazandı" demeyin. Satıcı yalnızca komutların sistem bağlamında çalıştığını yazıyor, ayrıcalık düzeyini belirtmiyor.
+- "133303 ve 133323 aynı açık" demeyin. Biri XML enjeksiyonu, diğeri kör komut enjeksiyonu; ayrı CVE ve ayrı vektörler var.
+- "133311 için 28 Kasım" demeyin. KEV JSON bu kayıt için 9 Aralık 2026 son tarihini veriyor.
+- "AWV'yi kapattım, güvendeyim" demeyin. Erişim kısıtlaması geçici önlem; çözüm yama veya sonraki sürüm.
+- "Tüm MiCollab kurulumları etkilendi" demeyin. Danışma desteklenen sürümleri ve 10.3.0.18 ve öncesini kapsıyor, destek sonu ürünleri kapsam dışında bırakıyor.
+
+## Durum
+
+26 Kasım 2026 itibarıyla tablo, Mitel MISA-2026-0012 danışması, beş NVD API kaydı, CISA KEV uyarısı ve KEV JSON akışından okundu. Mitel danışması 16 Kasım'da ilk kez yayınlandı, 24 Kasım'da revizyon 2.0 ile güncellendi; revizyon notu CVE numaralarının güncellendiğini söylüyor. NVD kayıtları 19 Kasım'da yayınlandı ve 26 Kasım'da değiştirildi. CISA 25 Kasım'da beş MiCollab CVE'sini KEV'e ekledi; katalog sürümü 2026.11.25.
+
+Belirsizlikler sınırlı ama net: birincil kayıtlar saldırgan kimliği, kurban listesi, kampanya adı veya PoC vermiyor. SSVC `exploitation: active` ve KEV eklemesi istismar bilgisini destekliyor; bu, her etkilenen kurulumun istismar edildiği anlamına gelmiyor. İkincil analizler kaynak listesine alınmadı. Yama yönergeleri KB000129195 makalesinde tarif ediliyor; bu makale doğrudan okunmadı, yalnızca birincil danışmadaki atıf esas alındı.
+
+## Bu seriden
+
+- [CISA BOD 26-04 ve SSVC](/blog/cisa-bod-26-04-ssvc)
+- [Drupal Core CVE-2026-132165](/blog/drupal-installer-cve-2026-132165)
+- [cPanel WP Toolkit proxy RCE](/blog/cpanel-wptk-proxy-rce)
+
+## Kaynaklar
+
+- [Mitel - Product Security Advisory MISA-2026-0012](https://www.mitel.com/support/security-advisories/mitel-product-security-advisory-misa-2026-0012)
+- [Mitel - KB000129195, MiCollab Security Update (MISA-2026-0012'de referans; doğrudan okunmadı)](https://mitel.service-now.com/mitel?id=kb_article&sys_id=3e441c0d97285b10cd1b3a871153afc5)
+- [NVD API - CVE-2026-133323](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-133323)
+- [NVD API - CVE-2026-133303](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-133303)
+- [NVD API - CVE-2026-133311](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-133311)
+- [NVD API - CVE-2026-133275](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-133275)
+- [NVD API - CVE-2026-133324](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-133324)
+- [CISA - 25 Kasım 2026 KEV uyarısı, 10 yeni kayıt](https://www.cisa.gov/news-events/alerts/2026/11/25/cisa-adds-10-known-exploited-vulnerabilities-catalog)
+- [CISA KEV JSON akışı](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+
+---
+
+# SolarWinds Serv-U 2026.4: Linux kök ayrıcalığı zinciri
+
+- Kaynak: https://fosstr.com/blog/solarwinds-serv-u-2026-4/
+- Tür: Yazı
+- Tarih: 2026-11-26
+- Etiketler: security, solarwinds, serv-u, cve, privilege-escalation, nvd
+- Özet: Serv-U 2026.4: 18 SolarWinds CVE'si + 11 üçüncü taraf CVE'si, dokuz Critical, CVE-2026-123172 ve 123168 için PR:H, 123166 Windows komut enjeksiyonu ve KEV durumu.
+
+26 Kasım 2026 itibarıyla SolarWinds Serv-U 2026.4, 24 Kasım 2026'da yayınlanan sürüm notlarında 18 SolarWinds CVE'sini ve 11 üçüncü taraf CVE'sini kapatıyor; SolarWinds tablosundaki dokuzu 9.1 Critical olarak listeleniyor. Odak iki kayıt: CVE-2026-123172 ve CVE-2026-123168. İkisi de Linux kurulumlarda root ayrıcalığına yükseltmeyi anlatıyor, satıcı CVSS 3.1 skoru 9.1 ve vektör `PR:H` taşıyor. Windows tarafında etki satıcıya göre daha düşük. CVE-2026-123166 ise yalnızca Windows'ta görülen bir komut enjeksiyonu. Aşağıda SolarWinds Trust Center danışma notları, sürüm notları, NVD API ve CISA KEV kontrolü var; aktif istismar, PoC veya IOC uydurulmadı.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| Sürüm | SolarWinds Serv-U 2026.4 |
+| Yayın tarihi | 24 Kasım 2026, sürüm notları |
+| Etkilenen | Serv-U 2026.3 ve altı |
+| Düzeltme sürümü | Serv-U 2026.4 |
+| Toplam | 18 SolarWinds CVE'si + 11 üçüncü taraf CVE'si; 9 Critical (SolarWinds tablosu), satıcı sürüm notları |
+| Odak kayıtlar | CVE-2026-123172, CVE-2026-123168 |
+| Etki | Linux'ta root'a yükseltme; Windows'ta daha düşük risk |
+| CVSS | 9.1 Critical, CVSS 3.1 secondary, kaynak `psirt@solarwinds.com` |
+| Vektör | `CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H` |
+| Windows vektörü | `AV:N/AC:L/PR:H/UI:N/S:U/C:L/I:L/A:L` |
+| Gerekli ayrıcalık | `PR:H`; yüksek ayrıcalıklı Serv-U bağlamı |
+| Windows komut enjeksiyonu | CVE-2026-123166, 7.2 High, yalnızca Windows |
+| NVD durumu | `Undergoing Analysis`; skor secondary |
+| SSVC | CISA Coordinator: `exploitation: none`, `automatable: no`, `technicalImpact: total` |
+| KEV | 2026.11.25 katalog sürümünde bu CVE'ler yok |
+| Kredi | Intigriti Bug Bounty Program |
+
+![Serv-U 2026.4 ayrıcalık yükseltme şeması](/diagrams/solarwinds-serv-u-2026-4.svg)
+
+## Teknik görünüm
+
+SolarWinds'ün 2026.4 sürüm notları, SolarWinds CVE tablosunda 18 kayıt listeliyor; dokuzu 9.1 Critical satırı taşıyor. Tablo CVE-2026-82322'yi domain group yöneticisinin sunucu yöneticisi seviyesine çıkabildiği IDOR olarak anlatıyor; CVE-2026-123167 yol traversal üzerinden ayrıcalıklı dosya erişimi, CVE-2026-82315, 82316 ve 82319 TOCTOU, CVE-2026-82320 ve 82321 type confusion, CVE-2026-82317 ise Linux'a özel ve yöneticileri etkileyen 6.8 Medium depolanan XSS olarak geçiyor. Bu ayrıntıların kaynağı satıcı sürüm notlarıdır; NVD kayıtlarından doğrulanmadıkları için burada yalnızca Notlar'daki haliyle aktarılıyor.
+
+CVE-2026-123172 ve CVE-2026-123168, Trust Center danışma notlarında benzer bir dille tanımlanıyor. İlkinde ayrıcalık yükseltmesi Linux kurulumlarda root'a çıkabiliyor; ikincisinde yetersiz doğrulama Linux'ta root kullanıcıya yükseltmeye yol açabiliyor. İki not da Windows için riskin daha düşük olduğunu söylüyor, etkilenen ürünü `Serv-U 2026.3 and below`, düzeltmeyi `2026.4` olarak veriyor ve Intigriti Bug Bounty Program'ı kredi olarak gösteriyor. Her iki danışma notunda Linux vektörü `AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H`, Windows vektörü `AV:N/AC:L/PR:H/UI:N/S:U/C:L/I:L/A:L` şeklinde.
+
+Burada `PR:H` belirleyici. NVD API kayıtları her iki CVE için 9.1 skoru `Secondary` olarak ve kaynak olarak `psirt@solarwinds.com` gösteriyor; NVD durumu `Undergoing Analysis`. Yani 9.1, satıcının skorudur ve NVD analiz skoru değildir. `PR:H`, saldırganın zaten yüksek ayrıcalıklı bir Serv-U bağlamına sahip olmasını gerektirir. Bu nedenle "kimlik doğrulamasız root RCE" ifadesi kayıtlarla uyuşmuyor. `S:C` alanı Linux tarafında etkinin Serv-U sınırını aşarak işletim sistemine geçtiğini gösteriyor; Windows'ta `S:U` ve düşük gizlilik, bütünlük, erişilebilirlik etkileri var.
+
+CVE-2026-123166 ayrı bir Windows kaydı. Danışma notu, kullanıcı tarafından kontrol edilen argümanların yeterince temizlenmediğini ve komut enjeksiyonuna açık olduğunu yazıyor; yalnızca Windows kurulumlarını etkiliyor. Satıcı 7.2 High ve `CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H` vektörünü veriyor. NVD kaydı aynı skoru secondary olarak taşıyor, CWE-78'i gösteriyor ve Windows platformunu doğruluyor. `PR:H` burada da geçerli; bu kaydı Linux root zincirleriyle aynıymış gibi sunmak yanlış olur.
+
+NVD'nin SSVC v2.0.3 alanları üç odak CVE için CISA Coordinator kaynağından geliyor: `exploitation: none`, `automatable: no`, `technicalImpact: total`. Bu kombinasyon, kayıtlı bir istismar kanıtı olmadığını, otomasyonun mevcut veriyle desteklenmediğini ve teknik etkinin ciddi olduğunu söylüyor. CISA KEV JSON akışının 2026.11.25 sürümünde CVE-2026-123172, 123168, 123166 veya 82322 için kayıt bulunmuyor. Satıcı notlarında da kurban listesi, kampanya adı, PoC veya IOC yok.
+
+## Ne yapmalı?
+
+1. **Envanteri çıkarın.** Serv-U sürümünü ve platformu her sunucuda doğrulayın. 2026.3 ve altındaki tüm kurulumları 2026.4'e taşıyın.
+2. **Linux'u önceleyin.** Yüksek ayrıcalıklı Serv-U hesapları, domain yöneticileri ve servis hesapları olan Linux sistemleri ilk sırada; `PR:H` saldırganın bu bağlamlardan birini zaten elde ettiğini varsayar.
+3. **Windows'u atlamayın.** Linux root başlığı öne çıksa da CVE-2026-123166 Windows'a özel komut enjeksiyonu. Windows kurulumları da aynı yama ile kapanıyor.
+4. **Ayrıcalıkları gözden geçirin.** Domain group admin, domain admin ve server admin rollerini listeleyin. Satıcı tablosundaki IDOR, TOCTOU ve type confusion kayıtları bu rollerin sınırlarıyla ilgili.
+5. **Kimlik doğrulama kontrollerini denetleyin.** Sürüm notları TOTP brute force, ilk faktör şifre brute force ve kullanıcı adı numaralandırma kayıtlarını da içeriyor. Çok faktörlü ayarları ve deneme sınırlarını gözden geçirin.
+6. **Yama sonrası bakın.** Sürümü doğrulayın; yama öncesi dönemde yeni yönetici hesapları, beklenmeyen dosya değişiklikleri, olağandışı komut çalıştırma izleri ve Serv-U oturumları için logları tarayın. Paylaşılmış bir IOC olmadığı için kendi ortamınızdan kanıt üretin.
+
+## Ne yapmamalı?
+
+- "Kimlik doğrulamasız root RCE var" demeyin. Vektör `PR:H` diyor; başlangıçta yüksek ayrıcalıklı bağlam gerekiyor.
+- "Aktif istismar görüldü" demeyin. SSVC `exploitation: none` diyor ve KEV'de kayıt yok.
+- "NVD 9.1 skorunu onayladı" demeyin. Skor NVD'de `Secondary` ve kaynağı SolarWinds.
+- "Windows'ta da root etkisi var" demeyin. Satıcı Windows vektörünü `S:U` ve düşük etkilerle veriyor.
+- "CVE-2026-123166 Linux'u da etkiliyor" demeyin. Danışma notu yalnızca Windows diyor.
+- "Dokuz critical aynı açık" demeyin. Sürüm notları ayrı CVE kimlikleri ve ayrı mekanizmalar listeliyor.
+- "82322 ve 823xx ailesini NVD doğruladı" demeyin. Bu yazıdaki ayrıntılar satıcı sürüm notlarından geliyor; NVD'yi yalnızca üç odak CVE için kullandık.
+- "PoC veya IOC yayımlandı" demeyin. Birincil kayıtlar böyle bir içerik içermiyor.
+
+## Durum
+
+26 Kasım 2026 itibarıyla Serv-U 2026.4, SolarWinds sürüm notları ve Trust Center danışma notlarıyla doğrulanmış bir yama sürümü. Sürüm notları 18 SolarWinds CVE'si ve 11 üçüncü taraf CVE'si listeliyor; SolarWinds tablosundaki dokuzunu Critical olarak işaretliyor. CVE-2026-123172 ve CVE-2026-123168 danışma notlarında Linux root yükseltmesi olarak tanımlanıyor; her ikisi de 2026.3 ve altını etkiliyor, 2026.4'te kapanıyor ve Intigriti'ye kredi veriyor. CVE-2026-123166 danışma notunda Windows'a özel komut enjeksiyonu olarak geçiyor. NVD API üç kayıt için satıcıdan gelen secondary CVSS metriğini ve CISA Coordinator SSVC alanlarını gösteriyor; kayıtlar `Undergoing Analysis` durumunda.
+
+Belirsizlikler net: birincil kayıtlarda istismar kanıtı, kurban bilgisi, kampanya adı, PoC veya IOC yok. 82322 ve 823xx ailesine ait mekanizma anlatımları satıcı sürüm notlarına dayanıyor ve NVD tarafından ayrıca analiz edilmiş değil. "Kimlik doğrulamasız root RCE" ve "aktif istismar" iddiaları bu kaynaklarla desteklenmiyor. Yama kararı sürüm, platform ve ayrıcalık verilerine dayanıyor.
+
+## Bu seriden
+
+- [CISA BOD 26-04 ve SSVC](/blog/cisa-bod-26-04-ssvc)
+- [WP Rocket CVE-2026-125812](/blog/wp-rocket-cve-2026-125812)
+- [Neden her şey 2shell oluyor](/blog/neden-her-sey-2shell-oluyor)
+
+## Kaynaklar
+
+- [SolarWinds - Serv-U 2026.4 release notes](https://documentation.solarwinds.com/en/success_center/servu/content/release_notes/servu_2026-4_release_notes.htm)
+- [SolarWinds Trust Center - CVE-2026-123172](https://www.solarwinds.com/trust-center/security-advisories/CVE-2026-123172)
+- [SolarWinds Trust Center - CVE-2026-123168](https://www.solarwinds.com/trust-center/security-advisories/CVE-2026-123168)
+- [SolarWinds Trust Center - CVE-2026-123166](https://www.solarwinds.com/trust-center/security-advisories/CVE-2026-123166)
+- [NVD API - CVE-2026-123172](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-123172)
+- [NVD API - CVE-2026-123168](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-123168)
+- [NVD API - CVE-2026-123166](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-123166)
+- [CISA KEV JSON feed'i](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+
+---
+
+# vCenter CVE-2026-123903: vmdir kimlik doğrulama atlatma
+
+- Kaynak: https://fosstr.com/blog/vcenter-cve-2026-123903/
+- Tür: Yazı
+- Tarih: 2026-11-26
+- Etiketler: security, vmware, vcenter, cve, vmdir, authentication-bypass, broadcom
+- Özet: Broadcom VMSA-2026-0011, CVE-2026-123890 ayrımı, satıcı CVSS 9.8, düzeltme sürümleri, KEV durumu ve ikincil PoC analizi.
+
+26 Kasım 2026 itibarıyla Broadcom, 24 Kasım'da yayınladığı VMSA-2026-0011 ile vCenter'in VMware Directory Service (vmdir) bileşeninde CVE-2026-123903 kimlik doğrulama atlatma açığını duyurdu. Satıcı maksimum CVSS 3.1 skorunu 9.8 olarak veriyor ve workaround listelemiyor. Bu kayıt, 19 Kasım'da yayınlanıp 20 Kasım'da güncellenen VMSA-2026-0009'taki CVE-2026-123890'dan ayrı bir açıktır; ikinci kayıt CISA KEV listesindedir. Aşağıda VMSA metni, Broadcom SSS, VMSA-2026-0009, NVD API sorguları, KEV JSON ve açıkça ikincil olarak etiketlenen Rapid7 analizi var; payload, kurban, kampanya veya IOC uydurulmadı.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-123903 |
+| Ürün | Broadcom VMware vCenter Server, VMware Directory Service (vmdir) |
+| Danışma | VMSA-2026-0011; ilk yayın ve son güncelleme 24 Kasım 2026 |
+| Zayıflık | Kimlik doğrulama atlatma; ağ erişimi olan saldırgan yetkisiz sistem erişimi kazanabilir |
+| CVSS | Satıcı maksimum 9.8 CRITICAL, CVSS 3.1; vektör `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` |
+| Koşullar | `AV:N`, `PR:N`, `UI:N`: ağ erişimi yeterli, hesap veya kullanıcı etkileşimi yok |
+| Düzeltme | vCenter 9.1.x: 9.1.2; 9.0.x: 9.0.2.0300; 8.0: 8.0 U3m; VCF 5.x: 5.2.5 |
+| 7.0 | Genel destek bitmiş; uzatılmış destek sözleşmesi için Broadcom Support |
+| Workaround | Yok; yamalar kümülatif ve vCenter Quick Patch için uygun değil |
+| NVD API | 26 Kasım 2026 08:17 UTC sorgusunda CVE-2026-123903 için kayıt yok |
+| KEV | 2026.11.25 KEV JSON ve katalog kontrolünde CVE-2026-123903 yok |
+| Ayrı kayıt | CVE-2026-123890 / VMSA-2026-0009, 19 Kasım, 20 Kasım güncelleme; KEV'e 20 Kasım |
+| İkincil analiz | Rapid7, 25 Kasım: herkese açık PoC doğrulandı; satıcı istismar onayı yok |
+
+![vCenter vmdir kimlik doğrulama atlatma şeması](/diagrams/vcenter-cve-2026-123903.svg)
+
+## Teknik görünüm
+
+VMSA-2026-0011'in 3a bölümü açığı şöyle tanımlıyor: vCenter, VMware Directory Service içinde kimlik doğrulama atlatma açığı içeriyor; ağ erişimi olan kötü niyetli bir aktör bu açığı kullanarak kimlik doğrulamayı atlatabilir ve sisteme yetkisiz erişim kazanabilir. Broadcom dereceyi Critical, maksimum CVSS 3.1 taban skorunu 9.8 olarak sınıflandırıyor. VMSA'daki hesap makinesi bağlantısı `AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` vektörünü gösteriyor: saldırı ağ üzerinden, düşük karmaşıklıkla, ayrıcalık ve kullanıcı etkileşimi olmadan gerçekleşiyor; gizlilik, bütünlük ve erişilebilirlik etkileri yüksek. Satıcı, açığa özel bir işaret veya sömürü koşulu belirtmiyor; "network access to vCenter" ifadesi erişilebilirliği tarif eder, belirli bir portu veya protokolü onaylamaz.
+
+Broadcom'un SSS'si iki noktayı netleştiriyor. Birincisi, CVE-2026-123903 CVE-2026-123890'dan "new and distinct issue"; bu yüzden eski kaydın istismar geçmişi yeni CVE'ye aktarılamaz. İkincisi, vmdir açıkları Enhanced Linked Mode'a özgü değil; SSS'nin 30. sorusu ELM kullanılmayan kurulumların da etkili olduğunu söylüyor. Yine SSS'ye göre yamalar kümülatif; VMSA-2026-0009 kapsamında vCenter 8.0 U3m zaten kurulduysa vCenter için ek işlem gerekmiyor, ancak 9.1.x ve 9.0.x dallarında bu duyurudaki sürümlere geçmek gerekiyor. vCenter güncellemeleri Quick Patch kapsamında değil; standart güncelleme mekanizması kullanılmalı.
+
+Sürüm matrisi dört ana dalı kapsıyor. VCF veya VVF içindeki vCenter 9.1.x için 9.1.2, 9.0.x için 9.0.2.0300, bağımsız vCenter 8.0 için 8.0 U3m ve VCF 5.x için 5.2.5 düzeltilmiş sürümler olarak listeleniyor. vCenter 7.0 uzatılmış destek kapsamında Broadcom Support ile ele alınıyor; SSS 6.5 ve 6.7'nin de etkilenmiş sayılması gerektiğini yazıyor. Telco Cloud Platform ve Infrastructure için KB463501 bağlantısı veriliyor. VMSA'daki "Workarounds: None" satırı bu CVE için geçerli; SSS'teki kısmi azaltmalar ESX I/O filter ve XHCI USB ile ilgili, vmdir kimlik doğrulama atlatmasıyla ilgili değil.
+
+Ayrı kayıt karışıklığı özellikle önemli. CVE-2026-123890, 19 Kasım'da yayınlanan ve 20 Kasım'da güncellenen VMSA-2026-0009'un vCenter kimlik doğrulama atlatma açığı; NVD kaydı `Analyzed`, CWE-288 ve CISA `exploitation: active` alanı taşıyor. CISA KEV JSON'da 20 Kasım eklenme, 23 Kasım son tarih var. CVE-2026-123903 için NVD API 26 Kasım'da sıfır sonuç döndürdü; dolayısıyla NVD skoru, CWE'si veya SSVC alanı yok ve KEV kaydı bulunmuyor. Rapid7'in 25 Kasım analizi iki açığı erişim yolu açısından ayırıyor: 123890 RPC, 123903 LDAP üzerinden erişilebilir; bu ayrıntı yalnızca ikincil kaynakta geçiyor ve satıcı belgelerinde doğrulanmıyor. Aynı ikincil analiz, 123903 için herkese açık bir PoC'in yayımlandığını ve Rapid7 tarafından doğrulandığını yazıyor. Bu bir satıcı onayı değil; VMSA, SSS, NVD ve KEV'de bu CVE için saha istismarı veya PoC bildirimi yok.
+
+## Ne yapmalı?
+
+1. **Envanteri sürüm bazında çıkarın.** vSphere Client Summary sekmesinden veya PowerCLI `DefaultVIServer.Version` ve `Build` alanlarından vCenter sürümünü ve build numarasını okuyun. Yalnızca ana sürümü bilmek yeterli değil; düzeltme sürümleri dal bazında listelenmiş.
+2. **Doğru hedef sürümü seçin.** 9.1.x için 9.1.2, 9.0.x için 9.0.2.0300, 8.0 için 8.0 U3m, VCF 5.x için 5.2.5. 7.0 uzatılmış destek müşterileri Broadcom Support'a başvurmalı.
+3. **Önceki yamayı kontrol edin.** 8.0 U3m, VMSA-2026-0009 için de düzeltilmiş sürümdü; bu build zaten kuruluysa vCenter'ı yeniden yamamanıza gerek yok. 9.x kurulumlarda eski express patch yeni açığı kapsamaz.
+4. **Yamayı normal döngü dışında planlayın.** Broadcom SSS dört Critical konuyu ITIL acil değişiklik olarak sınıflandırıyor. Quick Patch uygun olmadığı için standart update mekanizmasını kullanın; güncelleme sırasında yönetim arayüzü kısa süre kesilir, VM iş yükleri çalışmaya devam eder.
+5. **Erişimi azaltın ama workaround sanmayın.** vCenter yönetim arayüzünü güvenilir ağlarla sınırlamak genel iyi uygulamadır; VMSA bu CVE için workaround göstermediğinden yamanın yerine geçmez.
+6. **Yama sonrası kontrol yapın.** Kimlik doğrulama atlatma sonrası oluşabilecek yeni yönetici hesapları, dizin değişiklikleri ve olağandışı vCenter oturumları için 24 Kasım öncesine uzanan logları inceleyin. Şüphe varsa olay müdahalesi başlatın.
+
+## Ne yapmamalı?
+
+- "CVE-2026-123903 aktif olarak istismar ediliyor" demeyin. KEV kaydı yok ve satıcı belgelerinde istismar bildirimi yok.
+- "Bu CVE KEV'de" demeyin. KEV'de olan CVE-2026-123890'dur; eklenme 20 Kasım, son tarih 23 Kasım.
+- "NVD 9.8 skorunu doğruladı" demeyin. 9.8 VMSA'nın satıcı skorudur; NVD API 26 Kasım'da bu CVE için kayıt döndürmedi.
+- "Aynı açık, aynı yama" demeyin. Broadcom SSS CVE-2026-123903'ü CVE-2026-123890'dan ayrı olarak tanımlıyor.
+- "Rapid7 PoC'u satıcıdan geldi" demeyin. PoC iddiası ikincil analizde; satıcı notlarında PoC veya IOC yok.
+- "ELM kapalıysa güvendeyim" demeyin. SSS'ye göre vmdir açıkları ELM kullanılmadan da mevcut.
+- "Workaround var" demeyin. VMSA bu CVE için `None` diyor.
+- "Quick Patch ile kapatılabilir" demeyin. SSS bu güncellemeleri Quick Patch için uygun görmüyor.
+- "8.0 U3m tüm dalları kapsar" demeyin. Aynı build 8.0 için geçerli; 9.1.x ve 9.0.x için yeni sürümler gerekli.
+
+## Durum
+
+26 Kasım 2026 itibarıyla CVE-2026-123903, Broadcom VMSA-2026-0011 ve satıcı SSS'siyle doğrulanmış bir açık. Danışma 24 Kasım'da yayınlandı, Critical olarak sınıflandırıldı ve vmdir kimlik doğrulama atlatmasını tarif etti. Düzeltme sürümleri ve workaround durumu doğrudan yanıt matrisinden okundu. SSS, CVE-2026-123890 ile ilişkiyi, ELM kapsamını, kümülatif yama mantığını ve Quick Patch kısıtını açıklıyor. NVD API, bu CVE için 26 Kasım 08:17 UTC itibarıyla sıfır sonuç döndürdü; CVE kayıt API'si de 404 verdi. Bu yüzden NVD skoru, CWE veya SSVC değeri aktarılmadı.
+
+CISA KEV JSON'un 2026.11.25 sürümü ve katalog sayfası CVE-2026-123903 için kayıt içermiyor. Aynı dosyada CVE-2026-123890 20 Kasım eklenme ve 23 Kasım son tarih ile mevcut; VMSA-2026-0009 de 19 Kasım ilk yayın, 20 Kasım güncelleme tarihlerini taşıyor. Rapid7'in 25 Kasım analizi ikincil kaynak olarak etiketlendi; herkese açık PoC doğrulaması ve RPC/LDAP ayrımı yalnızca orada geçiyor. Satıcı danışması, SSS, NVD ve KEV'de bu yeni CVE için kurban listesi, kampanya adı, IOC veya saha istismarı bildirimi yok. Bu yazı "istismar ediliyor" iddiasını taşımıyor.
+
+## Bu seriden
+
+- [cPanel WP Toolkit proxy RCE](/blog/cpanel-wptk-proxy-rce)
+- [Drupal Core CVE-2026-132165](/blog/drupal-installer-cve-2026-132165)
+- [CISA BOD 26-04 ve SSVC](/blog/cisa-bod-26-04-ssvc)
+
+## Kaynaklar
+
+- [Broadcom - VMSA-2026-0011, 24 Kasım 2026](https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39626)
+- [Broadcom - VMSA-2026-0011 Questions & Answers](https://github.com/vmware/vcf-security-and-compliance-guidelines/blob/main/security-advisories/vmsa-2026-0011/README.md)
+- [Broadcom - VMSA-2026-0009, CVE-2026-123890](https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39495)
+- [NVD API - CVE-2026-123903 sorgusu, 26 Kasım 2026](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-123903)
+- [NVD API - CVE-2026-123890](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-123890)
+- [CISA KEV JSON akışı, sürüm 2026.11.25](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+- [CISA KEV kataloğu - CVE-2026-123903 sorgusu, sonuç yok](https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-123903)
+- [CISA KEV kataloğu - CVE-2026-123890](https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2026-123890)
+- [Rapid7 - CVE-2026-123903 analizi, ikincil kaynak](https://www.rapid7.com/blog/post/etr-cve-2026-123903-critical-vmware-directory-service-authentication-bypass-affects-vcenter)
+
+---
+
+# WordPress 7.1.5: 20 güvenlik düzeltmesi ve geri taşıma
+
+- Kaynak: https://fosstr.com/blog/wordpress-7-1-5-security-release/
+- Tür: Yazı
+- Tarih: 2026-11-26
+- Etiketler: security, wordpress, core, security-release, patchstack
+- Özet: WordPress 7.1.5 güvenlik sürümü: 20 düzeltme, Patchstack ikincil analizi, 4.7 dahil geri taşımalar ve güncelleme adımları.
+
+26 Kasım 2026 itibarıyla WordPress 7.1.5, WordPress.org'un 18 Kasım 2026'da duyurduğu bir güvenlik sürümü. Duyuru 20 güvenlik maddesi sıralıyor; Patchstack'in aynı gün yayınlanan **ikincil analizi** bunlardan 18'inin veritabanına eklendiğini, 2'sinin sertleştirme olduğunu ve 5 düzeltmenin Gutenberg paket yükseltmesiyle geldiğini yazıyor. Aşağıda WordPress.org birincil kayıtları, WordPress projesinin güvenlik danışma notu, Patchstack ikincil analizi ve CISA KEV kontrolü var; PoC, payload, kurban veya IOC uydurulmadı.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| Sürüm | WordPress 7.1.5 |
+| Yayın tarihi | 18 Kasım 2026 |
+| Tür | Güvenlik sürümü, kısa döngü |
+| Düzeltme sayısı | 20, WordPress.org duyurusu |
+| Patchstack veritabanı | 18 kayıt, ikincil analiz |
+| Sertleştirme | 2 değişiklik, ikincil analiz |
+| Gutenberg | 5 düzeltme paket yükseltmesinde, ikincil analiz |
+| Geri taşıma | 4.7 dahil uygun dallara; 4.6 ve öncesi destek dışı |
+| Öne çıkan zincir | Template Part block öznitelikleri, yönetici tarayıcısında eklenti yükleme ve olası RCE |
+| Çoklu site | Site yöneticisinden Super Admin'a yükseltme, Customizer menü önizlemeleri |
+| SQL enjeksiyonu | `WP_Meta_Query` iç içe relation değerleri ve Customizer front page ayarı |
+| Bilgi açığa çıkma | REST arama, REST yorumlar ve XML-RPC `wp.getComments` |
+| CVE durumu | Patchstack yayınında CVE yok; danışma notunda `No known CVE` |
+| KEV | 2026.11.25 katalog sürümünde bu sürüme ait kayıt yok |
+| Sonraki sürüm | 7.2, 8 Aralık 2026 için planlandı |
+
+![WordPress 7.1.5 güvenlik düzeltmeleri şeması](/diagrams/wordpress-7-1-5-security-release.svg)
+
+## Teknik görünüm
+
+WordPress.org duyurusu 20 maddelik bir liste yayımladı. Liste, kimlik doğrulamasız başlayan Template Part block ayrıcalık yükseltmesinden Contributor+ XSS varyantlarına, XML-RPC pingback hizmet reddinden REST üzerinden bilgi açığa çıkarmaya kadar geniş bir aralığı kapsıyor. İki madde açıkça sertleştirme olarak yazıldı: JSON medya türü eşleşmesini genişleten hatalı düzenli ifade düzeltmesi ve sunucu tarafı sağlayıcısı kalmadığı için blok editöründen Imgur embed varyantının kaldırılması. Duyuru, güvenlik sürümü olduğu için sitelerin hemen güncellenmesini öneriyor.
+
+WordPress.org sürüm belgesi aynı 20 maddeleri tekrarlıyor ve dal dal yama listesi veriyor: 7.0.9, 6.9.12, 6.8.13, 6.7.12, 6.6.12, 6.5.15, 6.4.15, 6.3.15, 6.2.16, 6.1.17, 6.0.19, 5.9.21, 5.8.20, 5.7.22, 5.6.24, 5.5.25, 5.4.26, 5.3.28, 5.2.31, 5.1.29, 5.0.32, 4.9.36, 4.8.35 ve 4.7.40. Duyuru geri taşımaların 4.7'ye kadar yapıldığını, 4.6 ve öncesinin artık güvenlik güncellemesi almadığını söylüyor. Belge ayrıca yalnızca en yeni sürümün aktif olarak desteklendiğini hatırlatıyor.
+
+Patchstack'in **ikincil analizi** 20 düzeltmeden 18'inin veritabanına kaydedildiğini, 2'sinin sertleştirme olduğunu ve 5'inin Gutenberg paket yükseltmesinden geldiğini yazıyor. WordPress.org belgesi "No package was revised" diyor; ikincil analize göre bu satır yalnızca çekirdek PHP listesini anlatıyor. Maruziyet değerlendirmesi yapılırken paket farkları da kapsanmalı.
+
+En kritik kayıt Template Part block ile ilgili. WordPress projesinin GHSA-pmp8-6cv8-q323 notuna göre `theme` ve `slug` öznitelikleri yönetici editörünün aynı sitede başka bir URL'e istek göndermesine yol açabiliyor. Author+ bu öznitelikleri bir gönderide ayarlayabiliyor; kimlik doğrulamasız saldırgan yöneticiye hazırlanmış bir editör bağlantısı gönderebiliyor veya yöneticiyi böyle bir bağlantıya yönlendirebiliyor. Yönetici bağlantıyı açtığında saldırgan için yönetici hesabı oluşabiliyor ve eklenti yüklemesiyle kod çalıştırma kapısı açılıyor. Not High diyor ve `No known CVE` yazıyor. Patchstack ikincil analizi, REST yolunun bu özniteliklerden dizildiğini ve yamanın `isSafeEntityKey()` eklediğini belirtiyor; payload yok.
+
+Çoklu site kaydında WordPress.org, site yöneticisinin Customizer menü önizlemeleriyle Super Admin hesabını ele geçirebildiğini doğruluyor. Patchstack ikincil analizi, menü ve widget önizlemelerinin aynı hash biçimini kullanmasının iki alanı ayırt edilemez kıldığını yazıyor; sınır çoklu sitede anlam kazanıyor.
+
+SQL enjeksiyonu iki kayıtla geliyor: `WP_Meta_Query` iç içe `relation` değerleri ve Customizer changeset önizlemelerinde front page ayarı. Patchstack ikincil analizine göre ilki, çağıran kod istek verisini `meta_query` içine geçirdiğinde anlam kazanıyor; WordPress.org ikincisi için yönetici gerektiğini yazıyor. Yama önizleme değerini de `sanitize_option()` ile temizliyor ve `$wpdb->prepare()` ekliyor.
+
+XSS kayıtları geniş: yorum shortcode öznitelikleriyle kimlik doğrulamasız depolanan, eski medya popup'ında yansıyan, Contributor+ oEmbed/Comment Date/medya dosya adı, yönetici Customizer, Openverse metaverisi ve `wp_interactivity_data_wp_context()` alan adı. Patchstack ikincil analizi ilki için Latest Comments block'u, yansıyan kayıt için kurban tıklaması, interactivity kaydı için güvenilmeyen veriyi namespace olarak geçiren kod gerektiğini yazıyor. Tetikleyici koşullar bunlar; payload değil.
+
+Bilgi açığa çıkma kayıtları da benzer bir ayrım taşıyor: REST arama endpoint'i üzerinden özel taksonomi terimleri kimlik doğrulamasız görülebiliyor; REST yorumlar endpoint'i Author+ için kullanıcı e-posta adreslerini açığa çıkarıyor; REST üzerinden gönderi ve şablon yazarı ataması Editor+ bilgisi veriyor; XML-RPC `wp.getComments` ise Subscriber+ için yorumcu e-postalarını ve IP adreslerini döndürüyor. XML-RPC toplu pingback'ler ise kimlik doğrulamasız hizmet reddi kaydı.
+
+## Ne yapmalı?
+
+1. **7.1.5'e güncelleyin.** WP Admin > Updates yolunu veya WordPress.org indirme sayfasını kullanın. Otomatik arka plan güncellemesi açık siteler yamayı kendiliğinden alır; yine de sürümü doğrulayın.
+2. **Dal eşlemenizi kontrol edin.** Ana sürüme geçemiyorsanız WordPress.org belgesindeki karşılık gelen yamalı sürüme geçin. 4.6 ve öncesi için yama yok; bu dalları desteklenen bir sürüme taşıyın.
+3. **Multisite rollerini gözden geçirin.** Site yöneticisi listesini ve Super Admin atamalarını denetleyin. Bu sürümde site yöneticisi bazı kayıtlarda kurban değil, başlangıç rolü.
+4. **Contributor+ hesaplarını denetleyin.** Altı düzeltme bu rollerin erişebildiği alanlarla ilgili. Gereksiz yazarlık hesaplarını kaldırın ve editörlerden gelen block içeriklerini gözden geçirin.
+5. **Özel kodu tarayın.** İstek verisini `meta_query` içine geçiren eklenti veya tema kodunu arayın; REST ve XML-RPC endpoint'lerini gereksiz açıklık açısından gözden geçirin. Pingback'ler gereksizse kapatın; bu yamanın yerine geçmez.
+6. **Güncelleme sonrası kontrol edin.** Sürümü doğrulayın; yama öncesi dönem için yeni yönetici hesapları, beklenmeyen eklenti kurulumları, olağandışı REST/XML-RPC trafiği ve dosya değişiklikleri açısından loglara bakın.
+
+## Ne yapmamalı?
+
+- "Aktif istismar görüldü" demeyin. Birincil duyuruda ve danışma notunda sahada istismar iddiası yok; KEV kataloğünde bu sürüme ait kayıt yok.
+- "Patchstack 18 CVE yayınladı" demeyin. 18 sayısı Patchstack veritabanı kaydıdır; Patchstack yayın sırasında CVE atanmadığını yazıyor.
+- "CVSS 9.8 gibi bir skor var" demeyin. Danışma notu High diyor, fakat birincil kayıtlarda bu sürüm için sayısal CVSS skoru yok.
+- "Gutenberg tarafında düzeltme yok" demeyin. Beş düzeltmenin paket yükseltmesinde olduğu ikincil analizde yer alıyor; belgedeki dosya listesi yalnızca çekirdek PHP kapsamını gösteriyor.
+- "4.6 güvende" demeyin. 4.6 ve öncesi güvenlik güncellemesi almıyor.
+- "Tüm açıklar kimlik doğrulamasız" demeyin. Bazı kayıtlar admin, Author+, Editor+ veya Contributor+ gerektiriyor.
+- "PoC veya payload yayımlandı" demeyin. Birincil kayıtlar ve danışma notu böyle bir içerik içermiyor.
+- "RCE kesin gerçekleşti" demeyin. WordPress.org "could lead to remote code execution" diyor; bu bir olasılık ifadesi.
+
+## Durum
+
+26 Kasım 2026 itibarıyla WordPress 7.1.5, WordPress.org duyurusu, HelpHub belgesi ve WordPress projesinin Template Part danışma notuyla doğrulanmış güvenlik sürümü. Duyuru 18 Kasım'da 20 maddeyi yayımladı; danışma notu High ve `No known CVE` diyor. Patchstack ikincil analizi 18 kayıt, 2 sertleştirme ve 5 Gutenberg düzeltmesi bildiriyor. CISA KEV 2026.11.25 kataloğunda bu sürüme ait kayıt yok.
+
+Belirsizlikler net: birincil kayıtlar PoC, payload, kurban listesi, kampanya adı veya IOC içermiyor. Patchstack ikincil analizi kod farkına dayanıyor ve somut bir istek parametresi yayımlamıyor. Bu yazı sahada istismar iddiası taşımıyor ve sayısal CVSS skoru üretmiyor. Yama kararı, sürüm ve rol verilerine dayanıyor.
+
+## Bu seriden
+
+- [cPanel WP Toolkit proxy RCE](/blog/cpanel-wptk-proxy-rce)
+- [Neden her şey 2shell oluyor](/blog/neden-her-sey-2shell-oluyor)
+- [CISA BOD 26-04 ve SSVC](/blog/cisa-bod-26-04-ssvc)
+
+## Kaynaklar
+
+- [WordPress.org - WordPress 7.1.5 Release](https://wordpress.org/news/2026/11/wordpress-7-1-5-release/)
+- [WordPress.org - Version 7.1.5 HelpHub belgesi](https://wordpress.org/documentation/wordpress-version/version-7-1-5/)
+- [WordPress/wordpress-develop - GHSA-pmp8-6cv8-q323](https://github.com/WordPress/wordpress-develop/security/advisories/GHSA-pmp8-6cv8-q323)
+- [Patchstack - WordPress 7.1.5 Security Release, ikincil analiz](https://patchstack.com/articles/wordpress-7-1-5-security-release/)
+- [CISA KEV JSON feed'i](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+
+---
+
 # WP Rocket CVE-2026-125812: önbellek dosyası doğrulamasından RCE
 
 - Kaynak: https://fosstr.com/blog/wp-rocket-cve-2026-125812/
@@ -105,6 +629,91 @@ Belirsizlikler net: ne satıcı ne de CVE kayıtları bir PoC, kurban listesi, k
 - [ZeroPath - CVE-2026-125812 path traversal analizi](https://zeropath.com/blog/cve-2026-125812-wp-rocket-path-traversal-rce)
 - [Patchstack - WordPress WP Rocket Plugin < 3.24.1 Cross Site Scripting (XSS)](https://patchstack.com/database/wordpress/plugin/wp-rocket/vulnerability/wordpress-wp-rocket-plugin-3-24-1-cross-site-scripting-xss-vulnerability)
 - [CISA KEV JSON feed'i](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+
+---
+
+# Xen Orchestra CVE-2026-133469: boş nesne token ile admin girişi
+
+- Kaynak: https://fosstr.com/blog/xen-orchestra-cve-2026-133469/
+- Tür: Yazı
+- Tarih: 2026-11-26
+- Etiketler: security, xen-orchestra, vates, cve, authentication-bypass, kev
+- Özet: VSA-2026-062, XO 6.9.2 ve 6.10.1, xo-server 5.211.2 ve 5.213.1, CNA CVSS 9.8, KEV ve IOC adımları.
+
+26 Kasım 2026 itibarıyla Vates, Xen Orchestra için VSA-2026-062 danışmasını 10 Kasım 2026'da yayınladı. Açık CVE-2026-133469 olarak kaydedildi: REST çerezinde gelen boş bir JSON nesnesi, kimlik doğrulamayı atlayıp yönetici (Admin) yetkisi sağlıyor. Satıcı CVSS 4.0 skorunun henüz olmadığını yazıyor; NVD kaydındaki 9.8, GitHub CNA kaynağından geliyor. NVD kaydı 23 Kasım'da yayınlandı, 26 Kasım'da değiştirildi. CISA aynı CVE'yi 25 Kasım'da KEV'e ekledi, son tarih 28 Kasım ve adli üçleme alanı Yes. Aşağıda Vates danışması, NVD API kaydı, CISA KEV uyarısı ve KEV JSON akışı var; uydurulmuş kurban, kampanya veya ek IOC bulunmuyor.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-133469 |
+| Danışma | VSA-2026-062, yayın 10 Kasım 2026 |
+| Ürün | Xen Orchestra, Xen Orchestra Appliance, xo-server |
+| Etkilenen XO | 6.9.2 öncesi ve 6.10.0'dan 6.10.1 öncesi |
+| Etkilenen xo-server | 5.211.2 öncesi ve 5.213.0 (GitHub CNA: affected; NVD CPE: excluded) ile 5.213.1 öncesi |
+| Yama | XO 6.9.2 / 6.10.1; xo-server 5.211.2 / 5.213.1 |
+| Zayıflık | CWE-287 ve CWE-1287 |
+| Kullanılan değer | `authenticationToken=j:%7B%7D`, yani `authenticationToken=j:{}` |
+| CVSS | 9.8 CRITICAL, GitHub CNA secondary; satıcı CVSS 4.0 yok |
+| Vektör | `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` |
+| NVD durumu | 23 Kasım yayın, 26 Kasım değişiklik, `Modified`, NVD analiz skoru yok |
+| SSVC | CISA Coordinator: `exploitation: active`, `automatable: yes`, `technicalImpact: total` |
+| KEV | Eklenme 25 Kasım 2026, son tarih 28 Kasım 2026, `forensicTriage: Yes` |
+| Satıcı IOC | Var; HTTP deseni, VM ve dosya aramaları, C2 blok listesi |
+
+![Xen Orchestra boş token kimlik doğrulama atlatma şeması](/diagrams/xen-orchestra-cve-2026-133469.svg)
+
+## Teknik görünüm
+
+Vates danışmasının özeti şu: REST çerez ayrıştırıcısı `authenticationToken=j:%7B%7D` değerini `{}` nesnesine çeviriyor. REST kimlik doğrulaması bu nesneyi metin (string) zorunluluğu olmadan XO token sağlayıcısına geçiriyor. Token koleksiyonu `{}` değerini filtresiz bir arama olarak ele alıp ilk token'ı döndürüyor; sağlayıcı, süresi dolmamışsa bu token'ın sahibi olarak kimlik doğruluyor. Kimlik doğrulanmış `/rest/v0/users/me/authentication_tokens` rotası daha sonra yeniden kullanılabilir giriş token kimliklerini döndürüyor. Satıcı bu zinciri doğrudan tanımlıyor; burada ek bir payload veya gizli endpoint uydurulmadı.
+
+Satıcının etki tanımı açık: saldırgan kimlik doğrulamayı atlayıp Admin yetkisiyle işlem yapabiliyor. Xen Orchestra ele geçirilmesi, yönetilen havuzlarda keyfi kod çalıştırmaya ve XCP-ng düğümünün `root` olarak tamamen ele geçirilmesine yol açabiliyor. Bu son cümle Vates danışmasının kendi metninde yer alıyor; genel bir varsayım değil. Yine de "her kurulumda root erişimi gerçekleşti" denmez: danışma olası bir etki zincirini tarif ediyor, gerçekleşmiş bir olay kaydı değil. Yönetim düzleminin ele geçirilmesi ayrıca yapılandırma ve kimlik bilgilerini açığa çıkarabiliyor; satıcı, XO ele geçirildiyse proxy, yedekleme hedefleri (NFS, S3, Azure, SMB), root hesabı ve havuz sırrı, kullanıcı hesapları, OTP sırları ve posta sunucusu parolaları dahil tüm parola ve sırların döndürülmesini istiyor.
+
+Sürüm aralığı iki kanaldan geliyor. NVD CPE kayıtları XO için 6.9.2 öncesi ve 6.10.0 (dahil) ile 6.10.1 (hariç) arasını, xo-server için 5.211.2 öncesi ve 5.213.0 (hariç, `versionStartExcluding`) ile 5.213.1 (hariç) arasını işaretliyor; GitHub CNA affected listesi 5.213.0'ı dahil ediyor. Vates danışması aynı sınırları stable ve latest kanalları olarak veriyor: 6.9.2 stable, 6.10.1 latest; xo-server 5.211.2 stable, 5.213.1 latest. 6.10.0 güvenli değil, yama 6.10.1 ile geliyor. Kaynadan kurulumlar için satıcı en güncel `master` dalına geçmeyi öneriyor; Vates ayrıca PR #10748 referansını veriyor.
+
+Vates, tespit için bu kampanyaya özgü IOC'ler yayınladı. XO tarafında HTTP isteklerinde `authenticationToken=j:%7B%7D` ve `authenticationToken=j:{}` desenleri aranıyor; çalışan VM'lerde `pivot2` aranıyor. Başarılı bir istismarda yetkisiz erişimi gösteren bir oturum logu olmadığı için ağ yakalaması gerekiyor. XCP-ng tarafında `hvm_serial: file` parametreli VM'ler, `xensource.log` içinde seri bağlantı izleri ve `/etc/cron.d/zz-ustar2`, `/etc/cron.d/zz-ustar`, `/.ustar5`, `/.ustar6` dosyaları kontrol ediliyor. Satıcı ağ ve Tor üzerinden C2 adreslerini de blok etmeyi istiyor: sekiz IP ve `.onion` alan adı. Danışma bu IOC'lerin yalnızca tespit edilen kampanyayı kapsadığını, başka aktörlerin farklı altyapı kullanabileceğini ve IOC yokluğunun temiz olunduğunu kanıtlamadığını açıkça yazıyor.
+
+CISA KEV JSON kaydı açığı "improper validation of specified type of input" olarak adlandırıyor, 25 Kasım ekleme ve 28 Kasım son tarih veriyor, `forensicTriage: Yes` diyor. NVD SSVC alanları `exploitation: active`, `automatable: yes`, `technicalImpact: total`. KEV, bilinen istismar anlamına geliyor; satıcı IOC'leriyle birlikte okunmalı.
+
+## Ne yapmalı?
+
+1. **Sürümü netleştirin.** XO ve xo-server sürümlerini kanalıyla birlikte okuyun. 6.9.2 / 5.211.2 stable, 6.10.1 / 5.213.1 latest yamalı sürümler; 6.10.0 ve (GitHub CNA'ya göre) 5.213.0 etkileniyor; NVD CPE 5.213.0'ı hariç tutuyor.
+2. **Yamayı uygulayın.** XOA kullanıcıları XOA > Updates ekranından stable veya latest kanalına geçebilir. Kaynadan kurulumda en güncel `master` alınmalı; satıcı bunu öneriyor.
+3. **Yönetim arayüzünü dışarıdan çıkarın.** Vates, XO'yu internete açmamayı ve ayrı bir yönetim ağına koymayı öneriyor. Bu, yamanın yerine geçmez.
+4. **Bilinen C2 altyapısını bloklayın.** Danışmadaki sekiz IP için giriş ve çıkış filtresi ve Tor trafiğinin engellenmesi öneriliyor. Satıcı, devam eden kötü faaliyetin dışlanamayacağını belirtiyor.
+5. **IOC'lerle tarama yapın, sessizliğe güvenmeyin.** HTTP desenlerini ağ yakalamasında arayın, `pivot2` VM'lerini ve XCP-ng üzerindeki belirtilen dosyaları kontrol edin. IOC yokluğu tek başına temizlik kanıtı değil.
+6. **WAF kuralını dikkatli kullanın.** Vates iki çerez desenini eşleştirmeyi öneriyor ama regex'in başka biçimlerle atlatılabileceğini uyarıyor; kural tek başına çözüm değil.
+7. **Ele geçirme şüphesinde sırları döndürün ve yeniden kurun.** Satıcı tüm parola ve sırların döndürülmesini, kesinleşmiş olayda tam yeniden kurulumu öneriyor; temizlik tek başına tüm arka kapıları garanti etmiyor.
+
+## Ne yapmamalı?
+
+- "Satıcı 9.8 verdi" demeyin. Vates CVSS 4.0 skorunun olmadığını yazıyor; 9.8 GitHub CNA kaynağından NVD'ye geliyor.
+- "NVD kendi analiz skorunu yayınladı" demeyin. NVD kaydında analiz skoru yok, 9.8 secondary olarak işaretli.
+- "PoC yok" demeyin. GitHub CNA danışmasında bir Proof of concept bölümü var; NVD o danışmayı Exploit etiketiyle bağlıyor. Bu yazı payload'ı kopyalamıyor. KEV ve SSVC aktif istismar diyor.
+- "6.10.0 güvenli" demeyin. Etkilenen aralık 6.10.0'dan 6.10.1 öncesine kadar; yama 6.10.1'de.
+- "IOC yoksa sistem temiz" demeyin. Vates IOC'lerin yalnızca gözlenen kampanyayı kapsadığını ve yokluğunun yeterli olmadığını yazıyor.
+- "Her XO kurulumunda root alındı" demeyin. Satıcı root ele geçirmeyi olası bir etki olarak tarif ediyor, her kurulum için gerçekleştiğini söylemiyor.
+- "WAF kuralı açığı kapatır" demeyin. Satıcı regex'in atlatılabileceğini uyarıyor.
+- "Internet erişimi kapalıysa sürüm önemli değil" demeyin. Etkilenen sürüm etkilenen sürümdür; dışa kapalı olmak riski azaltır, açığı düzeltmez.
+
+## Durum
+
+26 Kasım 2026 itibarıyla tablo VSA-2026-062, NVD API kaydı, CISA KEV uyarısı ve KEV JSON akışından okundu. Vates danışması 10 Kasım 2026'da yayınlandı ve aynı gün güncellendi; durumu Released. NVD kaydı 23 Kasım'da yayınlandı, 26 Kasım'da değiştirildi ve durumu `Modified`. CISA 25 Kasım'da on yeni KEV kaydı arasında CVE-2026-133469'u da ekledi; katalog sürümü 2026.11.25.
+
+Belirsizlikler: satıcı CVSS 4.0 puanı henüz yok, bu yüzden 9.8 yalnızca CNA ölçümü. Yayınlanan IOC'ler tek bir kampanyaya ait; diğer aktörler farklı altyapı kullanabilir. Birincil kayıtlar kurban listesi veya adlandırılmış aktör atfı içermiyor; Vates yalnızca gözlenen C2 altyapısını veriyor. NVD, GitHub CNA danışmasını Exploit etiketiyle bağlıyor; bu yazı çalışan payload veya kurban uydurmuyor. Satıcı root etkisini açıkça yazdığı için bu iddia kaynakla sınırlı olarak yer alıyor, daha geniş bir iddiaya dönüştürülmüyor.
+
+## Bu seriden
+
+- [cPanel WP Toolkit proxy RCE](/blog/cpanel-wptk-proxy-rce)
+- [WP Rocket CVE-2026-125812](/blog/wp-rocket-cve-2026-125812)
+- [CISA BOD 26-04 ve SSVC](/blog/cisa-bod-26-04-ssvc)
+
+## Kaynaklar
+
+- [Vates - VSA-2026-062: Empty-object login token](https://docs.vates.tech/security-advisories/advisories/2026/vates-sa-2026-062/)
+- [NVD API - CVE-2026-133469](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-133469)
+- [CISA - 25 Kasım 2026 KEV uyarısı, 10 yeni kayıt](https://www.cisa.gov/news-events/alerts/2026/11/25/cisa-adds-10-known-exploited-vulnerabilities-catalog)
+- [CISA KEV JSON akışı](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
 
 ---
 
