@@ -13,6 +13,93 @@ Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her 
 
 ---
 
+# WP Rocket CVE-2026-125812: önbellek dosyası doğrulamasından RCE
+
+- Kaynak: https://fosstr.com/blog/wp-rocket-cve-2026-125812/
+- Tür: Yazı
+- Tarih: 2026-11-26
+- Etiketler: security, wordpress, wp-rocket, cve, rce, cwe-22, patchstack
+- Özet: WP Rocket 3.24.2 öncesi: NVD CWE-22 path traversal, Patchstack kimlik doğrulamasız RCE, CVSS 9.8, SSVC alanları ve yama adımları.
+
+26 Kasım 2026 itibarıyla WP Rocket'ın 3.24.2 öncesi sürümleri, NVD kaydında CWE-22 path traversal, Patchstack kaydında **kimlik doğrulamasız uzaktan kod çalıştırma (RCE)** olarak tanımlanıyor. Satıcı 19 Kasım'da yayınladığı 3.24.2 notunda güvenlik satırını "önbelleklenen CSS, font ve preconnect dosyalarının doğrulamasını iyileştirmek" olarak yazdı. Aşağıda yalnızca bu birincil kayıtlarda bulunan bilgiler var; istismar zinciri, payload, kurban veya IOC uydurulmadı.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-125812 |
+| Ürün | WP Media WP Rocket (`wp-rocket`) |
+| Etkilenen | 3.24.2 öncesi; NVD: `from n/a before 3.24.2` |
+| Yama | 3.24.2, 19 Kasım 2026 |
+| Zayıflık | CWE-22, restricted directory dışına path traversal |
+| Patchstack | High priority RCE; gerekli ayrıcalık: `Unauthenticated` |
+| CVSS | 9.8 CRITICAL, CVSS 3.1 secondary, kaynak `audit@patchstack.com` |
+| Vektör | `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` |
+| NVD durumu | `Deferred`; NVD analiz skoru yok, üstteki skor secondary |
+| SSVC | CISA Coordinator: `exploitation: none`, `automatable: yes`, `technicalImpact: total` |
+| KEV | 26 Kasım 2026 KEV JSON kontrolünde kayıt yok |
+| Keşif | Vorelito; 4 Kasım bildirim, 23 Kasım Patchstack yayını |
+| Satıcı notu | Önbelleklenen CSS, font ve preconnect dosyalarının doğrulaması iyileştirildi |
+
+![WP Rocket önbellek dosyası RCE şeması](/diagrams/wp-rocket-cve-2026-125812.svg)
+
+## Teknik görünüm
+
+NVD açıklaması şunu diyor: WP Media WP Rocket `wp-rocket` içinde "Improper Limitation of a Pathname to a Restricted Directory" yani CWE-22 açığı var ve bu açık path traversal'a yol açıyor. Etki aralığı `from n/a before 3.24.2` olarak verilmiş; pratikte 3.24.2 altındaki sürümleri kapsam dışı saymak için bir kanıt yok. CWE, Patchstack ve NVD için secondary olarak işaretlenmiş; NVD kaydının durumu `Deferred`, yani NVD'nin kendi analitik skoru bulunmuyor.
+
+Patchstack kaydı aynı açığı **Remote Code Execution** olarak sınıflandırıyor ve gerekli ayrıcalığı `Unauthenticated` olarak veriyor. CVSS vektöründeki `PR:N` ve `UI:N` alanları, saldırganın WP Admin hesabına veya kullanıcı etkileşimine ihtiyaç duymadığını gösteriyor. Patchstack 9.8 skorunu "high priority" olarak etiketliyor ve benzer açıkların toplu istismar kampanyalarında kullanılabileceğini yazıyor; bu bir risk değerlendirmesidir, sahada istismar görüldüğü anlamına gelmez.
+
+WP Media'nın GitHub üzerindeki 3.24.2 sürüm notu tek güvenlik maddesiyle geliyor: `Security: Improve validation of cached CSS, font and preconnect files`. Bu satır, yamalanan yüzeyin önbelleklenen varlık dosyalarının yol/doğrulama kontrolü olduğuna işaret ediyor. Ancak satıcı bir exploit zinciri, dosya adı, endpoint, payload veya IOC yayınlamadı; NVD ve Patchstack kayıtları da somut bir PoC içermiyor. Path traversal ile RCE sınıflandırmasını aynı kayıt kümesinden okumak mümkün, fakat "şu dosyaya şu payload yazılıyor" demek için kanıt yok.
+
+NVD'deki SSVC v2.0.3 alanları CISA Coordinator kaynağından geliyor: `exploitation: none`, `automatable: yes`, `technicalImpact: total`. Bu kombinasyon, bilinen bir istismar kanıtı olmadığını; buna karşın otomatikleştirilebilirlik ve teknik etkinin yüksek olduğunu söylüyor. CISA KEV JSON akışında 26 Kasım itibarıyla bu CVE bulunmuyor; dolayısıyla "KEV'de" veya "aktif istismar var" denmesi doğru değil.
+
+Ayrı bir WP Rocket kaydı olan CVE-2026-125806, 3.24.1 öncesi XSS açığını anlatıyor; Patchstack onu `Contributor` ayrıcalığı ve 6.5 skorla düşük öncelikli olarak işaretliyor. 3.24.2'ye yükseltmek o eski sürümü de geride bırakır, ancak bu iki CVE aynı açık değildir.
+
+## Ne yapmalı?
+
+1. **Sürümü doğrulayın.** WP Admin > Plugins ekranında WP Rocket sürümünü okuyun. 3.24.2 altındaysa yama uygulayın. "Otomatik güncelleme açıktı" varsayımı yeterli değil; WP Rocket otomatik güncellemeyi desteklemez ve bildirim gecikebilir.
+2. **Eklentiyi etkin tutarak güncelleyin.** WP Rocket Knowledge Base'e göre güncelleme sırasında eklenti aktif olmalı: Plugins ekranındaki update bildirimiyle `Update now` veya Dashboard > Updates > `Check Again` yolunu kullanın.
+3. **Bildirim gelmezse zorlayın.** Plugins sayfasının URL'sine `?rocket_force_update=1` ekleyin; örnek: `https://example.com/wp-admin/plugins.php?rocket_force_update=1`. WP Rocket lisansının geçerli olduğundan ve sunucunun WP Rocket güncelleme servisine ulaşabildiğinden emin olun.
+4. **Manuel yöntemi hazırlıklı kullanın.** WP Rocket Tools sekmesinden ayarları dışa aktarın, hesabınızdan 3.24.2 paketini indirin, eski eklentiyi deactivate/delete edin, yeni ZIP'i yükleyip etkinleştirin ve ayarları geri içe aktarın. Multisite'ta güncelleme Network Admin tarafından yapılır; `https://example.com/wp-admin/network/plugins.php?rocket_force_update=1` bildirimi tetikleyebilir.
+5. **Yama gecikecekse riski azaltın.** Patchstack müşterileri için bir mitigation kuralı yayınlandı. Genel geçici önlem olarak WP Rocket'ı devre dışı bırakın ve önbelleği temizleyin; bu performansı etkiler ve yamanın yerine geçmez. Yalnızca wp-admin erişimini kısıtlamak yeterli değil, çünkü kayıt `Unauthenticated` diyor.
+6. **Güncelleme sonrası kontrol edin.** Sürümün 3.24.2 veya üzeri olduğunu doğrulayın, önbelleği temizleyin ve yamadan önceki dönem için olağandışı HTTP istekleri, yeni PHP dosyaları, cron girdileri ve yeni yönetici hesapları açısından logları tarayın. Şüphe varsa olay müdahalesi başlatın.
+
+## Ne yapmamalı?
+
+- "WP Rocket aktif olarak istismar ediliyor" demeyin. SSVC `exploitation: none` diyor ve CVE KEV'de yok.
+- "NVD 9.8 skoru onayladı" demeyin. 9.8, NVD kaydında `Secondary` olarak Patchstack kaynaklı; NVD durumu `Deferred`.
+- "Patchstack toplu kampanya gördü" demeyin. Patchstack yalnızca benzer açıkların bu tür kampanyalarda kullanılabileceğini değerlendiriyor.
+- "Admin girişini kapattım, güvendeyim" demeyin. Gerekli ayrıcalık `Unauthenticated`.
+- "3.24.1 güvenli" demeyin. RCE yaması 3.24.2'de; 3.24.1 yalnızca önceki XSS kaydında patched olarak geçiyor.
+- "Satıcı PoC veya IOC yayınladı" demeyin. Satır satıcı notunda yok; kayıtlarda da yok.
+- "RCE ve XSS aynı açık" demeyin. CVE-2026-125812 ve CVE-2026-125806 ayrı kayıtlar.
+- "`rocket_force_update=1` açığı kapatır" demeyin. Bu parametre yalnızca güncelleme bildirimini tetiklemeye yardımcı olur.
+
+## Durum
+
+26 Kasım 2026 itibarıyla CVE-2026-125812, Patchstack danışma notu, NVD API kaydı ve WP Media sürüm notuyla doğrulanmış bir açık. Patchstack 23 Kasım'da yayın yaptı, Vorelito'yu kredi olarak verdi ve rapor tarihini 4 Kasım olarak gösterdi. NVD kaydı 25 Kasım'da oluşturuldu, `Deferred` durumunda ve CWE-22 ile 9.8'lik secondary CVSS 3.1 metriğini taşıyor. WP Media 3.24.2'yi 19 Kasım 14:52 UTC'de yayınladı; güvenlik satırı önbelleklenen CSS, font ve preconnect dosyalarının doğrulamasını iyileştirmeyi anlatıyor.
+
+Belirsizlikler net: ne satıcı ne de CVE kayıtları bir PoC, kurban listesi, kampanya adı, port veya IOC içeriyor. CISA KEV JSON akışında kayıt yok; SSVC alanları istismar kanıtı olmadığını, otomatikleştirilebilirliğin mümkün olduğunu ve teknik etkinin toplam olduğunu söylüyor. CVE.org kayıt sayfası JavaScript gerektirdiği için kanıt olarak kullanılmadı; teknik alanlar NVD API ve Patchstack kaydından okundu. Bu yazı "sahada istismar var" iddiasını taşımıyor.
+
+## Bu seriden
+
+- [cPanel WP Toolkit proxy RCE](/blog/cpanel-wptk-proxy-rce)
+- [Drupal Core CVE-2026-132165](/blog/drupal-installer-cve-2026-132165)
+- [CISA BOD 26-04 ve SSVC](/blog/cisa-bod-26-04-ssvc)
+
+## Kaynaklar
+
+- [Patchstack - WordPress WP Rocket Plugin < 3.24.2 Remote Code Execution (RCE)](https://patchstack.com/database/wordpress/plugin/wp-rocket/vulnerability/wordpress-wp-rocket-plugin-3-24-2-remote-code-execution-rce-vulnerability)
+- [NVD API - CVE-2026-125812](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-125812)
+- [WP Rocket 3.24.2 sürüm notu](https://github.com/wp-media/wp-rocket/releases/tag/v3.24.2)
+- [WP Rocket - Updating WP Rocket](https://docs.wp-rocket.me/article/14-updating-wp-rocket)
+- [WP Rocket - Missing update notification in dashboard](https://docs.wp-rocket.me/article/124-missing-update-notification-in-dashboard)
+- [WP Rocket - How to use WP Rocket in a multisite environment](https://docs.wp-rocket.me/article/874-how-to-use-wp-rocket-in-a-multisite-environment)
+- [Patchstack - WordPress WP Rocket Plugin < 3.24.1 Cross Site Scripting (XSS)](https://patchstack.com/database/wordpress/plugin/wp-rocket/vulnerability/wordpress-wp-rocket-plugin-3-24-1-cross-site-scripting-xss-vulnerability)
+- [CISA KEV JSON feed'i](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+
+---
+
 # AutoGPT CVE-2026-133462: paylasilan ajan MCP kimlik bilgilerinizi kullanabilir
 
 - Kaynak: https://fosstr.com/blog/autogpt-mcp-cve-2026-133462/
