@@ -13,6 +13,261 @@ Bu dosya sitedeki tüm yazıların ve proje tanıtımlarının tam metnini, her 
 
 ---
 
+# Budibase CVE-2026-137498: __proto__ ile MongoDB filtresi silme
+
+- Kaynak: https://fosstr.com/blog/budibase-proto-pollution-cve-2026-137498/
+- Tür: Yazı
+- Tarih: 2026-11-27
+- Etiketler: security, budibase, mongodb, prototype-pollution, cve, cwe-943
+- Özet: Budibase Server 4.0.0 öncesi: PUBLIC sorgularda dinamik __proto__ anahtarı, boş MongoDB filtresi, GHSA PoC koşulları ve NVD kaydı.
+
+27 Kasım 2026 itibarıyla Budibase Server'da PUBLIC yetkisine açılmış MongoDB sorguları, dinamik JSON anahtarı olarak `__proto__` verildiğinde filtreyi `{}` biçimine indirgeyebiliyor. Bu, sorgunun seçtiği collection içindeki tüm belgeleri okumak, değiştirmek veya silmek anlamına geliyor. Aşağıda Budibase güvenlik duyurusu, NVD API kaydı, yerel PoC'nin kapsamı ve KEV JSON kontrolü var; üretim sistemlerinde istismar görüldüğü iddiası yok.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-137498 |
+| Ürün | Budibase Server (`@budibase/server`) |
+| Etkilenen | 3.39.18 ile 3.44.0 arası doğrulandı; NVD: 3.39.18'den 4.0.0 öncesi |
+| Düzelten | 4.0.0 |
+| Zayıflık | CWE-943; duyuruda ayrıca CWE-1321 prototype pollution |
+| Önkoşul | MongoDB datasource, PUBLIC sorgu, dinamik JSON anahtarı |
+| Etki | Filtre `{}` olur; find, updateMany, deleteMany tüm belgelere uygulanır |
+| CVSS 4.0 | 9.9 CRITICAL, VulnCheck ikincil kaynağı |
+| CVSS 3.1 | 10.0 CRITICAL, VulnCheck ikincil kaynağı; duyuruda 9.8 ve 10.0 tartışması |
+| NVD durumu | `Received`; NVD analiz skoru veya SSVC alanı yok |
+| GHSA | GHSA-x4w8-596q-fmh7, 10 Kasım 2026, Critical |
+| KEV | 2026.11.25 KEV JSON içinde kayıt yok |
+| Bulan | GabrielGomesAL |
+
+![Budibase __proto__ MongoDB filtresi şeması](/diagrams/budibase-proto-pollution-cve-2026-137498.svg)
+
+## Teknik görünüm
+
+Budibase duyurusu, PUBLIC bir MongoDB sorgusuna erişen kimlik doğrulanmamış çağrının `__proto__` değerini desteklenen dinamik JSON anahtarı olarak verebildiğini anlatıyor. Şablon işlemenin ilk turu `Object.fromEntries` ile gerçek bir own property oluşturuyor. İkinci turda `packages/server/src/sdk/workspace/queries/queries.ts` içinde `const enrichedQuery = {}` oluşturuluyor ve `enrichedQuery[enrichedKey] = ...` ataması yapılıyor. Anahtar `__proto__` olduğunda bu atama kalıtsal setter'ı tetikliyor, yeni bir own property oluşmuyor ve dönen filtre `{}` kalıyor. Filtre MongoDB adaptörüne değişmeden geçiyor: `find({})` tüm belgeleri döndürüyor, `updateMany({}, update)` tüm belgeleri güncelliyor, `deleteMany({})` tüm belgeleri siliyor.
+
+PUBLIC yetki kontrolü `packages/server/src/middleware/authorized.ts` içinde oturum ve CSRF kontrollerinden önce `next()` döndürüyor; bu yüzden oturum veya CSRF token gerekmiyor. Duyuru önkoşulları açıkça sayıyor: builder bir MongoDB datasource yapılandırmalı; sorgu yayınlanmış bir uygulamada PUBLIC execution permission ile açılmalı; sorgu `{"{{ key }}":"fixed"}` gibi bir istek parametresini JSON anahtarı olarak kullanmalı; çağrı yapan yayınlanmış uygulama ve sorgu kimliklerini bilmeli; recaptcha kapalı olmalı veya çağrı recaptcha'yı geçmeli. Etki alanı, builder'ın seçtiği collection; keyfi collection seçimi iddia edilmiyor.
+
+Duyuru, kendi yerel örneğinde canary belgelerle bir PoC gösteriyor: `POST /api/v2/queries/<READ_QUERY_ID>` isteği, `x-budibase-app-id` başlığı ve `{"parameters":{"key":"__proto__"}}` gövdesiyle tüm belgeleri döndürüyor. Ayrıca ağ kullanmayan bir Node.js semantic harness sonucunu paylaşıyor. Bu testler self-hosted geçici örnek ve bellek içi sahte collection ile sınırlı; Budibase Cloud veya üretim sistemleri üzerinde test yapılmadığı duyuruda açıkça yazıyor. Bu yüzden "sahada istismar edildi" denmesi kaynaklara dayanmıyor.
+
+Açık, PR #18987 / merge `ee39be0` ile, CVE-2026-54350 düzeltmesinin ardından 3.39.18'de girdi. Önceki CVE parametre **değerlerindeki** quote-breaking injection'ı kapsıyordu ve 3.39.12'ye kadar etkiliydi; bu kayıt parametre **anahtarlarındaki** dinamik `__proto__` kullanımıyla ilgili. Duyuru current master'ın `a7575af5047529258af7ca6c008194100b087ddd` commit'inde de etkilendiğini belirtiyor. Düzeltme sürümü 4.0.0.
+
+NVD kaydı 26 Kasım 2026 16:18 UTC'de oluşturuldu ve `Received` durumunda. 9.9'luk CVSS 4.0 ve 10.0'lık CVSS 3.1 ölçümleri `disclosure@vulncheck.com` ikincil kaynağından geliyor; duyuru metni aynı etki için `S:U` ile 9.8 ve `S:C` ile 10.0 vektörlerini tartışıyor ve nihai skoru Budibase/CNA'ya bırakıyor. GHSA yayınlandığında "No known CVE" diyordu; CVE kimliği NVD kaydıyla sonradan eşleşti. NVD analiz skoru ve SSVC alanı bulunmuyor.
+
+CISA KEV JSON'un 2026.11.25 sürümünde bu CVE bulunmuyor. Kayıtlarda kurban listesi, aktör adı, kampanya veya IOC yok; duyurudaki PoC yalnızca yetkili yerel test ortamı için geçerli.
+
+## Ne yapmalı?
+
+1. **Sürümü yükseltin.** `@budibase/server` 4.0.0 veya üzerine geçin; duyuru 3.39.18 ile 3.44.0 aralığını ve master'ı doğruladı.
+2. **PUBLIC sorguları envanterleyin.** MongoDB datasource kullanan ve execution permission'ı PUBLIC olan sorguları bulun; özellikle JSON anahtarı olarak istek parametresi alanları inceleyin.
+3. **Dinamik anahtarları sınırlayın.** Sorgu şablonlarında kullanıcı kontrolündeki bir değeri JSON anahtarı olarak kullanmaktan kaçının; anahtarları sabit bir allowlist ile sınırlayın.
+4. **Filtreyi son aşamada doğrulayın.** Şablon işlemesinden sonra filtrenin boş olmadığını ve beklenen alanları içerdiğini kontrol edin. Bu, duyuruda önerilen remediation maddelerinden biridir.
+5. **Recaptcha'yı kapatmayın.** PUBLIC sorgular için recaptcha etkinse ve çağrı doğrulanmıyorsa koşullardan biri karşılanmamış olur; yine de tek başına güvenlik sınırı saymayın.
+6. **Veri değişikliklerini tarayın.** Yama öncesi dönemde toplu update veya delete işlemlerini ve beklenmeyen PUBLIC sorgu çağrılarını loglarda arayın. Bu, kaynaklardan gelen bir IOC değil, yerel kontrol önerisidir.
+
+## Ne yapmamalı?
+
+- "Budibase aktif olarak istismar ediliyor" demeyin. KEV kaydı yok ve duyuruda üretim sistemi testi yok.
+- "NVD 10.0 skoru onayladı" demeyin. Skor VulnCheck kaynaklı, NVD durumu `Received`.
+- "Her Budibase kurulumu etkili" demeyin. MongoDB datasource, PUBLIC sorgu ve dinamik anahtar koşulları gerekli.
+- "Keyfi collection seçilebiliyor" demeyin. Duyuru etki alanını builder'ın seçtiği collection olarak sınırlıyor.
+- "PoC üretimde çalıştırıldı" demeyin. PoC self-hosted geçici örnek ve bellek içi harness ile sınırlı.
+- "CVE-2026-54350 ile aynı açık" demeyin. Biri değer injection, diğeri anahtar kaynaklı prototype pollution ve sürüm aralıkları farklı.
+- "Nihai CVSS 10.0 kesinleşti" demeyin. Duyuru nihai skoru CNA'ya bırakıyor; NVD analizi yok.
+- "Açık her MongoDB sorgusunu etkiler" demeyin. Koşul, PUBLIC yetki ve JSON anahtarı olarak parametre kullanımı.
+
+## Durum
+
+27 Kasım 2026 itibarıyla CVE-2026-137498, Budibase güvenlik duyurusu GHSA-x4w8-596q-fmh7 ve NVD API kaydıyla doğrulanmış bir açık. GHSA 10 Kasım'da yayınlandı ve GabrielGomesAL'i kredi olarak veriyor; NVD kaydı 26 Kasım 16:18 UTC'de oluşturuldu ve `Received` durumunda. Önkoşullar, kaynak-sink yolu, yerel PoC kapsamı ve önerilen remediation maddeleri doğrudan GHSA metninden okundu. CVSS ölçümleri VulnCheck ikincil kaynağından; NVD analiz skoru veya SSVC alanı bulunmuyor.
+
+Belirsizlikler net: duyuru yayın anında CVE bilmiyordu; nihai skor CNA'ya bırakıldı; PoC yalnızca yerel test ortamıyla sınırlı; kurban, aktör, IOC, kampanya veya port bilgisi yok; CISA KEV JSON'un 2026.11.25 sürümünde kayıt bulunmuyor. Bu yazı "veritabanı tamamen ele geçirildi" gibi abartılı bir sonuç çıkarmıyor ve etkiyi duyurudaki koşullarla sınırlı tutuyor.
+
+## Bu seriden
+
+- [WP Rocket CVE-2026-125812](/blog/wp-rocket-cve-2026-125812)
+- [Drupal Core CVE-2026-132165](/blog/drupal-installer-cve-2026-132165)
+- [GitHub Security Advisory izinleri](/blog/github-security-advisory-permissions)
+
+## Kaynaklar
+
+- [Budibase - GHSA-x4w8-596q-fmh7, MongoDB filter erasure via __proto__](https://github.com/Budibase/budibase/security/advisories/GHSA-x4w8-596q-fmh7)
+- [NVD API - CVE-2026-137498](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-137498)
+- [Budibase - PR #18987, dynamic JSON keys](https://github.com/Budibase/budibase/pull/18987)
+- [Budibase - GHSA-8qv3-p479-cj62, CVE-2026-54350](https://github.com/advisories/GHSA-8qv3-p479-cj62)
+- [VulnCheck - Budibase MongoDB filter erasure analizi, ikincil kaynak](https://www.vulncheck.com/advisories/budibase-server-3.39.18-before-4.0.0-mongodb-filter-erasure-via-proto-keys)
+- [CISA KEV JSON feed'i](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+
+---
+
+# LXD CVE-2026-135384: OIDC token bağlama eksikliği
+
+- Kaynak: https://fosstr.com/blog/lxd-oidc-cve-2026-135384/
+- Tür: Yazı
+- Tarih: 2026-11-27
+- Etiketler: security, lxd, oidc, authentication, cve, cwe-287
+- Özet: Canonical LXD 5.0.12 / 5.21.10 / 6.10.2 öncesi: OIDC bearer token bağlama, audience ve claim karmaşası, GHSA ve NVD kayıtları.
+
+27 Kasım 2026 itibarıyla Canonical LXD, OIDC kimlik doğrulaması etkin kurulumlarda bearer token'ı yalnızca issuer, imza ve süre açısından kontrol ediyor. `oidc.audience` ayarlanmadıysa token bu LXD sunucusuna bağlı değil: aynı sağlayıcının başka bir uygulamaya verdiği token, kullanıcı adı taşımayan token veya access token yerine gönderilen ID token kabul edilebiliyor. Aşağıda Canonical duyurusu, NVD API kaydı, düzeltme sürümleri ve KEV JSON kontrolü var; kurban, kampanya veya saha istismarı iddiası yok.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-135384 |
+| Ürün | Canonical LXD |
+| Etkilenen | LXD >= 5.0; NVD: 5.0.12, 5.21.10, 6.10.2 oncesi |
+| Düzelten | 5.0.12, 5.21.10, 6.10.2 |
+| Zayıflık | CWE-287, improper authentication |
+| Koşul | OIDC authentication yapılandırılmış olmalı |
+| Etki | Yetkisiz LXD API erişimi, kullanıcı taklidi, subnet kısıtının asılması |
+| CVSS 4.0 | 9.2 CRITICAL, `security@ubuntu.com` CNA kaynağı |
+| CVSS 3.1 | 8.1 HIGH, GHSA metnindeki reporter skoru |
+| NVD durumu | `Deferred`; NVD analiz skoru veya SSVC alanı yok |
+| GHSA | GHSA-v3m9-p36m-qjqc, 26 Kasım 2026 |
+| KEV | 2026.11.25 KEV JSON içinde kayıt yok |
+| Kaynak notu | Duyuru, Incus duyurusundan kopyalanmış |
+
+![LXD OIDC token baglama şeması](/diagrams/lxd-oidc-cve-2026-135384.svg)
+
+## Teknik görünüm
+
+Canonical'in GHSA-v3m9-p36m-qjqc duyurusu, OIDC yapılandırıldığında bearer token'ın veya web UI çerezinin issuer, imza ve süre kontrollerinden sonra kabul edildiğini yazıyor. `oidc.audience` ayarlanmadığı sürece token'ı bu sunucuya bağlayan bir alan yok. Bunun üç sonucu var: aynı identity provider'ın başka bir uygulamaya verdiği token kabul ediliyor; hiçbir kullanıcıyı adlandırmayan imzalı token boş kullanıcı adıyla oturum açıyor; ID token, access token yerine sunulabiliyor. Sonuncusu, access token için düşünülmüş `incus.allowed_subnets` claim'i ve daha kısa ömür kontrolünü atlamayı mümkün kılıyor.
+
+Dördüncü bir nokta kullanıcı adı eşlemesinde. `oidc.claim` ayarlanmadığında kullanıcı adı token'ın `email` claim'inden alınıyor ve sağlayıcı adresi doğrulanmamış olarak işaretlese bile bu claim kullanılıyor. Duyuruya göre varsayılan yapılandırmada OIDC istemcileri OpenFGA veya authorization scriptlet'e gönderilmiyor; dolayısıyla kimlik doğrulaması geçen her OIDC istemcisi LXD sunucusu üzerinde tam kontrole sahip. OpenFGA veya scriptlet kullanan ve kullanıcıyı e-posta adresiyle tanımlayan sunucularda, sağlayıcıdaki kendi hesabına doğrulanmamış e-posta adresi yazabilen bir kullanıcı o adresin sahibi olarak yetkilendirilebiliyor. `incus.allowed_subnets` ile ağ kısıtlanmış bir kullanıcı da API'ye her ağdan erişebiliyor.
+
+Duyuru aynı metni Incus tarafında tanımlıyor ve Canonical LXD duyurusunun Incus duyurusundan kopyalandığını açıkça belirtiyor. Bu, iki ürünün aynı sürüm numaralarını paylaştığı anlamına gelmez; LXD için düzeltme sürümleri 5.0.12, 5.21.10 ve 6.10.2'dir. NVD kaydı 27 Kasım 2026 00:16 UTC'de oluşturuldu ve `Deferred` durumunda. 9.2'lik CVSS 4.0 ölçümü `security@ubuntu.com` kaynaklı, yani Ubuntu/Canonical CNA'sından geliyor; GHSA sayfasındaki 8.1'lik CVSS 3.1 skoru reporter ölçümü. NVD'nin kendi analiz skoru ve SSVC alanları yok.
+
+Satıcının yayınladığı geçici önlemler net: `oidc.audience` değerini, sağlayıcının yalnızca LXD için ürettiği access token'lara koyacağı bir değere ayarlayın; bu, diğer uygulamalara verilen token'ları ve access token yerine gönderilen ID token'ları reddeder. `oidc.claim` değerini kullanıcının kendisi değiştiremeyeceği bir claim'e, örneğin `sub` yapın veya sağlayıcıyı yalnızca doğrulanmış e-posta adreslerini açıklayacak şekilde yapılandırın. Bu önlemler yamanın yerine geçmez.
+
+CISA KEV JSON'un 2026.11.25 sürümünde bu CVE bulunmuyor. Kayıtlarda PoC, kurban listesi, aktör adı, IOC veya LXD API portu bilgisi yok; "aktif istismar" veya "zero-click" iddiası kaynaklara dayanmıyor.
+
+## Ne yapmalı?
+
+1. **OIDC kullanılıp kullanılmadığını doğrulayın.** Yerel kimlik doğrulama kullanan LXD kurulumları bu kaydın tanımladığı koşulun dışında kalır.
+2. **Düzeltme sürümlerine geçin.** 5.0 hattı için 5.0.12, 5.21 hattı için 5.21.10, 6.10 hattı için 6.10.2 hedefleyin; kaydın kapsamı `>= 5.0`.
+3. **Audience ayarlayın.** `oidc.audience` değerini yalnızca bu LXD kurulumu için üretilen access token'larda görünen bir değer yapın; yama gecikirse satıcının geçici önlemi olarak uygulayın.
+4. **Claim seçimini gözden geçirin.** `oidc.claim` için `sub` gibi kullanıcı tarafından değiştirilemeyen bir alan seçin veya sağlayıcıda yalnızca doğrulanmış e-postaların salındığından emin olun.
+5. **Yetkilendirme katmanını kontrol edin.** OpenFGA veya scriptlet kullanıyorsanız kullanıcı kimliğinin e-posta yerine doğrulanabilir bir claim'e dayandığını doğrulayın; ağ kısıtlarını token claim'iyle tek başına güvenmeyin.
+6. **Oturumları inceleyin.** OIDC ile açılmış beklenmedik oturumları ve yeni yönetilen sanal makineleri loglarda arayın. Bu, kaynaklardan gelen bir IOC değil, yerel kontrol önerisidir.
+
+## Ne yapmamalı?
+
+- "LXD kırıldı, her API açık" demeyin. Koşul OIDC yapılandırması ve token altyapısı; yerel auth kullanan kurulumlar kapsam dışı.
+- "NVD 9.2 verdi" demeyin. Skor `security@ubuntu.com` CNA kaynaklı; NVD durumu `Deferred`.
+- "KEV'de, aktif istismar var" demeyin. 2026.11.25 KEV JSON'da kayıt yok, saha kanıtı yok.
+- "Incus ve LXD aynı ürün, aynı yama" demeyin. LXD duyurusu Incus metninden kopyalandı; düzeltme sürümleri LXD için ayrı.
+- "E-posta doğrulaması her zaman devre dışı" demeyin. Etki, `oidc.claim` ayarlanmadığında doğrulanmamış e-posta claim'i kullanılmasıyla sınırlı.
+- "Audience ayarı kalıcı çözüm" demeyin. Satıcı bunu workaround olarak yazıyor; kalıcı çözüm düzeltme sürümü.
+- "PoC veya kurban var" demeyin. Birincil kayıtlar böyle bir bilgi içermiyor.
+
+## Durum
+
+27 Kasım 2026 itibarıyla CVE-2026-135384, Canonical LXD güvenlik duyurusu GHSA-v3m9-p36m-qjqc ve NVD API kaydıyla doğrulanmış bir açık. GHSA 26 Kasım'da yayınlandı ve Incus duyurusundan kopyalandığını belirtiyor; NVD kaydı 27 Kasım 00:16 UTC'de oluşturuldu ve `Deferred` durumunda. Etkilenen ve düzeltilen sürümler, geçici önlemler ve etki açıklaması doğrudan GHSA metninden okundu. CVSS 4.0 skoru Ubuntu/Canonical CNA kaynaklı, CVSS 3.1 skoru GHSA'daki reporter ölçümü; NVD analiz skoru veya SSVC alanı bulunmuyor.
+
+Belirsizlikler net: kayıtlar PoC, kurban, aktör, IOC veya LXD API portu belirtmiyor; OIDC dışı kurulumların etkilenip etkilenmediğine dair bir veri yok; `Deferred` durumu NVD analizinin tamamlanmadığını gösteriyor. CISA KEV JSON'un 2026.11.25 sürümünde kayıt yok. Bu yazı "E2EE kırıldı", "zero-click" veya "ransomware doğrulandı" türü abartılı iddialar taşımıyor.
+
+## Bu seriden
+
+- [OpenShell CNCF ajan güvenliği](/blog/openshell-cncf-ajan-guvenligi)
+- [ManageEngine DDI Central CVE'leri](/blog/manageengine-ddi-central-cves)
+- [GitHub Security Advisory izinleri](/blog/github-security-advisory-permissions)
+
+## Kaynaklar
+
+- [Canonical LXD - GHSA-v3m9-p36m-qjqc, OIDC token binding](https://github.com/canonical/lxd/security/advisories/GHSA-v3m9-p36m-qjqc)
+- [Incus - GHSA-cp5w-98j2-x2hv, kaynak duyuru](https://github.com/lxc/incus/security/advisories/GHSA-cp5w-98j2-x2hv)
+- [NVD API - CVE-2026-135384](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-135384)
+- [CISA KEV JSON feed'i](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+
+---
+
+# Traefik CVE-2026-137481: sanitizePath ile yetki atlatma
+
+- Kaynak: https://fosstr.com/blog/traefik-sanitizepath-cve-2026-137481/
+- Tür: Yazı
+- Tarih: 2026-11-27
+- Etiketler: security, traefik, reverse-proxy, cve, cwe-22, authorization-bypass
+- Özet: Traefik 2.11.62 ve 3.7.18 öncesi: path parametreli nokta segmentleri, middleware atlatma, GHSA ve NVD kayıtları, düzeltme sürümleri.
+
+27 Kasım 2026 itibarıyla Traefik'in istek yolu temizleme seçeneği `sanitizePath`, `/..;x/` gibi path parametresi taşıyan nokta segmentlerini çözmüyor. Traefik router eşleşmesini ve middleware uygulamasını bu çözülmemiş yol üzerinde yapıyor, yolu değiştirmeden backend'e iletiyor. Parametreleri saran bir backend aynı host altında açık ve korumalı route'ları paylaşıyorsa, tek bir istek kimlik doğrulama veya yetkilendirme middleware'ini atlayabiliyor. Aşağıda Traefik güvenlik duyurusu, NVD API kaydı, yama sürümleri ve KEV JSON kontrolü var; sahada istismar, kurban veya kampanya iddiası yok.
+
+## Kısa özet
+
+| Alan | Değer |
+|---|---|
+| CVE | CVE-2026-137481 |
+| Ürün | Traefik proxy (`github.com/traefik/traefik`) |
+| Etkilenen | v2 <= 2.11.61; v3 >= 3.0.0 <= 3.7.17; v3.8.0-rc.1 |
+| Düzelten | v2.11.62, v3.7.18, v3.8.0-rc.2 |
+| Zayıflık | CWE-22; duyuruda ayrıca CWE-436 interpretation conflict |
+| Etki | Path tabanlı kimlik doğrulama veya yetkilendirme atlatma |
+| Koşul | `sanitizePath` açık (varsayılan) ve path parametresi saran backend |
+| CVSS 4.0 | 7.8 HIGH, GHSA kaynağı, `SC:H/SI:L` |
+| CVSS 3.1 | 9.3 CRITICAL, VulnCheck ikincil kaynağı |
+| NVD durumu | `Awaiting Analysis`; NVD analiz skoru veya SSVC alanı yok |
+| GHSA | GHSA-cp28-5662-543f, 12 Kasım 2026, High |
+| KEV | 2026.11.25 KEV JSON içinde kayıt yok |
+| Bulan | TristanInSec |
+
+![Traefik sanitizePath yetki atlatma şeması](/diagrams/traefik-sanitizepath-cve-2026-137481.svg)
+
+## Teknik görünüm
+
+Traefik duyurusu, varsayılan olarak açık olan `sanitizePath` seçeneğinin `..` ve `.` nokta segmentlerini ve yinelenen eğik çizgileri çözdüğünü, ancak `/..;x/` biçiminde path parametresi taşıyan nokta segmentlerini olduğu gibi bıraktığını yazıyor. Router eşleşmesi ve middleware zinciri bu çözülmemiş yola göre hesaplanıyor; istek aynı biçimde backend'e geçiyor. Servlet konteynerleri ve Spring gibi path parametrelerini ayıran backend'ler `/public/..;x/admin` yolunu `/admin` olarak yorumluyor. Eğer `/public` için açık bir router ile `/admin` için korumalı bir router aynı backend'i paylaşıyorsa, saldırgan tek istekle korumalı middleware'i atlayabiliyor.
+
+Duyuru örnek istek biçimi olarak `/public/..;x/admin` veriyor; bu, kaynakta geçen bir istek şeklidir ve herhangi bir dağıtımda çalıştığı doğrulanmış bir exploit anlamına gelmez. Saldırı yüzeyi HTTP istek yoludur; kayıtlar belirli bir port, protokol veya ağ konumu belirtmiyor. Koşullardan biri de backend'in path parametresini sarması ve açık ile kapalı route'ların aynı servisi paylaşması. Bu koşullar olmadan açığın tek başına sonuç verdiğine dair bir kanıt yok.
+
+Yama sürümleri v2.11.62, v3.7.18 ve v3.8.0-rc.2. Bu sürümler `sanitizePath` açıkken nokta ve boş segmentleri, path parametresi taşısalar bile, nokta segmenti kaldırmadan önce çözüyor. Traefik v3.0 ile v3.6 hattı artık desteklenmiyor ve yama almayacak; duyuru bu dallar için çözümü yamalı bir sürüme geçmek olarak yazıyor.
+
+NVD kaydı 26 Kasım 2026 16:17 UTC'de oluşturuldu ve `Awaiting Analysis` durumunda. CWE-22 ve 9.3'lük CVSS 3.1 ölçümü `disclosure@vulncheck.com` kaynaklı; 7.8'lik CVSS 4.0 ölçümü de yine ikincil kaynaktan geliyor ve GHSA sayfasında yer alıyor. NVD'nin kendi analiz skoru yok, dolayısıyla "NVD 9.3 verdi" denmesi doğru değil. GHSA ayrıca CWE-436 interpretation conflict kategorisini de listeliyor; NVD kaydı yalnızca CWE-22 taşıyor. GitHub duyurusu yayınlandığında "No known CVE" diyordu; CVE kimliği NVD kaydıyla sonradan eşleşti. İki kaydın farklı tarihleri bu yüzden bir çelişki değil.
+
+CISA KEV JSON'un 2026.11.25 sürümünde CVE-2026-137481 bulunmuyor. Kayıtlarda kurban listesi, aktör adı, IOC veya kampanya bilgisi yok; bu yazı "aktif istismar var" iddiasını taşımıyor.
+
+## Ne yapmalı?
+
+1. **Sürümü sayın.** Traefik dağıtımlarınızı envanterleyin. v2 için 2.11.62, v3 için 3.7.18, release candidate kullananlar için 3.8.0-rc.2 hedefleyin.
+2. **EOL dalları geride bırakın.** v3.0 ile v3.6 yama almayacak. Bu dallarda kalmak, duyuruda tanımlı çözümün dışında kalır.
+3. **Router eşleşmesini gözden geçirin.** Açık bir route ile korumalı bir route'un aynı backend'i paylaştığı, middleware'in yalnızca yola göre uygulandığı konfigürasyonları bulun. Path parametresi saran backend'lerde bu eşleşme riskli.
+4. **Yolu katmanlar arasında tutarlı hale getirin.** Backend'in path parametresi sarması bekleniyorsa, korumalı kaynaklara giden yolların bu parametrelerle erişilemediğini doğrulayın; normalizasyonu tek katmanda yapın.
+5. **Logları tarayın.** Erişim loglarınızda `/..;x/` biçiminde istekler arayın. Bu, kaynaklardan gelen bir IOC değil, bu yazının önerdiği yerel arama desendir.
+6. **Yamadan sonra doğrulayın.** Yükseltme sonrası aynı istek biçiminin korumalı kaynağa ulaşmadığını kendi test ortamınızda kontrol edin.
+
+## Ne yapmamalı?
+
+- "Aktif istismar görüldü" demeyin. KEV kaydı yok ve birincil kaynaklarda saha kanıtı yok.
+- "NVD 9.3 skoru onayladı" demeyin. Skor VulnCheck kaynaklı, NVD durumu `Awaiting Analysis`.
+- "Traefik'te RCE var" demeyin. Duyuru yetkilendirme atlatmasını anlatıyor, kod çalıştırma iddiası içermiyor.
+- "Tüm Traefik sürümleri etkili" demeyin. Etki aralığı ve backend koşulu duyuruda açıkça sınırlı.
+- "sanitizePath kapatmak çözüm" demeyin. Duyuru böyle bir workaround listelemiyor.
+- "GHSA zaten CVE vermişti" demeyin. Duyuru yayınlandığında CVE bilinmiyordu; eşleşme NVD kaydıyla oluştu.
+- "Her backend etkilenir" demeyin. Koşul, path parametresi saran bir backend'in açık ve korumalı route'ları paylaşması.
+- "Bir exploit kiti yayıldı" demeyin. Kaynaklarda yalnızca istek biçimi var.
+
+## Durum
+
+27 Kasım 2026 itibarıyla CVE-2026-137481, Traefik güvenlik duyurusu GHSA-cp28-5662-543f ve NVD API kaydıyla doğrulanmış bir açık. Duyuru 12 Kasım'da yayınlandı ve TristanInSec'i kredi olarak veriyor; NVD kaydı 26 Kasım 16:17 UTC'de oluşturuldu ve `Awaiting Analysis` durumunda. Düzeltilen sürümler ve etkilenen aralıklar doğrudan GHSA'nın affected versions bölümünden okundu. CVSS 4.0 ve 3.1 ölçümleri VulnCheck/GHSA kaynaklı; NVD analiz skoru ve SSVC alanları bulunmuyor.
+
+Belirsizlikler net: NVD analizi bekliyor, GHSA yayın anında CVE bilmiyordu, kayıtlar belirli bir port veya ağ konumu vermiyor ve hiçbir kaynak kurban, aktör, IOC veya sahada istismar bildirmiyor. `/public/..;x/admin` bir istek örneğidir, doğrulanmış bir kampanya göstergesi değildir. CISA KEV JSON'un 2026.11.25 sürümünde kayıt yok. Bu yazı abartılı bir başlık taşımıyor ve istismar kanıtı olmayan bir açığı "aktif istismar ediliyor" olarak sunmuyor.
+
+## Bu seriden
+
+- [nginx2root CVE-2026-123007](/blog/nginx2root-cve-2026-123007)
+- [cPanel WP Toolkit proxy RCE](/blog/cpanel-wptk-proxy-rce)
+- [GitHub Security Advisory izinleri](/blog/github-security-advisory-permissions)
+
+## Kaynaklar
+
+- [Traefik - GHSA-cp28-5662-543f, sanitizePath path-parameter dot-segments](https://github.com/traefik/traefik/security/advisories/GHSA-cp28-5662-543f)
+- [NVD API - CVE-2026-137481](https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-137481)
+- [Traefik - v2.11.62 sürüm notları](https://github.com/traefik/traefik/releases/tag/v2.11.62)
+- [Traefik - v3.7.18 sürüm notları](https://github.com/traefik/traefik/releases/tag/v3.7.18)
+- [Traefik - v3.8.0-rc.2 sürüm notları](https://github.com/traefik/traefik/releases/tag/v3.8.0-rc.2)
+- [VulnCheck - Traefik yetki atlatma analizi, ikincil kaynak](https://www.vulncheck.com/advisories/traefik-before-2.11.62-authorization-bypass-via-sanitizepath-path-parameter-dot-segments)
+- [CISA KEV JSON feed'i](https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)
+
+---
+
 # HPE AirWave CVE-2026-133971: web kimlik doğrulama atlatma
 
 - Kaynak: https://fosstr.com/blog/hpe-airwave-cve-2026-133971/
